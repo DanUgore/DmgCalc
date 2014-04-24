@@ -1,0 +1,4 @@
+DmgCalc
+=======
+
+Barebones Damage Calculator

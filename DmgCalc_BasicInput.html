@@ -1,13 +1,183 @@
 <!DOCTYPE html>
 <html>
-	<head></head>
+	<head>
+		<script>
+		doc = document;
+		Data = exports = {};
+		</script>
+		<!-- Add pre-load code and libraries -->
+		<script src="./lib/jquery-1.11.1.min.js"></script>
+		<script src="./data/pokedex.js"></script>
+		<script src="./data/moves.js"></script>
+		<script src="./data/typechart.js"></script>
+		<script src="pre-init.js"></script>
+		<script src="calc.js"></script>
+		<!-- Basic Styling 
+		<style>
+		.pokemon-pane {
+			display: inline;
+			width: 48%;
+		}
+		</style>-->
+	</head>
 	<body>
-		<div id="p1-pokemon">
-			
-		</div>
-		<br />
-		<div id="p2-pokemon">
-			
+		<div id="container">
+			<div id="p1-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
+				<h3>P1</h3><!--<input id="p1-species">-->
+				<select id="p1-species" class="pkmSelect"></select><input id="p1-level" value=100 type=number max=100 min=1><i id="p1-gender"></i><br />
+				<select id="p1-type1" class="typeSelect"></select><select id="p1-type2" class="typeSelect"></select><select id="p1-type3" class="typeSelect" disabled></select>
+				<table id="stats-table">
+					<thead>
+						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td><td>Eff. Stat</td></tr>
+					</thead>
+					<!-- Consider `readonly` attribute instead of `disabled` in some places -->
+					<tbody>
+						<tr id="hp">
+							<th><span>HP</span></th>
+							<td><input type=number min=1 max=255 disabled></td>
+							<td><input type=number min=0 max=31 value=31></td>
+							<td><input type=number min=0 max=252 step=4></td>
+							<td><input type=number min=0 max=999 disabled></td>
+							<td><input type=number min=-6 max=6 disabled value=0></td>
+							<td><span id="p1-effStat-hp"></span></td>
+						</tr>
+						<tr id="atk">
+							<th><span>Atk</span></th>
+							<td><input type=number min=1 max=255 disabled></td>
+							<td><input type=number min=0 max=31 value=31></td>
+							<td><input type=number min=0 max=252 step=4 value=0></td>
+							<td><input type=number min=0 max=999 disabled></td>
+							<td><input type=number min=-6 max=6 value=0></td>
+							<td><span id="p1-effStat-atk"></span></td>
+						</tr>
+						<tr id="def">
+							<th><span>Def</span></th>
+							<td><input type=number min=1 max=255 disabled></td>
+							<td><input type=number min=0 max=31 value=31></td>
+							<td><input type=number min=0 max=252 step=4 value=0></td>
+							<td><input type=number min=0 max=999 disabled></td>
+							<td><input type=number min=-6 max=6 value=0></td>
+							<td><span id="p1-effStat-def"></span></td>
+						</tr>
+						<tr id="spa">
+							<th><span>SpA</span></th>
+							<td><input type=number min=1 max=255 disabled></td>
+							<td><input type=number min=0 max=31 value=31></td>
+							<td><input type=number min=0 max=252 step=4 value=0></td>
+							<td><input type=number min=0 max=999 disabled></td>
+							<td><input type=number min=-6 max=6 value=0></td>
+							<td><span id="p1-effStat-spa"></span></td>
+						</tr>
+						<tr id="spd">
+							<th><span>SpD</span></th>
+							<td><input type=number min=1 max=255 disabled></td>
+							<td><input type=number min=0 max=31 value=31></td>
+							<td><input type=number min=0 max=252 step=4 value=0></td>
+							<td><input type=number min=0 max=999 disabled></td>
+							<td><input type=number min=-6 max=6 value=0></td>
+							<td><span id="p1-effStat-spd"></span></td>
+						</tr>
+						<tr id="spe">
+							<th><span>Spe</span></th>
+							<td><input type=number min=1 max=255 disabled></td>
+							<td><input type=number min=0 max=31 value=31></td>
+							<td><input type=number min=0 max=252 step=4 value=0></td>
+							<td><input type=number min=0 max=999 disabled></td>
+							<td><input type=number min=-6 max=6 value=0></td>
+							<td><span id="p1-effStat-spe"></span></td>
+						</tr>
+					</tbody>
+				</table>
+				<table id="moves-table">
+					<thead>
+						<tr><th>Moves</th><td>Name</td><td>Type</td><td>BP</td><td>Cat.</td><td>PP</td><td>Crit</td></tr>
+					</thead>
+					<tbody>
+						<tr id="move-1">
+							<th>Move 1</th>
+							<td><select class="moveSelect"></select></td>
+							<td><select class="typeSelect"></select></td>
+							<td><input type="number" min=0 max=255 disabled></td>
+							<td><select class="catSelect"></select></td>
+							<td><input type="number" min=1 max=64></td>
+							<td><input type="checkbox"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="p2-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
+				<h3>P2</h3>
+			</div>
 		</div>
 	</body>
+	<!-- Post-body code here, done after page loads -->
+	<!-- Will relocate code below to init.js after testing -->
+	<!-- <script src="init.js"> -->
+	<script>
+		// Initial Gender
+		var genderIcon = doc.getElementById('p1-gender');
+		genderIcon.innerText = Display.genderSymbols['m'];
+		
+		// Initialize Dropdowns
+		(function loadDropdowns() {
+			$dropdowns = $( "select" );
+			// console.log($dropdowns);
+			for (var index = 0; index < $dropdowns.length; index++) {
+				$dropdown = $dropdowns.eq(index);
+				// if ($dropdown.children().length) continue;
+				var options = []; // Option Elements to be Appended
+				if ($dropdown.hasClass("typeSelect")) {
+					if ($dropdown.attr("id") && $dropdown.attr("id").charAt(7) !== '1') options.push('<option value="--">--</option>');
+					for (var type in Data.BattleTypeChart) options.push('<option value="'+type+'">'+type+'</option>');
+					$dropdown.html(options.join(''));
+					// continue;
+				}
+				if ($dropdown.hasClass("moveSelect")) {
+					options.push('<option value="--">--</option>');
+					for (var id in Data.BattleMovedex) {
+						var move = Data.BattleMovedex[id];
+						if (id !== move.id) continue;
+						options.push('<option value="'+move.id+'">'+(move.isNonstandard?'Custom: ':'')+move.name+'</option>');
+					}
+					$dropdown.html(options.join(''));
+					// continue;
+				}
+				if ($dropdown.hasClass("catSelect")) {
+					options = [
+						'<option value="Physical">Physical</option>',
+						'<option value="Special">Special</option>',
+						'<option value="Status">Status</option>'
+					];
+					$dropdown.html(options.join(''));
+					// continue;
+				}
+				if ($dropdown.hasClass("pkmSelect")) {
+					options.push('<option value="--">--</option>');
+					// Pokemon are placed in alphabetical order for ease of location.
+					var Pokedex = Data.BattlePokedex;
+					var ids = Object.keys(Pokedex).sort();
+					var customPkms = [];
+					for (var i = 0; i < ids.length; i++) {
+						var id = ids[i];
+						var pkm = Data.BattlePokedex[id];
+						if (!pkm.num || pkm.num < 1) {
+							customPkms.push(id);
+							continue;
+						}
+						options.push('<option value="'+id+'">'+pkm.species+'</option>');
+					}
+					for (var i = 0; i < customPkms.length; i++) {
+						var id = customPkms[i];
+						var pkm = Data.BattlePokedex[id];
+						options.push('<option value="'+id+'">Custom: '+pkm.species+'</option>');
+					}
+					// $dropdown.html(options.join(''));
+					$dropdown.get(0).innerHTML = options.join('');
+					// continue;
+					// break;
+				}
+				// if (index > 2) break;
+			}
+		})()
+	</script>
 </html>

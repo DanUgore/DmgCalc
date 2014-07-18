@@ -245,7 +245,7 @@ exports.BattleItems = {
 				}
 			}
 		},
-		num: -7,
+		num: -6,
 		gen: 6,
 		desc: "Holder's Sp. Def is 1.5x, but it can only use damaging moves."
 	},
@@ -1238,6 +1238,25 @@ exports.BattleItems = {
 		gen: 4,
 		desc: "Holder's super effective attacks against other Pokemon do 1.2x damage."
 	},
+	"fairygem": {
+		id: "fairygem",
+		name: "Fairy Gem",
+		isUnreleased: true,
+		spritenum: 0,
+		isGem: true,
+		onSourceTryPrimaryHit: function (target, source, move) {
+			if (target === source || move.category === 'Status') return;
+			if (move.type === 'Fairy') {
+				if (source.useItem()) {
+					this.add('-enditem', source, 'Fairy Gem', '[from] gem', '[move] ' + move.name);
+					source.addVolatile('gem');
+				}
+			}
+		},
+		num: -6,
+		gen: 6,
+		desc: "Holder's first successful Fairy-type attack will have 1.3x power. Single use."
+	},
 	"fastball": {
 		id: "fastball",
 		name: "Fast Ball",
@@ -1428,6 +1447,14 @@ exports.BattleItems = {
 		num: 275,
 		gen: 4,
 		desc: "If holder's HP is full, will survive an attack that would KO it with 1HP. Single use."
+	},
+	"friendball": {
+		id: "friendball",
+		name: "Friend Ball",
+		spritenum: 153,
+		num: 497,
+		gen: 2,
+		desc: "A Poké Ball that makes caught Pokémon more friendly."
 	},
 	"fullincense": {
 		id: "fullincense",
@@ -3077,7 +3104,7 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
-		num: 311,
+		num: -6,
 		gen: 6,
 		desc: "Holder's Fairy-type attacks have 1.2x power. Judgment is Fairy-type."
 	},
@@ -3550,7 +3577,7 @@ exports.BattleItems = {
 		onImmunity: function (type, pokemon) {
 			if (type === 'sandstorm' || type === 'hail' || type === 'powder') return false;
 		},
-		num: -8,
+		num: -6,
 		gen: 6,
 		desc: "Protects the holder from weather-related damage and powder moves."
 	},
@@ -3846,13 +3873,13 @@ exports.BattleItems = {
 		},
 		onModifySpAPriority: 1,
 		onModifySpA: function (spa, pokemon) {
-			if (pokemon.baseTemplate.species === 'Latios' || pokemon.baseTemplate.species === 'Latias') {
+			if (pokemon.baseTemplate.num === 380 || pokemon.baseTemplate.num === 381) {
 				return this.chainModify(1.5);
 			}
 		},
 		onModifySpDPriority: 2,
 		onModifySpD: function (spd, pokemon) {
-			if (pokemon.baseTemplate.species === 'Latios' || pokemon.baseTemplate.species === 'Latias') {
+			if (pokemon.baseTemplate.num === 380 || pokemon.baseTemplate.num === 381) {
 				return this.chainModify(1.5);
 			}
 		},

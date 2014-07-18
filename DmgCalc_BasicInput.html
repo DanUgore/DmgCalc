@@ -12,6 +12,7 @@
 		<script src="./data/abilities.js"></script>
 		<script src="./data/items.js"></script>
 		<script src="./data/typechart.js"></script>
+		<script src="./data/learnsets.js"></script>
 		<script src="Data.js"></script>
 		<script src="Display.js"></script>
 		<script src="Pokemon.js"></script>
@@ -29,10 +30,10 @@
 		<div id="container">
 			<div id="p1-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
 				<h3>P1</h3>
-				<select id="species" class="pkmSelect" data-default=""><option value="">--</option></select><input id="level" class="levelSelect" value=100 type=number max=100 min=1 data-default=100><input id="happiness" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="genderSelect" data-default="N"></select><br />
-				<select id="type1" class="typeSelect"></select><select id="type2" class="typeSelect" data-default=""><option value="">--</option></select><select id="type3" class="typeSelect" disabled data-default=""><option value="">--</option></select><select id="status" class="statusSelect" data-default=""><option value="">Healthy</option></select><br />
-				<select id="ability" class="abilitySelect" data-default="--"><option value="--">--</option></select><select id="item" class="itemSelect" data-default=""><option value="">--</option></select><select id="nature" class="natureSelect" data-default="Docile"></select>
-				<table id="stats-table">
+				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input id="level" class="level-select" value=100 type=number max=100 min=1 data-default=100><input id="happiness" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
+				<select id="type1" class="type-select"></select><select id="type2" class="type-select" data-default=""><option value="">--</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">--</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><br />
+				<select id="ability" class="ability-select" data-default=""><option value="">--</option></select><select id="item" class="item-select" data-default=""><option value="">--</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
+				<table class="stats-table">
 					<thead>
 						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td><td>Eff. Stat</td></tr>
 					</thead>
@@ -94,44 +95,44 @@
 						</tr>
 					</tbody>
 				</table>
-				<table id="moves-table">
+				<table class="moves-table">
 					<thead>
 						<tr><th>Moves</th><td>Name</td><td>Type</td><td>BP</td><td>Cat.</td><td>PP</td><td>Crit</td></tr>
 					</thead>
 					<tbody>
 						<tr id="move-0">
 							<th>Move 1</th>
-							<td><select class="moveSelect"><option value="">--</option></select></td>
-							<td><select class="typeSelect"><option value="">--</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 disabled></td>
-							<td><select class="catSelect"></select></td>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
 						<tr id="move-1">
 							<th>Move 2</th>
-							<td><select class="moveSelect"><option value="">--</option></select></td>
-							<td><select class="typeSelect"><option value="">--</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 disabled></td>
-							<td><select class="catSelect"></select></td>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
 						<tr id="move-2">
 							<th>Move 3</th>
-							<td><select class="moveSelect"><option value="">--</option></select></td>
-							<td><select class="typeSelect"><option value="">--</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 disabled></td>
-							<td><select class="catSelect"></select></td>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
 						<tr id="move-3">
 							<th>Move 4</th>
-							<td><select class="moveSelect"><option value="">--</option></select></td>
-							<td><select class="typeSelect"><option value="">--</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 disabled></td>
-							<td><select class="catSelect"></select></td>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
@@ -140,10 +141,10 @@
 			</div>
 			<div id="p2-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
 				<h3>P2</h3>
-				<select id="species" class="pkmSelect" data-default=""><option value="">--</option></select><input id="level" class="levelSelect" value=100 type=number max=100 min=1 data-default=100><input id="happiness" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="genderSelect" data-default="N"></select><br />
-				<select id="type1" class="typeSelect"></select><select id="type2" class="typeSelect" data-default=""><option value="">--</option></select><select id="type3" class="typeSelect" disabled data-default=""><option value="">--</option></select><select id="status" class="statusSelect" data-default=""><option value="">Healthy</option></select><br />
-				<select id="ability" class="abilitySelect" data-default="--"><option value="--">--</option></select><select id="item" class="itemSelect" data-default=""><option value="">--</option></select><select id="nature" class="natureSelect" data-default="Docile"></select>
-				<table id="stats-table">
+				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input id="level" class="level-select" value=100 type=number max=100 min=1 data-default=100><input id="happiness" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
+				<select id="type1" class="type-select"></select><select id="type2" class="type-select" data-default=""><option value="">--</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">--</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><br />
+				<select id="ability" class="ability-select" data-default=""><option value="">--</option></select><select id="item" class="item-select" data-default=""><option value="">--</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
+				<table class="stats-table">
 					<thead>
 						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td><td>Eff. Stat</td></tr>
 					</thead>
@@ -205,44 +206,44 @@
 						</tr>
 					</tbody>
 				</table>
-				<table id="moves-table">
+				<table class="moves-table">
 					<thead>
 						<tr><th>Moves</th><td>Name</td><td>Type</td><td>BP</td><td>Cat.</td><td>PP</td><td>Crit</td></tr>
 					</thead>
 					<tbody>
 						<tr id="move-0">
 							<th>Move 1</th>
-							<td><select class="moveSelect"><option value="">--</option></select></td>
-							<td><select class="typeSelect"><option value="">--</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 disabled></td>
-							<td><select class="catSelect"></select></td>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
 						<tr id="move-1">
 							<th>Move 2</th>
-							<td><select class="moveSelect"><option value="">--</option></select></td>
-							<td><select class="typeSelect"><option value="">--</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 disabled></td>
-							<td><select class="catSelect"></select></td>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
 						<tr id="move-2">
 							<th>Move 3</th>
-							<td><select class="moveSelect"><option value="">--</option></select></td>
-							<td><select class="typeSelect"><option value="">--</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 disabled></td>
-							<td><select class="catSelect"></select></td>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
 						<tr id="move-3">
 							<th>Move 4</th>
-							<td><select class="moveSelect"><option value="">--</option></select></td>
-							<td><select class="typeSelect"><option value="">--</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 disabled></td>
-							<td><select class="catSelect"></select></td>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
@@ -274,12 +275,12 @@
 				$dropdown = $dropdowns.eq(index);
 				// if ($dropdown.children().length) continue;
 				var options = []; // Option Elements to be Appended
-				if ($dropdown.hasClass("typeSelect")) {
+				if ($dropdown.hasClass("type-select")) {
 					for (var type in Data.BattleTypeChart) options.push('<option value="'+type+'">'+type+'</option>');
 					$dropdown.append(options.join(''));
 					// continue;
 				}
-				if ($dropdown.hasClass("moveSelect")) {
+				if ($dropdown.hasClass("move-select")) {
 					for (var id in Data.BattleMovedex) {
 						var move = Data.BattleMovedex[id];
 						if (id !== move.id) continue;
@@ -288,7 +289,7 @@
 					$dropdown.append(options.join(''));
 					// continue;
 				}
-				if ($dropdown.hasClass("catSelect")) {
+				if ($dropdown.hasClass("cat-select")) {
 					options = [
 						'<option value="Physical">Physical</option>',
 						'<option value="Special">Special</option>',
@@ -297,7 +298,7 @@
 					$dropdown.append(options.join(''));
 					// continue;
 				}
-				if ($dropdown.hasClass("pkmSelect")) {
+				if ($dropdown.hasClass("pkm-select")) {
 					// Pokemon are placed in alphabetical order for ease of location.
 					var Pokedex = Data.BattlePokedex;
 					var ids = Object.keys(Pokedex).sort();

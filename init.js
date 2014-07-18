@@ -13,12 +13,12 @@ $p2 = $( "#p2-pokemon" );
 		// if ($dropdown.children().length) continue;
 		var options = []; // Option Elements to be Appended
 		var customs = []; // Custom Option Elements
-		if ($dropdown.hasClass("typeSelect")) {
+		if ($dropdown.hasClass("type-select")) {
 			for (var type in Data.BattleTypeChart) options.push('<option value="'+type+'">'+type+'</option>');
 			$dropdown.append(options.join(''));
 			continue;
 		}
-		if ($dropdown.hasClass("moveSelect")) {
+		if ($dropdown.hasClass("move-select")) {
 			for (var id in Data.BattleMovedex) {
 				var move = Data.BattleMovedex[id];
 				if (id !== move.id) continue;
@@ -27,7 +27,7 @@ $p2 = $( "#p2-pokemon" );
 			$dropdown.append(options.join(''));
 			continue;
 		}
-		if ($dropdown.hasClass("catSelect")) {
+		if ($dropdown.hasClass("cat-select")) {
 			options = [
 				'<option value="Physical">Physical</option>',
 				'<option value="Special">Special</option>',
@@ -36,7 +36,7 @@ $p2 = $( "#p2-pokemon" );
 			$dropdown.append(options.join(''));
 			continue;
 		}
-		if ($dropdown.hasClass("abilitySelect")) {
+		if ($dropdown.hasClass("ability-select")) {
 			for (var id in Data.BattleAbilities) {
 				var ability = Data.BattleAbilities[id];
 				if (id !== ability.id) continue;
@@ -45,7 +45,7 @@ $p2 = $( "#p2-pokemon" );
 			$dropdown.append(options.join(''));
 			continue;
 		}
-		if ($dropdown.hasClass("itemSelect")) {
+		if ($dropdown.hasClass("item-select")) {
 			for (var id in Data.BattleItems) {
 				var item = Data.BattleItems[id];
 				if (id !== item.id) continue;
@@ -54,7 +54,7 @@ $p2 = $( "#p2-pokemon" );
 			$dropdown.append(options.join(''));
 			continue;
 		}
-		if ($dropdown.hasClass("natureSelect")) {
+		if ($dropdown.hasClass("nature-select")) {
 			for (var id in Data.Natures) {
 				var nature = Data.Natures[id];
 				options.push('<option value="'+id+'">'+nature.name+'</option>');
@@ -62,7 +62,7 @@ $p2 = $( "#p2-pokemon" );
 			$dropdown.append(options.join(''));
 			continue;
 		}
-		if ($dropdown.hasClass("statusSelect")) {
+		if ($dropdown.hasClass("status-select")) {
 			for (var id in Data.Statuses) {
 				var status = Data.Statuses[id];
 				options.push('<option value="'+id+'">'+status.name+'</option>');
@@ -70,7 +70,7 @@ $p2 = $( "#p2-pokemon" );
 			$dropdown.append(options.join(''));
 			continue;
 		}
-		if ($dropdown.hasClass("genderSelect")) {
+		if ($dropdown.hasClass("gender-select")) {
 			options = [
 				'<option value="M">'+Display.genderSymbols['m']+'</option>',
 				'<option value="F">'+Display.genderSymbols['f']+'</option>',
@@ -79,7 +79,7 @@ $p2 = $( "#p2-pokemon" );
 			$dropdown.append(options.join(''));
 			continue;
 		}
-		if ($dropdown.hasClass("pkmSelect")) {
+		if ($dropdown.hasClass("pkm-select")) {
 			// Pokemon are placed in alphabetical order for ease of location.
 			var Pokedex = Data.BattlePokedex;
 			var ids = Object.keys(Pokedex).sort();
@@ -105,14 +105,31 @@ $p2 = $( "#p2-pokemon" );
 	}
 })()
 
-// P1 $().change event
-// Populates P1 fields.
-$('.pkmSelect').change(
+// Species Handler
+$('.pkm-select').change(
 	function () {
 		$this = $(this);
-		if ($this.val() === "--") return Display.clearFields($this.parent());
-		var pkm = new Pokemon($this.val());
-		pkm.display($this.parent());
+		if (!$this.val()) return Display.clearAllFields($this.parent());
+		Display.showPokemon($this.parent(), new Pokemon($this.val(), (Data.Sets[$this.val()] ? Data.Sets[$this.val()].sets[0] : null)));
+	}
+);
+
+// Move Handlers
+$('.move-select').change(
+	function () {
+		$this = $(this);
+		if (!$this.val()) return Display.clearMoveFields($this.parents("tr"));
+		Display.showMove($this.parents("tr"), $this.val());
+	}
+);
+
+// Stat Handlers
+// Terribly inefficient but this'll change later anyway lol
+$('.ev-input, .iv-input').change(
+	function () {
+		$this = $(this);
+		if (!$this.val()) return;
+		Display.showPokemon($this.parents('.pokemon-pane'), Display.getPokemon($this.parents('.pokemon-pane')));
 	}
 );
 

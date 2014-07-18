@@ -103,15 +103,15 @@ $p2 = $( "#p2-pokemon" );
 			continue;
 		}
 	}
-})()
+})();
 
 // Set Default Data On Form Elements (<input>, <select>)
-(function(){
-	var formElements = $('input, select');
-	for (var i = 0; i < formElements.length; i++) {
-		if ($formElements.eq(i).data("default") === undefined) $formElements.eq(i).data("default", "");
+(function () {
+	var $formElements = $('input, select');
+	for (var i = 0; i < $formElements.length; i++) {
+		if (typeof $formElements.eq(i).data("default") === 'undefined') $formElements.eq(i).data("default", "");
 	}
-})()
+})();
 
 // Species Handler
 $('.pkm-select').change(

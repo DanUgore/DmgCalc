@@ -2,10 +2,12 @@
 function toID(str) { return str.toLowerCase().replace(/[^a-z0-9]/g,''); }
 
 // Data Definitions
+Data = Data || exports || {};
 Data.Pokedex = Data.BattlePokedex;
 Data.Movedex = Data.BattleMovedex;
 Data.Abilities = Data.BattleAbilities;
 Data.Items = Data.BattleItems;
+Data.Learnsets = Data.BattleLearnsets;
 Data.StatTable = {
 	hp:"HP",
 	atk:"Atk",
@@ -51,3 +53,12 @@ Data.Natures = {
 };
 
 // Data Functions
+Data.getLearnset = function(pokemon) {
+	if (!Data.Learnsets) return null;
+	if (!Data.Pokedex[pokemon]) return false;
+	if (!Data.Learnsets[pokemon]) {
+		pokemon = toID(Data.Pokedex[pokemon].baseSpecies);
+	}
+	if (!Data.Learnsets[pokemon].learnset) return false;
+	return Data.Learnsets[pokemon].learnset;
+};

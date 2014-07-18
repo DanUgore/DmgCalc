@@ -4,56 +4,43 @@ Display = {};
 Display.genderSymbols = {m:'\u2642',f:'\u2640',n:'\u2205'};
 
 // Display Functions
+Display.resetElement = function ($el) {
+	if (!($el instanceof jQuery)) return null;
+	if ($el.length !== 1) return false;
+	if (typeof $el.data("default") === 'undefined') return $el.val("")
+	return $el.val($el.data("default"));
+}
 Display.clearAllFields = function ($side) {
 	// if (this.$side) 
 	if (!($side instanceof jQuery)) return null;
-	// Species
-	$side.find(".pkm-select").val("--");
-	// Level
-	$side.find(".level-input").val(100);
-	// Happiness
-	$side.find(".happiness-input").val(255);
-	// Gender
-	$side.find(".gender-select").val("M");
-	// Types
-	$side.find("#type1").val("Bug");
-	$side.find("#type2").val("--");
-	// Ability
-	$side.find(".ability-select").val("--");
-	// Item
-	$side.find(".item-select").val("--");
-	// Nature
-	$side.find(".nature-select").val("--");
-	// Stats
-	// var $table = $side.children("#stats-table");
-	for (var stat in Data.StatTable) {
-		var $row = $side.find('#'+stat);
-		if (!$row.length) continue;
-		$row.find(".baseStat-input").val("");
-		$row.find(".iv-input").val("");
-		$row.find(".ev-input").val("");
-		$row.find(".stat-input").val("");
-		$row.find(".boost-input").val("");
-	}
-	// Moves
-	for (var i = 0; i < 4; i++) {
-		var $row = $side.find('#move-'+i);
-		if (!$row.length) continue;
-		$row.find(".move-select").val("--");
-		$row.find(".type-select").val("--");
-		$row.find(".bp-input").val("");
-		$row.find(".cat-select").val("Physical");
-		$row.find(".pp-input").val("");
-	}
+	var classes = [
+		".pkm-select", // Species
+		".level-input", // Level
+		".happiness-input", // Happiness
+		".gender-select", // Gender
+		".type-select", // Types & Move Types
+		".ability-select", // Ability
+		".item-select", // Item
+		".nature-select", // Nature
+		".baseStat-input", // Stats
+		".iv-input", 
+		".ev-input", 
+		".stat-input", 
+		".boost-input", 
+		".move-select", // Moves
+		".bp-input", 
+		".cat-select", 
+		".pp-input"
+	];
+	var $elements = $side.find(classes.join(','));
+	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
 	return true;
 }
 Display.clearMoveField = function ($moveRow) {
 	if (!($moveRow instanceof jQuery)) return null;
-	$moveRow.find(".move-select").val("--");
-	$moveRow.find(".type-select").val("--");
-	$moveRow.find(".bp-input").val("");
-	$moveRow.find(".cat-select").val("Physical");
-	$moveRow.find(".pp-input").val("");
+	var classes = [".move-select", ".type-select", ".bp-input", ".cat-select", ".pp-input"];
+	var $elements = $moveRow.find(classes.join(','));
+	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
 	return true;
 }
 Display.showPokemon = function ($side, pokemon) {

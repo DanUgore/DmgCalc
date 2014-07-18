@@ -106,13 +106,13 @@ $p2 = $( "#p2-pokemon" );
 })();
 
 // Set Default Data On Form Elements (<input>, <select>)
-(function () {
+/* (function () {
 	var $formElements = $('input, select');
 	for (var i = 0; i < $formElements.length; i++) {
 		if (typeof $formElements.eq(i).data("default") === 'undefined') $formElements.eq(i).data("default", "");
 	}
 })();
-
+ */
 // Species Handler
 $('.pkm-select').change(
 	function () {

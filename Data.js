@@ -8,6 +8,7 @@ Data.Movedex = Data.BattleMovedex;
 Data.Abilities = Data.BattleAbilities;
 Data.Items = Data.BattleItems;
 Data.Learnsets = Data.BattleLearnsets;
+Data.TypeChart = Data.BattleTypeChart;
 Data.StatTable = {
 	hp:"HP",
 	atk:"Atk",

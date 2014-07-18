@@ -1,4 +1,4 @@
-// Define Pokemon Object. Requires `Data` to be defined. (pre-init.js)
+// Define Pokemon Object. Requires `Data` to be defined.
 
 function Pokemon(name, set) {
 	this.id = toID(name);

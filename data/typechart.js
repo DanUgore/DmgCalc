@@ -20,7 +20,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 1
 		},
-		HPivs: {"atk" 30,"def" 30,"spd" 30}
+		HPivs: {"atk":30,"def":30,"spd":30}
 	},
 	"Dark": {
 		damageTaken: {
@@ -66,7 +66,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 0.5
 		},
-		HPivs: {"atk" 30}
+		HPivs: {"atk":30}
 	},
 	"Electric": {
 		damageTaken: {
@@ -90,7 +90,7 @@ exports.BattleTypeChart = {
 			"Steel": 0.5,
 			"Water": 1
 		},
-		HPivs: {"spa" 30}
+		HPivs: {"spa":30}
 	},
 	"Fairy": {
 		damageTaken: {
@@ -134,7 +134,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 1
 		},
-		HPivs: {"def" 30,"spa" 30,"spd" 30,"spe" 30}
+		HPivs: {"def":30,"spa":30,"spd":30,"spe":30}
 	},
 	"Fire": {
 		damageTaken: {
@@ -158,7 +158,7 @@ exports.BattleTypeChart = {
 			"Steel": 0.5,
 			"Water": 2
 		},
-		HPivs: {"atk" 30,"spa" 30,"spe" 30}
+		HPivs: {"atk":30,"spa":30,"spe":30}
 	},
 	"Flying": {
 		damageTaken: {
@@ -181,7 +181,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 1
 		},
-		HPivs: {"hp" 30,"atk" 30,"def" 30,"spa" 30,"spd" 30}
+		HPivs: {"hp":30,"atk":30,"def":30,"spa":30,"spd":30}
 	},
 	"Ghost": {
 		damageTaken: {
@@ -205,7 +205,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 1
 		},
-		HPivs: {"def" 30,"spd" 30}
+		HPivs: {"def":30,"spd":30}
 	},
 	"Grass": {
 		damageTaken: {
@@ -229,7 +229,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 0.5
 		},
-		HPivs: {"atk" 30,"spa" 30}
+		HPivs: {"atk":30,"spa":30}
 	},
 	"Ground": {
 		damageTaken: {
@@ -253,7 +253,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 2
 		},
-		HPivs: {"spa" 30,"spd" 30}
+		HPivs: {"spa":30,"spd":30}
 	},
 	"Ice": {
 		damageTaken: {
@@ -278,7 +278,7 @@ exports.BattleTypeChart = {
 			"Steel": 2,
 			"Water": 1
 		},
-		HPivs: {"atk" 30,"def" 30}
+		HPivs: {"atk":30,"def":30}
 	},
 	"Normal": {
 		damageTaken: {
@@ -324,7 +324,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 1
 		},
-		HPivs: {"def" 30,"spa" 30,"spd" 30}
+		HPivs: {"def":30,"spa":30,"spd":30}
 	},
 	"Psychic": {
 		damageTaken: {
@@ -347,7 +347,7 @@ exports.BattleTypeChart = {
 			"Steel": 1,
 			"Water": 1
 		},
-		HPivs: {"atk" 30,"spe" 30}
+		HPivs: {"atk":30,"spe":30}
 	},
 	"Rock": {
 		damageTaken: {
@@ -371,7 +371,7 @@ exports.BattleTypeChart = {
 			"Steel": 2,
 			"Water": 2
 		},
-		HPivs: {"def" 30,"spd" 30,"spe" 30}
+		HPivs: {"def":30,"spd":30,"spe":30}
 	},
 	"Steel": {
 		damageTaken: {

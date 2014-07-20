@@ -10,7 +10,7 @@ Calc.relevantObjs = {
 };
 
 
-Calc.calcDamageNumbers = function (attacker, defender, move, args) {
+Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	// We are in the middle of calcing
 	this.calcing = true;
 	// Move

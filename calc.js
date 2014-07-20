@@ -167,15 +167,19 @@ Calc.get = function (handle, returnArray) {
 				returnValue = $.extend(returnValue, this[obj]['handles'][handle]); break;
 			default: returnValue.value = this[obj]['handles'][handle];
 		}
-		if (typeof returnValue.calue === 'undefined') continue;
+		if (typeof returnValue.value === 'undefined') continue;
 		returnValue.priority = returnValue.priority || 0;
+		returnValue.source = this[obj];
 		returnValues.push(returnValue);
 	}
 	if (this.self) delete this.self;
 	console.log(returnValues);
+	returnValues.sort(function(a,b){
+		return a.priority - b.priority;
+	);
 	if (returnArray) return returnValues;
-	if (returnValues.length) return returnValues[0].value;
-	return false;
+	if (!returnValues.length) return false;
+	return returnValues[0].value;
 };
 
 Calc.moveClone = function (move) {

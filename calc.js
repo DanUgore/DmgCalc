@@ -176,7 +176,7 @@ Calc.get = function (handle, returnArray) {
 	console.log(returnValues);
 	returnValues.sort(function(a,b){
 		return a.priority - b.priority;
-	);
+	});
 	if (returnArray) return returnValues;
 	if (!returnValues.length) return false;
 	return returnValues[0].value;

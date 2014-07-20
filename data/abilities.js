@@ -68,17 +68,14 @@ exports.BattleAbilities = {
 	"aerilate": {
 		desc: "Turns all of this Pokemon's Normal-typed attacks into Flying-type and deal 1.3x damage. Does not affect Hidden Power.",
 		shortDesc: "This Pokemon's Normal moves become Flying-type and do 1.3x damage.",
-		onModifyMove: function (move, pokemon) {
-			if (move.type === 'Normal' && move.id !== 'hiddenpower') {
-				move.type = 'Flying';
-				pokemon.addVolatile('aerilate');
-			}
-		},
-		effect: {
-			duration: 1,
-			onBasePowerPriority: 8,
-			onBasePower: function (basePower, pokemon, target, move) {
-				return this.chainModify([0x14CD, 0x1000]);
+		handles: {
+			moveType: function () {
+				if (this.move.type === "Normal") return "Flying";
+				this.args[this.self.id] = true;
+			},
+			bpMod: function () {
+				if (this.args[this.self.id]) return 0x14CD;
+				return undefined;
 			}
 		},
 		id: "aerilate",

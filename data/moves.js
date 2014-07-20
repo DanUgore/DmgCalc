@@ -4648,25 +4648,10 @@ exports.BattleMovedex = {
 		name: "Freeze-Dry",
 		pp: 20,
 		priority: 0,
-		getEffectiveness: function (source, target, pokemon) {
-			var type = source.type || source;
-			var totalTypeMod = 0;
-			var types = target.getTypes && target.getTypes() || target.types;
-			for (var i = 0; i < types.length; i++) {
-				if (!this.data.TypeChart[types[i]]) continue;
-				if (types[i] === 'Water') {
-					totalTypeMod++;
-					continue;
-				}
-				var typeMod = this.data.TypeChart[types[i]].damageTaken[type];
-				if (typeMod === 1) { // super-effective
-					totalTypeMod++;
-				}
-				if (typeMod === 2) { // resist
-					totalTypeMod--;
-				}
+		handles: {
+			typeEff: {
+				"Water":2
 			}
-			return totalTypeMod;
 		},
 		secondary: {
 			chance: 10,

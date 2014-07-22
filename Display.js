@@ -102,6 +102,8 @@ Display.getPokemon = function ($side) {
 	var species = $side.find(".pkm-select").val();
 	if (!species) return false;
 	var set = {};
+	set.name = $side.find(".pkm-select option:selected").text();
+	
 	// Level
 	set.level = $side.find(".level-input").val();
 	// Happiness
@@ -138,5 +140,27 @@ Display.getPokemon = function ($side) {
 		set.moveset[i] = $row.find(".move-select").val()
 	}
 	return new Pokemon(species, set);
+}
+Display.getMove = function ($moveRow) {
+	if (!($moveRow instanceof jQuery)) return null;
+	var move = {};
+	// $moveRow = $side.find('#move-'+moveIndex);
+	move.id = $moveRow.find(".move-select").val();
+	move.name = $moveRow.find(".move-select option:selected").text();
+	move.type = $moveRow.find(".type-select").val();
+	move.basePower = $moveRow.find(".bp-input").val();
+	move.category = $moveRow.find(".cat-select").val();
+	move.pp = $moveRow.find(".pp-input").val();
+	return move;
+}
+Display.showResult = function ($side1, $side2, moveIndex, damageNumbers) {
+	if (!($side1 instanceof jQuery && $side2 instanceof jQuery)) return null;
+	var moveName = ( typeof moveIndex === 'string' ? moveIndex : ( Display.getMove($side1.find('#move-'+moveIndex)) ? Display.getMove($side1.find('#move-'+moveIndex)).name : moveIndex ) );
+	var atkMon = Display.getPokemon($p1);
+	var defMon = Display.getPokemon($p2);
+	var percentage = "(" + (Math.floor(damageNumbers[0]*1000/defMon.stats['hp'])/10) + "-" + (Math.floor(damageNumbers[15]*1000/defMon.stats['hp'])/10) + "%)";
+	var range = ""+damageNumbers[0]+"-"+damageNumbers[15];
+	$('#results-display').text(atkMon.set.name+"'s "+moveName+" vs "+defMon.set.name+" "+range+" "+percentage);
+	$('#results-details').text(damageNumbers.join(', '));
 }
 

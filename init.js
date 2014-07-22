@@ -119,41 +119,49 @@ $p2 = $( "#p2-pokemon" );
 	}
 })();
 
-// Set Default Data On Form Elements (<input>, <select>)
-/* (function () {
-	var $formElements = $('input, select');
-	for (var i = 0; i < $formElements.length; i++) {
-		if (typeof $formElements.eq(i).data("default") === 'undefined') $formElements.eq(i).data("default", "");
-	}
-})();
- */
+// Add Handlers
 // Species Handler
-$('.pkm-select').change(
-	function () {
-		$this = $(this);
-		if (!$this.val()) return Display.clearAllFields($this.parent());
-		Display.showPokemon($this.parent(), new Pokemon($this.val(), (Data.Sets[$this.val()] ? Data.Sets[$this.val()].sets[0] : null)));
-	}
-);
+(function addHandlers() {
+	$('.pkm-select').change(
+		function () {
+			$this = $(this);
+			if (!$this.val()) return Display.clearAllFields($this.parent());
+			Display.showPokemon($this.parent(), new Pokemon($this.val(), (Data.Sets[$this.val()] ? Data.Sets[$this.val()].sets[0] : null)));
+		}
+	);
+	var elements = [
+		".level-input",
+		".happiness-input",
+		".gender-select",
+		".nature-select",
+		".status-select"
+	]
+	$(elements.join(', ')).change(
+		function () {
+			$this = $(this);
+			Display.updatePokemon($this.parent());
+		}
+	);
 
-// Move Handlers
-$('.move-select').change(
-	function () {
-		$this = $(this);
-		if (!$this.val()) return Display.clearMoveFields($this.parents("tr"));
-		Display.showMove($this.parents("tr"), $this.val());
-	}
-);
+	// Move Handlers
+	$('.move-select').change(
+		function () {
+			$this = $(this);
+			if (!$this.val()) return Display.clearMoveFields($this.parents("tr"));
+			Display.showMove($this.parents("tr"), $this.val());
+		}
+	);
 
-// Stat Handlers
-// Terribly inefficient but this'll change later anyway lol
-$('.ev-input, .iv-input').change(
-	function () {
-		$this = $(this);
-		if (!$this.val()) return;
-		Display.showPokemon($this.parents('.pokemon-pane'), Display.getPokemon($this.parents('.pokemon-pane')));
-	}
-);
+	// Stat Handlers
+	// Terribly inefficient but this'll change later anyway lol
+	$('.ev-input, .iv-input').change(
+		function () {
+			$this = $(this);
+			if (!$this.val()) return;
+			Display.showPokemon($this.parents('.pokemon-pane'), Display.getPokemon($this.parents('.pokemon-pane')));
+		}
+	);
+})()
 
 // Bind event listeners
 /*

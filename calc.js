@@ -54,7 +54,6 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	
 	// Base Damage
 	baseDamage = (Math.floor(Math.floor(Math.floor(2 * attacker.level / 5 + 2) * move.basePower * attackStat / defendStat) / 50) + 2);
-	console.log(baseDamage);
 	damage = baseDamage;
 	
 	// Spread?
@@ -172,7 +171,7 @@ Calc.get = function (handle, returnArray) {
 		returnValues.push(returnValue);
 	}
 	if (this.self) delete this.self;
-	console.log(returnValues);
+	//console.log(returnValues);
 	returnValues.sort(function(a,b){
 		return a.priority - b.priority;
 	});

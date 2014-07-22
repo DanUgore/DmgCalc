@@ -11,7 +11,7 @@ function Pokemon(name, set) {
 	this.ability = toID(this.set.ability || (this.set.abilities && this.set.abilities[0]) || this.abilities[0]);
 	this.nature = this.set.nature || (this.set.natures && this.set.natures[0]) || "Docile";
 	this.level = parseInt(this.set.level) || 100;
-	var statTable = {"hp" : "HP","atk" : "Atk","def" : "Def","spa" : "SpA","spd" : "SpD","spe" : "Spe"}
+	var statTable = Data.StatTable;
 	this.ivs = {}; this.evs = {};
 	this.baseStats = this.baseStats || {};
 	this.boosts = this.set.boosts || {};
@@ -43,14 +43,19 @@ Pokemon.prototype.changeSet = function(set) {
 	this.ability = toID(this.set.ability || (this.set.abilities && this.set.abilities[0]) || this.abilities[0]);
 	this.nature = this.set.nature || "Docile";
 	this.level = this.set.level || 100;
-	var statTable = {"hp" : "HP" , "atk" : "Atk" , "def" : "Def" , "spa" : "SpA" , "spd" : "SpD" , "spe" : "Spe"};
+	var statTable = Data.StatTable;
 	this.ivs = {}; this.evs = {};
+	this.baseStats = this.baseStats || {};
+	this.boosts = this.set.boosts || {};
 	for (var stat in statTable) {
-		this.baseStats[stat] = this.baseStats[stat] || 10;
-		this.ivs[stat] = this.set.ivs[stat] || 31;
-		this.evs[stat] = this.set.evs[stat] || 0;
+		this.baseStats[stat] = parseInt(this.baseStats[stat]) || 10;
+		this.ivs[stat] = parseInt(this.set.ivs[stat]) || 31;
+		this.evs[stat] = parseInt(this.set.evs[stat]) || 0;
+		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
 	}
+	this.calcStats();
 	this.moveset = (this.set.moveset || ["","","",""]).map(toID);
+	return this;
 };
 Pokemon.prototype.calcStats = function() {
 	this.stats = {};
@@ -85,3 +90,15 @@ Pokemon.prototype.resetDetails = function() {
 Pokemon.prototype.update = function() {
 	this.calcStats();
 };
+Pokemon.randomMoveset = function (pokemon) { // This one is accessible outside the Pokemon object
+	if (!Data.getLearnset) return null;
+	var lset = Data.getLearnset(toID(pokemon));
+	if (!lset) return false;
+	var moves = Object.keys(lset['sketch'] ? Data.Movedex : lset);
+	var randSet = [];
+	for (var i = 0; i < 4; i++) {
+		randSet.push(moves[parseInt(Math.random()*moves.length)]);
+	}
+	return randSet;
+}
+

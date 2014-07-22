@@ -108,7 +108,7 @@
 			</div>
 			<div id="p1-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
 				<h3>P1</h3>
-				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input class="level-input" value=100 type=number max=100 min=1 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
+				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input id="level" class="level-select" value=100 type=number max=100 min=1 data-default=100><input id="happiness" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
 				<select id="type1" class="type-select" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">--</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">--</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><br />
 				<select id="ability" class="ability-select" data-default=""><option value="">--</option></select><select id="item" class="item-select" data-default=""><option value="">--</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
 				<table class="stats-table">
@@ -120,10 +120,10 @@
 						<tr id="hp">
 							<th><span>HP</span></th>
 							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6  data-default=0 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0 disabled></td>
 						</tr>
 						<tr id="atk">
 							<th><span>Atk</span></th>
@@ -172,60 +172,48 @@
 						<tr><th>Moves</th><td>Name</td><td>Type</td><td>BP</td><td>Cat.</td><td>PP</td><td>Crit</td></tr>
 					</thead>
 					<tbody>
-						<tr id="hp">
-							<th><span>HP</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0 disabled></td>
+						<tr id="move-0">
+							<th>Move 1</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled data-default="Physical"></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
-						<tr id="atk">
-							<th><span>Atk</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
+						<tr id="move-1">
+							<th>Move 2</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
-						<tr id="def">
-							<th><span>Def</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
+						<tr id="move-2">
+							<th>Move 3</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
-						<tr id="spa">
-							<th><span>SpA</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
-						</tr>
-						<tr id="spd">
-							<th><span>SpD</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
-						</tr>
-						<tr id="spe">
-							<th><span>Spe</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
+						<tr id="move-3">
+							<th>Move 4</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div id="p2-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
 				<h3>P2</h3>
-				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input class="level-input" value=100 type=number max=100 min=1 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
+				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input id="level" class="level-select" value=100 type=number max=100 min=1 data-default=100><input id="happiness" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
 				<select id="type1" class="type-select" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">--</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">--</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><br />
 				<select id="ability" class="ability-select" data-default=""><option value="">--</option></select><select id="item" class="item-select" data-default=""><option value="">--</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
 				<table class="stats-table">
@@ -237,50 +225,50 @@
 						<tr id="hp">
 							<th><span>HP</span></th>
 							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0 disabled></td>
 						</tr>
 						<tr id="atk">
 							<th><span>Atk</span></th>
 							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
 						</tr>
 						<tr id="def">
 							<th><span>Def</span></th>
 							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
 						</tr>
 						<tr id="spa">
 							<th><span>SpA</span></th>
 							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
 						</tr>
 						<tr id="spd">
 							<th><span>SpD</span></th>
 							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
 						</tr>
 						<tr id="spe">
 							<th><span>Spe</span></th>
 							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 data-default=31></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 data-default=0></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
 						</tr>
 					</tbody>
 				</table>

@@ -15,7 +15,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	this.calcing = true;
 	// Move
 	if (typeof move === 'string') move = Data.Movedex[move]; // Calc.getMove(move)
-	if (move.category === 'Status') return;
+	if (!move || move.category === 'Status') return;
 	// Clone attacker, defender, and move.
 	//this.attacker = attacker;
 	//this.defender = defender;
@@ -54,6 +54,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	
 	// Base Damage
 	baseDamage = (Math.floor(Math.floor(Math.floor(2 * attacker.level / 5 + 2) * move.basePower * attackStat / defendStat) / 50) + 2);
+	console.log(baseDamage);
 	damage = baseDamage;
 	
 	// Spread?
@@ -71,13 +72,13 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	// STAB
 	var hasSTAB = false;
 	for (var i = 0; i < attacker.types.length && !hasSTAB; i++) {
-		if (move.type === attacker.types[i]) hasSTAB = true;
+		if (this.move.type === attacker.types[i]) hasSTAB = true;
 	}
 	var stabMod = 0x1800;
 	
 	// Type Effectiveness
-	var typeEff = 1;
-	typeEff *= this.compareTypes(move.type, defender.types, (move.ignoreImmunities || ability.ignoreImmunities)); // TODO: Work out a way to modify effectiveness
+	// var typeEff = 1;
+	var typeEff = this.getTypeEff(this.move.type, defender.types);
 	
 	// Burn
 	var burnEffect = false;
@@ -90,7 +91,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	var damageNumbers = [];
 	for (var dmgRoll = 15; damageNumbers.length < 16; dmgRoll--) {
 		var rolledDamage = Math.floor(damage * (100 - dmgRoll) / 100);
-		rolledDamage = this.modify(rolledDamage,hasSTAB? stabMod:0x1000);
+		rolledDamage = this.modify(rolledDamage, (hasSTAB ? stabMod : 0x1000));
 		rolledDamage = Math.floor(rolledDamage * typeEff);
 		if (burnEffect) rolledDamage = Math.floor(rolledDamage/2);
 		// Final Modifier
@@ -135,7 +136,6 @@ Calc.compareTypes = function (oType, dType, ignoreImmunities) {
 			eff *= (Data.TypeChart[dType[j]].damageTaken[oType[i]] !== 0 ? Data.TypeChart[dType[j]].damageTaken[oType[i]] : (ignoreImmunities ? 1 : 0));
 		}
 	}
-	return eff;
 }
 
 /* Calc.get() - returns 
@@ -148,7 +148,6 @@ Calc.get = function (handle, returnArray) {
 	if (!this.calcing) return null;
 	handle = handle || '';
 	if (!handle) return null;
-	console.log(this);
 	var returnValues = [];
 	for (var obj in this.relevantObjs) {
 		if (!this[obj]) {
@@ -181,6 +180,50 @@ Calc.get = function (handle, returnArray) {
 	if (!returnValues.length) return false;
 	return returnValues[0].value;
 };
+
+Calc.getFrom = function (handle, fromObj) {
+	if (!this.calcing) return null;
+	handle = handle || '';
+	fromObj = fromObj || '';
+	if (!handle || !fromObj) return null;
+	var returnValues = [];
+	if (!this[fromObj]) {
+		console.log('Could not find this.'+fromObj);
+		return false;
+	}
+	if (!this[fromObj]['handles'] || !this[fromObj]['handles'][handle]) return false;
+	var returnValue = {};
+	this.self = this[fromObj];
+	switch (typeof this[fromObj]['handles'][handle]) {
+		case 'function':
+			returnValue.value = this[fromObj]['handles'][handle].call(this);
+			if (typeof returnValue.value === 'object') returnValue = $.extend({}, returnValue, returnValue.value);
+			break;
+		case 'object':
+			returnValue = $.extend(returnValue, this[fromObj]['handles'][handle]); break;
+		default: returnValue.value = this[fromObj]['handles'][handle];
+	}
+	if (this.self) delete this.self;
+	if (typeof returnValue.value === 'undefined') return false;
+	returnValue.source = this[fromObj];
+	return returnValue.value;
+};
+
+Calc.getTypeEff = function (oType, dTypes) {
+	if (!oType) return false;
+	var immune = this.getFrom('immuneTo'+oType, 'defenderAbility');
+	if (immune) return 0;
+	var eff = 1;
+	if (!Data.TypeChart[oType]) return false;
+	for (var j = 0, damageTaken; j < dTypes.length; j++) {
+		if (!Data.TypeChart[dTypes[j]]) return false;
+		//console.log("this.getFrom('typeEff'"+oType+", 'move'): ", this.getFrom('typeEff'+oType, 'move'))
+		damageTaken = this.getFrom('typeEff'+dTypes[j], 'move') || Data.TypeChart[dTypes[j]].damageTaken[oType];
+		eff *= (damageTaken !== 0 ? damageTaken : (ignoreImmunities ? 1 : 0));
+	}
+	console.log('eff: ',eff);
+	return eff;
+}
 
 Calc.moveClone = function (move) {
 	if (!move) return {};

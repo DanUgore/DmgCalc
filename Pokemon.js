@@ -17,8 +17,8 @@ function Pokemon(name, set) {
 	this.boosts = this.set.boosts || {};
 	for (var stat in statTable) {
 		this.baseStats[stat] = parseInt(this.baseStats[stat]) || 10;
-		this.ivs[stat] = parseInt(this.set.ivs[stat]) || 31;
-		this.evs[stat] = parseInt(this.set.evs[stat]) || 0;
+		this.ivs[stat] = isNaN(parseInt(this.set.ivs[stat])) ? 31 : parseInt(this.set.ivs[stat]);
+		this.evs[stat] = isNaN(parseInt(this.set.evs[stat])) ? 0 : parseInt(this.set.evs[stat]);
 		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
 	}
 	this.calcStats();
@@ -27,7 +27,7 @@ function Pokemon(name, set) {
 	if (!this.genderRatio && !this.gender) this.genderRatio = {M:0.5,F:0.5};
 	this.gender = this.gender || this.set.gender || this.randomGender();
 	var hpTypes = ["Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark"];
-	var hpTypeIndex = Math.floor(parseInt(function() { var buf = ""; buf += ''+(this.ivs[stat] % 2) ; return buf; }, 2) * 15 / 63)
+	var hpTypeIndex = Math.floor(parseInt((function(ivs) { var buf = ""; for (var stat in ivs) buf += ''+(ivs[stat] % 2) ; return buf; })(this.ivs), 2) * 15 / 63)
 	this.hpType = hpTypes[hpTypeIndex];
 	this.hpPower = 60; //Math.floor(parseInt(function() { var buf = ""; for (var stat in statTable) { buf += ''+((this.ivs[stat] & 2) / 2) }; return buf; }, 2) * 40 / 63 + 30)
 	this.status = this.set.status || "";
@@ -49,8 +49,8 @@ Pokemon.prototype.changeSet = function(set) {
 	this.boosts = this.set.boosts || {};
 	for (var stat in statTable) {
 		this.baseStats[stat] = parseInt(this.baseStats[stat]) || 10;
-		this.ivs[stat] = parseInt(this.set.ivs[stat]) || 31;
-		this.evs[stat] = parseInt(this.set.evs[stat]) || 0;
+		this.ivs[stat] = isNaN(parseInt(this.set.ivs[stat])) ? 31 : parseInt(this.set.ivs[stat]);
+		this.evs[stat] = isNaN(parseInt(this.set.evs[stat])) ? 0 : parseInt(this.set.evs[stat]);
 		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
 	}
 	this.calcStats();

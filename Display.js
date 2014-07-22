@@ -43,6 +43,13 @@ Display.clearMoveField = function ($moveRow) {
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
 	return true;
 }
+Display.updatePokemon = function ($side) {
+	if (!($side instanceof jQuery)) return null;
+	var pkm = Display.getPokemon($side);
+	if (typeof pkm === 'undefined') return console.log('Display.getPokemon($side) - $side was not jQuery');
+	if (!pkm) return Display.clearAllFields();
+	return Display.showPokemon($side, pkm);
+}
 Display.showPokemon = function ($side, pokemon) {
 	if (!($side instanceof jQuery)) return null;
 	if (!(pokemon instanceof Pokemon)) return false;
@@ -58,9 +65,9 @@ Display.showPokemon = function ($side, pokemon) {
 	$side.find("#type1").val(pokemon.types[0]);
 	if (pokemon.types[1]) $side.find("#type2").val(pokemon.types[1]);
 	// Ability
-	$side.find(".ability-select").val(pokemon.ability || "--");
+	$side.find(".ability-select").val(pokemon.ability);
 	// Item
-	$side.find(".item-select").val(pokemon.item || "--");
+	$side.find(".item-select").val(pokemon.item);
 	// Nature
 	$side.find(".nature-select").val(pokemon.nature);
 	// Stats

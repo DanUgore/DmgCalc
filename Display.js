@@ -153,14 +153,15 @@ Display.getMove = function ($moveRow) {
 	move.pp = $moveRow.find(".pp-input").val();
 	return move;
 }
-Display.showResult = function ($side1, $side2, moveIndex, damageNumbers) {
-	if (!($side1 instanceof jQuery && $side2 instanceof jQuery)) return null;
-	var moveName = ( typeof moveIndex === 'string' ? moveIndex : ( Display.getMove($side1.find('#move-'+moveIndex)) ? Display.getMove($side1.find('#move-'+moveIndex)).name : moveIndex ) );
-	var atkMon = Display.getPokemon($p1);
-	var defMon = Display.getPokemon($p2);
+Display.showResult = function ($atkSide, $defSide, moveIndex, damageNumbers) {
+	if (!($atkSide instanceof jQuery && $defSide instanceof jQuery)) return null;
+	var moveName = ( typeof moveIndex === 'string' ? moveIndex : ( Display.getMove($atkSide.find('#move-'+moveIndex)) ? Display.getMove($atkSide.find('#move-'+moveIndex)).name : moveIndex ) );
+	var atkMon = Display.getPokemon($atkSide);
+	var defMon = Display.getPokemon($defSide);
 	var percentage = "(" + (Math.floor(damageNumbers[0]*1000/defMon.stats['hp'])/10) + "-" + (Math.floor(damageNumbers[15]*1000/defMon.stats['hp'])/10) + "%)";
 	var range = ""+damageNumbers[0]+"-"+damageNumbers[15];
-	$('#results-display').text(atkMon.set.name+"'s "+moveName+" vs "+defMon.set.name+" "+range+" "+percentage);
-	$('#results-details').text(damageNumbers.join(', '));
+	var $resultBox = $("#"+$atkSide.attr('id').substr(0,2)+"-results > .result-move-"+moveIndex+" > .inner-results-container");
+	$resultBox.children('.results-move-name').text(moveName);
+	$resultBox.children('.results-move-damage').text(range+" "+percentage);
 }
 

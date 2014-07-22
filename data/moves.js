@@ -4649,9 +4649,7 @@ exports.BattleMovedex = {
 		pp: 20,
 		priority: 0,
 		handles: {
-			typeEff: {
-				"Water":2
-			}
+			typeEffWater: 2
 		},
 		secondary: {
 			chance: 10,

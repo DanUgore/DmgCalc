@@ -18,16 +18,95 @@
 		<script src="Pokemon.js"></script>
 		<script src="PokemonSets.js"></script>
 		<script src="calc.js"></script>
-		<!-- Basic Styling 
+		<!-- Basic Styling -->
 		<style>
 		.pokemon-pane {
-			display: inline;
+			display: inline-block;
 			width: 48%;
+			margin: auto;
 		}
-		</style>-->
+		.results-list {
+			display: inline-block;
+			width: 48%;
+			margin: 0px;
+			padding: 0px;
+		}
+		li {
+			list-style-type: none;
+			display: inline;
+		}
+		.results-move-name, .results-move-damage {
+			text-align: center;
+			height: 40%;
+			width: 40%;
+		}
+		.inner-results-container {
+			height: 40%;
+			width: 40%;
+			display: inline-block;
+		}
+		</style>
 	</head>
 	<body>
 		<div id="container">
+			<div id="results" class="results-pane">
+				<h3>Results: </h3>
+				<div id="results-display">
+					<ul id="p1-results" class="results-list">
+						<li class="result-move-0">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>	
+						<li class="result-move-1">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+						<li class="result-move-2">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+						<li class="result-move-3">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+					</ul>
+					<ul id="p2-results" class="results-list">
+						<li class="result-move-0">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>	
+						<li class="result-move-1">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+						<li class="result-move-2">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+						<li class="result-move-3">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div id="results-details" style="display: none"></div>
+			</div>
 			<div id="p1-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
 				<h3>P1</h3>
 				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input id="level" class="level-select" value=100 type=number max=100 min=1 data-default=100><input id="happiness" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
@@ -35,7 +114,7 @@
 				<select id="ability" class="ability-select" data-default=""><option value="">--</option></select><select id="item" class="item-select" data-default=""><option value="">--</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
 				<table class="stats-table">
 					<thead>
-						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td><td>Eff. Stat</td></tr>
+						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td></tr>
 					</thead>
 					<!-- Consider `readonly` attribute instead of `disabled` in some places -->
 					<tbody>
@@ -46,7 +125,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0 disabled></td>
-							<td><span id="p1-effStat-hp"></span></td>
 						</tr>
 						<tr id="atk">
 							<th><span>Atk</span></th>
@@ -55,7 +133,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-atk"></span></td>
 						</tr>
 						<tr id="def">
 							<th><span>Def</span></th>
@@ -64,7 +141,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-def"></span></td>
 						</tr>
 						<tr id="spa">
 							<th><span>SpA</span></th>
@@ -73,7 +149,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-spa"></span></td>
 						</tr>
 						<tr id="spd">
 							<th><span>SpD</span></th>
@@ -82,7 +157,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-spd"></span></td>
 						</tr>
 						<tr id="spe">
 							<th><span>Spe</span></th>
@@ -91,7 +165,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-spe"></span></td>
 						</tr>
 					</tbody>
 				</table>
@@ -146,7 +219,7 @@
 				<select id="ability" class="ability-select" data-default=""><option value="">--</option></select><select id="item" class="item-select" data-default=""><option value="">--</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
 				<table class="stats-table">
 					<thead>
-						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td><td>Eff. Stat</td></tr>
+						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td></tr>
 					</thead>
 					<!-- Consider `readonly` attribute instead of `disabled` in some places -->
 					<tbody>
@@ -157,7 +230,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0 disabled></td>
-							<td><span id="p1-effStat-hp"></span></td>
 						</tr>
 						<tr id="atk">
 							<th><span>Atk</span></th>
@@ -166,7 +238,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-atk"></span></td>
 						</tr>
 						<tr id="def">
 							<th><span>Def</span></th>
@@ -175,7 +246,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-def"></span></td>
 						</tr>
 						<tr id="spa">
 							<th><span>SpA</span></th>
@@ -184,7 +254,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-spa"></span></td>
 						</tr>
 						<tr id="spd">
 							<th><span>SpD</span></th>
@@ -193,7 +262,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-spd"></span></td>
 						</tr>
 						<tr id="spe">
 							<th><span>Spe</span></th>
@@ -202,7 +270,6 @@
 							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
 							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
 							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-							<td><span id="p1-effStat-spe"></span></td>
 						</tr>
 					</tbody>
 				</table>
@@ -249,11 +316,6 @@
 						</tr>
 					</tbody>
 				</table>
-			</div>
-			<div id="results" class="results-pane">
-			<h3>Results: </h3>
-			<div id="results-display">P1 Move 1 vs P2 0-0 (0-0%)</div>
-			<div id="results-details"></div>
 			</div>
 		</div>
 	</body>

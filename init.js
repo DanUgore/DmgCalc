@@ -19,11 +19,23 @@ $p2 = $( "#p2-pokemon" );
 			continue;
 		}
 		if ($dropdown.hasClass("move-select")) {
+			var customMoves = [];
 			for (var id in Data.BattleMovedex) {
 				var move = Data.BattleMovedex[id];
 				if (id !== move.id) continue;
-				options.push('<option value="'+move.id+'">'+(move.isNonstandard?'Custom: ':'')+move.name+'</option>');
+				if (move.isNonstandard) {
+					customMoves.push(id);
+					continue;
+				}
+				options.push('<option value="'+move.id+'">'+move.name+'</option>');
 			}
+			options.push('<optgroup label="Custom Moves">');
+			for (var i = 0; i < customMoves.length; i++) {
+				var id = customMoves[i];
+				var move = Data.BattleMovedex[id];
+				options.push('<option value="'+id+'">'+move.name+'</option>');
+			}
+			options.push('</optgroup>');
 			$dropdown.append(options.join(''));
 			continue;
 		}
@@ -88,17 +100,19 @@ $p2 = $( "#p2-pokemon" );
 				var id = ids[i];
 				var pkm = Data.BattlePokedex[id];
 				if (!pkm.num || pkm.num < 1) {
-					customs.push(id);
+					customPkms.push(id);
 					continue;
 				}
 				options.push('<option value="'+id+'">'+pkm.species+'</option>');
 			}
+			options.push('<optgroup label="Custom Pokemon">');
 			for (var i = 0; i < customPkms.length; i++) {
 				var id = customPkms[i];
 				var pkm = Data.BattlePokedex[id];
 				// Consider <optgroup label="Custom Pokemon"></optgroup>
-				options.push('<option value="'+id+'">Custom: '+pkm.species+'</option>');
+				options.push('<option value="'+id+'">'+pkm.species+'</option>');
 			}
+			options.push('</optgroup>');
 			$dropdown.append(options.join(''));
 			continue;
 		}

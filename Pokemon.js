@@ -32,6 +32,7 @@ function Pokemon(name, set) {
 	this.hpPower = 60; //Math.floor(parseInt(function() { var buf = ""; for (var stat in statTable) { buf += ''+((this.ivs[stat] & 2) / 2) }; return buf; }, 2) * 40 / 63 + 30)
 	this.status = this.set.status || "";
 	this.currentHP = parseInt(this.set.currentHP || this.stats['hp']);
+	this.happiness = parseInt(this.set.happiness || 255);
 };
 
 Pokemon.prototype.changeSet = function(set) {

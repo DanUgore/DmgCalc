@@ -33,6 +33,7 @@ function Pokemon(name, set) {
 	this.status = this.set.status || "";
 	this.currentHP = parseInt(this.set.currentHP || this.stats['hp']);
 	this.happiness = parseInt(this.set.happiness || 255);
+	for (var prop in this.set) if (typeof this[prop] === 'undefined') this[prop] = this.set[prop];
 };
 
 Pokemon.prototype.changeSet = function(set) {

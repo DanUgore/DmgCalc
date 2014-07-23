@@ -210,6 +210,7 @@ Calc.getFrom = function (handle, fromObj) {
 
 Calc.getTypeEff = function (oType, dTypes) {
 	if (!oType) return false;
+	var ignoreImmunities = false;
 	var immune = this.getFrom('immuneTo'+oType, 'defenderAbility');
 	if (immune) return 0;
 	var eff = 1;

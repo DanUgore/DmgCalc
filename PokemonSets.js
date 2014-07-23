@@ -1,12 +1,13 @@
 Data.Tiers = {
-	"uber": {name:"Uber",level:100,id:"uber"},
-	"overused": {name:"OU",level:100,id:"overused"},
-	"underused": {name:"UU",level:100,id:"underused"},
-	"rarelyused": {name:"RU",level:100,id:"rarelyused"},
-	"neverused": {name:"NU",level:100,id:"neverused"},
-	"littlecup": {name:"LC",level:100,id:"littlecup"},
-	"vgc12": {name:"VGC",level:50,id:"vgc12"},
-	"xybattlespot": {name:"BS",level:50,id:"xybattlespot"}
+	"uber": {shortName:"Uber",level:100,id:"uber",name:"Uber"},
+	"overused": {shortName:"OU",level:100,id:"overused",name:"OverUsed"},
+	"underused": {shortName:"UU",level:100,id:"underused",name:"UnderUsed"},
+	"rarelyused": {shortName:"RU",level:100,id:"rarelyused",name:"RarelyUsed"},
+	"neverused": {shortName:"NU",level:100,id:"neverused",name:"NeverUsed"},
+	"littlecup": {shortName:"LC",level:100,id:"littlecup",name:"Little Cup"},
+	"vgc12": {shortName:"VGC",level:50,id:"vgc12",name:"VGC '12"},
+	"xybattlespot": {shortName:"BS",level:50,id:"xybattlespot",name:"Battle Spot"},
+	"doubles": {name:"Doubles",level:100,id:"doubles",shortName:"Dubs",name:"Smogon Doubles"}
 }
 
 Data.Sets = {

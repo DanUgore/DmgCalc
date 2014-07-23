@@ -58,9 +58,15 @@ Pokemon.prototype.changeSet = function(set) {
 	this.moveset = (this.set.moveset || ["","","",""]).map(toID);
 	return this;
 };
+Pokemon.prototype.updateDetails = function(update) {
+	if (!update) return null;
+	$.extend(true, this, update);
+	this.update();
+	return this;
+};
 Pokemon.prototype.calcStats = function() {
 	this.stats = {};
-	for (var stat in {"hp":"HP","atk":"Atk","def":"Def","spa":"SpA","spd":"SpD","spe":"Spe"}) {
+	for (var stat in Data.StatTable) {
 		if (stat === 'hp') this.stats[stat] = (this.baseStats[stat] === 1 ? 1 : Math.floor(Math.floor(2*this.baseStats[stat] + this.ivs[stat] + this.evs[stat]/4) * this.level/100) + this.level + 10);
 		else {
 			var nature = Data.Natures[this.nature];
@@ -87,9 +93,15 @@ Pokemon.prototype.randomMoveset = function() {
 Pokemon.prototype.resetDetails = function() {
 	var newPoke = new Pokemon(this.id);
 	for (var prop in newPoke) this[prop] = newPoke[prop];
+	return this;
 };
-Pokemon.prototype.update = function() {
+Pokemon.prototype.update = function() { // Recalculate necessary things when internal values are changed.
 	this.calcStats();
+	if (this.currentHP > this.stats['hp']) this.currentHP = this.stats['hp'];
+	var hpTypes = ["Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark"];
+	var hpTypeIndex = Math.floor(parseInt((function(ivs) { var buf = ''; for (var stat in ivs) buf += (ivs[stat] % 2) ; return buf; })(this.ivs), 2) * 15 / 63);
+	this.hpType = hpTypes[hpTypeIndex];
+	//this.hpPower = 60; Math.floor(parseInt((function(ivs) { var buf = ''; for (var stat in ivs) { buf += ((ivs[stat] & 2) / 2) }; return buf; }(this.ivs), 2) * 40 / 63 + 30)
 };
 Pokemon.randomMoveset = function (pokemon) { // This one is accessible outside the Pokemon object
 	if (!Data.getLearnset) return null;

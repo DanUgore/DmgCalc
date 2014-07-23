@@ -2,6 +2,8 @@
 Display = {};
 
 Display.genderSymbols = {m:'\u2642',f:'\u2640',n:'\u2205'};
+Display.p1active; // Caching Pokemon so we don't have to rebuild every time
+Display.p2active; // Caching Pokemon so we don't have to rebuild every time
 
 // Display Functions
 Display.resetElement = function ($el) {
@@ -89,6 +91,7 @@ Display.showPokemon = function ($side, pokemon) {
 		if (!move) continue;
 		Display.showMove($row, move.id);
 	}
+	if (pokemon.side) this[pokemon.side+'active'] = pokemon;
 	return true;
 }
 Display.showMove = function ($moveRow, move) {
@@ -146,6 +149,8 @@ Display.getPokemon = function ($side) {
 		if (!$row.length) continue;
 		set.moveset[i] = $row.find(".move-select").val()
 	}
+	// Side
+	set.side = $side.attr('id').substr(0,2);
 	return new Pokemon(species, set);
 }
 Display.getMove = function ($moveRow) {
@@ -161,14 +166,56 @@ Display.getMove = function ($moveRow) {
 	return move;
 }
 Display.showResult = function ($atkSide, $defSide, moveIndex, damageNumbers) {
-	if (!($atkSide instanceof jQuery && $defSide instanceof jQuery)) return null;
-	var moveName = ( typeof moveIndex === 'string' ? moveIndex : ( Display.getMove($atkSide.find('#move-'+moveIndex)) ? Display.getMove($atkSide.find('#move-'+moveIndex)).name : moveIndex ) );
-	var atkMon = Display.getPokemon($atkSide);
-	var defMon = Display.getPokemon($defSide);
+	var atkMon;
+	var defMon;
+	if (!($atkSide instanceof jQuery)) {
+		if ($atkSide instanceof Pokemon) atkMon = $atkSide;
+		else return null;
+	}
+	if (!($defSide instanceof jQuery)) {
+		if ($defSide instanceof Pokemon) defMon = $defSide;
+		else return null;
+	}
+	atkMon = atkMon || Display.getPokemon($atkSide);
+	defMon = atkMon || Display.getPokemon($defSide);
+	moveIndex = parseInt(moveIndex);
+	if (isNaN(moveIndex)) return false;
+	var moveName = ( atkMon === $atkSide ? ( Data.Movedex[atkMon.moveset[moveIndex]] ? Data.Movedex[atkMon.moveset[moveIndex]].name : atkMon.moveset[moveIndex] ) : ( Display.getMove($atkSide.find('#move-'+moveIndex)) ? Display.getMove($atkSide.find('#move-'+moveIndex)).name : "Unnamed Move" ) );
 	var percentage = "(" + (Math.floor(damageNumbers[0]*1000/defMon.stats['hp'])/10) + "-" + (Math.floor(damageNumbers[15]*1000/defMon.stats['hp'])/10) + "%)";
 	var range = ""+damageNumbers[0]+"-"+damageNumbers[15];
-	var $resultBox = $("#"+$atkSide.attr('id').substr(0,2)+"-results > .result-move-"+moveIndex+" > .inner-results-container");
+	var $resultBox = $("#"+atkMon.side+"-results > .result-move-"+moveIndex+" > .inner-results-container");
 	$resultBox.children('.results-move-name').text(moveName);
 	$resultBox.children('.results-move-damage').text(range+" "+percentage);
 }
-
+Display.updateCalcs = function () {
+	if (!$p1 && !$p2) return null;
+	var $side;
+	var p1active = Display.getPokemon($p1);
+	var p2active = Display.getPokemon($p2);
+	if (!p1active) return false;
+	if (!p2active) return false;
+	var p1results = [];
+	var p2results = [];
+	// P1
+	for (var i = 0; i < p1active.moveset.length; i++) {
+		if (!p1active.moveset[i]) {
+			p1results.push(false);
+			continue;
+		}
+		p1results.push(
+			Calc.calcDamageNumbers(p1active, p2active, p1active.moveset[i])/*,  field {} */
+		);
+		if (p1results[i]) Display.showResult(p1active, p2active, i, p1results[i]);
+	}
+	// P2
+	for (var i = 0; i < p2active.moveset.length; i++) {
+		if (!p2active.moveset[i]) {
+			p2results.push(false);
+			continue;
+		}
+		p2results.push(
+			Calc.calcDamageNumbers(p2active, p1active, p2active.moveset[i])/*,  field {} */
+		);
+		if (p2results[i]) Display.showResult(p2active, p1active, i, p2results[i]);
+	}
+}

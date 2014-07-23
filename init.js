@@ -127,6 +127,7 @@ $p2 = $( "#p2-pokemon" );
 			$this = $(this);
 			if (!$this.val()) return Display.clearAllFields($this.parent());
 			Display.showPokemon($this.parent(), new Pokemon($this.val(), (Data.Sets[$this.val()] ? Data.Sets[$this.val()].sets[0] : null)));
+			Display.updateCalcs();
 		}
 	);
 	var elements = [
@@ -134,12 +135,14 @@ $p2 = $( "#p2-pokemon" );
 		".happiness-input",
 		".gender-select",
 		".nature-select",
-		".status-select"
+		".status-select",
+		".ev-input",
+		".iv-input"
 	]
 	$(elements.join(', ')).change(
 		function () {
 			$this = $(this);
-			Display.updatePokemon($this.parent());
+			Display.updatePokemon($this.parents('.pokemon-pane'));
 		}
 	);
 
@@ -152,7 +155,7 @@ $p2 = $( "#p2-pokemon" );
 		}
 	);
 
-	// Stat Handlers
+	/*/ Stat Handlers
 	// Terribly inefficient but this'll change later anyway lol
 	$('.ev-input, .iv-input').change(
 		function () {
@@ -160,7 +163,7 @@ $p2 = $( "#p2-pokemon" );
 			if (!$this.val()) return;
 			Display.showPokemon($this.parents('.pokemon-pane'), Display.getPokemon($this.parents('.pokemon-pane')));
 		}
-	);
+	);*/
 })()
 
 // Bind event listeners

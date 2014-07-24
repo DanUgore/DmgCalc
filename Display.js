@@ -2,8 +2,10 @@
 Display = {};
 
 Display.genderSymbols = {m:'\u2642',f:'\u2640',n:'\u2205'};
-Display.p1active; // Caching Pokemon so we don't have to rebuild every time
-Display.p2active; // Caching Pokemon so we don't have to rebuild every time
+Display.active = { // Caching Pokemon so we don't have to rebuild every time
+	p1: null,
+	p2: null
+};
 
 // Display Functions
 Display.resetElement = function ($el) {
@@ -13,7 +15,7 @@ Display.resetElement = function ($el) {
 	return $el.val($el.data("default"));
 }
 Display.clearAllFields = function ($side) {
-	// if (this.$side) 
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	var classes = [
 		".pkm-select", // Species
@@ -36,6 +38,7 @@ Display.clearAllFields = function ($side) {
 	];
 	var $elements = $side.find(classes.join(','));
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
+	Display.showPokemon(Display.getPokemon($side, true));
 	return true;
 }
 Display.clearMoveField = function ($moveRow) {
@@ -45,14 +48,35 @@ Display.clearMoveField = function ($moveRow) {
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
 	return true;
 }
-Display.updatePokemon = function ($side) {
+Display.changePokemon = function ($side) {
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
-	var pkm = Display.getPokemon($side);
-	if (typeof pkm === 'undefined') return console.log('Display.getPokemon($side) - $side was not jQuery');
+	if (!$side.val()) return Display.clearAllFields($side.parent());
+	var side = $side.parent().attr('id').substr(0,2);
+	Display.active[side] = new Pokemon($side.val(), (Data.Sets[$side.val()] ? Data.Sets[$side.val()].sets[0] : null));
+	Display.active[side].side = side;
+	Display.showPokemon(side, Display.active[side]);
+	Display.loadSets(side);
+	
+	Display.updateCalcs();
+}
+Display.updatePokemon = function ($side) {
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
+	var pkm = Display.getPokemon($side); // Pulls Pokemon from cache
+	if (!pkm) return Display.showPokemon($side, Display.getPokemon($side, true));
+	if (pkm.id !== $side.find(".pkm-select").val()) pkm = Display.getPokemon($side, true); // Species changed. Make a new Pokemon
+	else pkm = pkm.updateDetails(Display.getSet($side));
 	if (!pkm) return Display.clearAllFields();
 	return Display.showPokemon($side, pkm);
 }
+Display.changeSet = function ($side, set) {
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
+	Display.active;
+}
 Display.showPokemon = function ($side, pokemon) {
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	if (!(pokemon instanceof Pokemon)) return false;
 	// Species
@@ -91,7 +115,7 @@ Display.showPokemon = function ($side, pokemon) {
 		if (!move) continue;
 		Display.showMove($row, move.id);
 	}
-	if (pokemon.side) this[pokemon.side+'active'] = pokemon;
+	if (pokemon.side) this.active[pokemon.side] = pokemon;
 	return true;
 }
 Display.showMove = function ($moveRow, move) {
@@ -106,11 +130,21 @@ Display.showMove = function ($moveRow, move) {
 	$moveRow.find(".pp-input").val(move.pp);
 	return true;
 }
-Display.getPokemon = function ($side) {
+Display.getPokemon = function ($side, makeNew) {
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
+	var side = $side.attr('id').substr(0,2);
+	if (!makeNew) return this.active[side];
 	// Species
 	var species = $side.find(".pkm-select").val();
 	if (!species) return false;
+	var set = Display.getSet($side);
+	Display.active[side] = new Pokemon(species, set);
+	return Display.active[side];
+}
+Display.getSet = function ($side) {
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
 	var set = {};
 	set.name = $side.find(".pkm-select option:selected").text();
 	
@@ -151,7 +185,8 @@ Display.getPokemon = function ($side) {
 	}
 	// Side
 	set.side = $side.attr('id').substr(0,2);
-	return new Pokemon(species, set);
+	
+	return set;
 }
 Display.getMove = function ($moveRow) {
 	if (!($moveRow instanceof jQuery)) return null;
@@ -170,10 +205,12 @@ Display.showResult = function ($atkSide, $defSide, moveIndex, damageNumbers) {
 	var defMon;
 	if (!($atkSide instanceof jQuery)) {
 		if ($atkSide instanceof Pokemon) atkMon = $atkSide;
+		else if ($atkSide in Display.active) $atkSide = $("#"+$atkSide+"-pokemon");
 		else return null;
 	}
 	if (!($defSide instanceof jQuery)) {
 		if ($defSide instanceof Pokemon) defMon = $defSide;
+		else if ($defSide in Display.active) $defSide = $("#"+$defSide+"-pokemon");
 		else return null;
 	}
 	atkMon = atkMon || Display.getPokemon($atkSide);
@@ -219,3 +256,138 @@ Display.updateCalcs = function () {
 		if (p2results[i]) Display.showResult(p2active, p1active, i, p2results[i]);
 	}
 }
+Display.makeSetDropdown = function (pokemon) {
+	if (pokemon instanceof Pokemon) pokemon = pokemon.id;
+	pokemon = pokemon || '';
+	var sets = Data.getSets(pokemon);
+	var options = ['<option value="">Blank Set</option>'];
+	for (var i = 0, set, tier; i < sets.length; i++) {
+		set = sets[i];
+		tier = set.tier ? (Data.Tiers[set.tier].shortName || set.tier) : '';
+		options.push('<option value='+i+'>'+tier+': '+(set.name || 'Set '+i)+'</option>');
+	}
+	options.push('<option value="R">Random Moves</option>');
+	return options;
+}
+Display.loadDropdowns = function () {
+	$dropdowns = $( "select" );
+	// console.log($dropdowns);
+	for (var index = 0; index < $dropdowns.length; index++) {
+		$dropdown = $dropdowns.eq(index);
+		// if ($dropdown.children().length) continue;
+		var options = []; // Option Elements to be Appended
+		var customs = []; // Custom Option Elements
+		if ($dropdown.hasClass("type-select")) {
+			for (var type in Data.BattleTypeChart) options.push('<option value="'+type+'">'+type+'</option>');
+			$dropdown.append(options.join(''));
+			continue;
+		}
+		if ($dropdown.hasClass("move-select")) {
+			var customMoves = [];
+			for (var id in Data.BattleMovedex) {
+				var move = Data.BattleMovedex[id];
+				if (id !== move.id) continue;
+				if (move.isNonstandard) {
+					customMoves.push(id);
+					continue;
+				}
+				options.push('<option value="'+move.id+'">'+move.name+'</option>');
+			}
+			options.push('<optgroup label="Custom Moves">');
+			for (var i = 0; i < customMoves.length; i++) {
+				var id = customMoves[i];
+				var move = Data.BattleMovedex[id];
+				options.push('<option value="'+id+'">'+move.name+'</option>');
+			}
+			options.push('</optgroup>');
+			$dropdown.append(options.join(''));
+			continue;
+		}
+		if ($dropdown.hasClass("cat-select")) {
+			options = [
+				'<option value="Physical">Physical</option>',
+				'<option value="Special">Special</option>',
+				'<option value="Status">Status</option>'
+			];
+			$dropdown.append(options.join(''));
+			continue;
+		}
+		if ($dropdown.hasClass("ability-select")) {
+			for (var id in Data.BattleAbilities) {
+				var ability = Data.BattleAbilities[id];
+				if (id !== ability.id) continue;
+				options.push('<option value="'+ability.id+'">'+(ability.isNonstandard?'Custom: ':'')+ability.name+'</option>');
+			}
+			$dropdown.append(options.join(''));
+			continue;
+		}
+		if ($dropdown.hasClass("item-select")) {
+			for (var id in Data.BattleItems) {
+				var item = Data.BattleItems[id];
+				if (id !== item.id) continue;
+				options.push('<option value="'+item.id+'">'+(item.isNonstandard?'Custom: ':'')+item.name+'</option>');
+			}
+			$dropdown.append(options.join(''));
+			continue;
+		}
+		if ($dropdown.hasClass("nature-select")) {
+			for (var id in Data.Natures) {
+				var nature = Data.Natures[id];
+				options.push('<option value="'+id+'">'+nature.name+'</option>');
+			}
+			$dropdown.append(options.join(''));
+			continue;
+		}
+		if ($dropdown.hasClass("status-select")) {
+			for (var id in Data.Statuses) {
+				var status = Data.Statuses[id];
+				options.push('<option value="'+id+'">'+status.name+'</option>');
+			}
+			$dropdown.append(options.join(''));
+			continue;
+		}
+		if ($dropdown.hasClass("gender-select")) {
+			options = [
+				'<option value="M">'+Display.genderSymbols['m']+'</option>',
+				'<option value="F">'+Display.genderSymbols['f']+'</option>',
+				'<option value="N">'+Display.genderSymbols['n']+'</option>'
+			];
+			$dropdown.append(options.join(''));
+			continue;
+		}
+		if ($dropdown.hasClass("pkm-select")) {
+			// Pokemon are placed in alphabetical order for ease of location.
+			var Pokedex = Data.BattlePokedex;
+			var ids = Object.keys(Pokedex).sort();
+			var customPkms = [];
+			for (var i = 0; i < ids.length; i++) {
+				var id = ids[i];
+				var pkm = Data.BattlePokedex[id];
+				if (!pkm.num || pkm.num < 1) {
+					customPkms.push(id);
+					continue;
+				}
+				options.push('<option value="'+id+'">'+pkm.species+'</option>');
+			}
+			options.push('<optgroup label="Custom Pokemon">');
+			for (var i = 0; i < customPkms.length; i++) {
+				var id = customPkms[i];
+				var pkm = Data.BattlePokedex[id];
+				// Consider <optgroup label="Custom Pokemon"></optgroup>
+				options.push('<option value="'+id+'">'+pkm.species+'</option>');
+			}
+			options.push('</optgroup>');
+			$dropdown.append(options.join(''));
+			continue;
+		}
+	}
+}
+Display.loadSets = function ($side) {
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
+	var pkm = Display.active[$side.attr('id').substr(0,2)];
+	console.log($side.attr('id'));
+	$side.children('.set-select').html(Display.makeSetDropdown(pkm.id));
+}
+Display.addHandlers = function () {};
+

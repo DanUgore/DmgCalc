@@ -22,7 +22,7 @@ function Pokemon(name, set) {
 		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
 	}
 	this.calcStats();
-	this.moveset = (this.set.moveset || this.randomMoveset() || []).slice(0,4).map(toID);
+	this.moveset = (this.set.moveset || []).slice(0,4).map(toID);
 	while (this.moveset.length < 4) this.moveset.push('');
 	if (!this.genderRatio && !this.gender) this.genderRatio = {M:0.5,F:0.5};
 	this.gender = this.gender || this.set.gender || this.randomGender();
@@ -88,7 +88,8 @@ Pokemon.prototype.randomMoveset = function() {
 	for (var i = 0; i < 4; i++) {
 		randSet.push(moves[parseInt(Math.random()*moves.length)]);
 	}
-	return randSet;
+	this.moveset = randSet;
+	return this;
 };
 Pokemon.prototype.resetDetails = function() {
 	var newPoke = new Pokemon(this.id);
@@ -103,7 +104,7 @@ Pokemon.prototype.update = function() { // Recalculate necessary things when int
 	this.hpType = hpTypes[hpTypeIndex];
 	//this.hpPower = 60; Math.floor(parseInt((function(ivs) { var buf = ''; for (var stat in ivs) { buf += ((ivs[stat] & 2) / 2) }; return buf; }(this.ivs), 2) * 40 / 63 + 30)
 };
-Pokemon.randomMoveset = function (pokemon) { // This one is accessible outside the Pokemon object
+Pokemon.makeRandomMoveset = function (pokemon) { // This one is accessible outside the Pokemon object
 	if (!Data.getLearnset) return null;
 	var lset = Data.getLearnset(toID(pokemon));
 	if (!lset) return false;

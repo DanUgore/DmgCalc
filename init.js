@@ -45,12 +45,12 @@ Display.loadDropdowns();
 		function () {
 			$this = $(this);
 			var val = $this.val();
-			if (val === "") return Display.clearAllFields();
 			var $side = $this.parent();
 			pkm = Display.getPokemon($side);
-			if (val === "R") return; // Do stuff here later
+			if (val === "") return Display.showPokemon($side, pkm.resetDetails());
+			if (val === "R") return Display.showPokemon($side, pkm.randomMoveset()); // Do stuff here later
 			set = Data.getSets(pkm.id)[val];
-			Display.showPokemon($side, Display.getPokemon($side).changeSet(set));
+			Display.showPokemon($side, pkm.changeSet(set));
 		}
 	);
 })()

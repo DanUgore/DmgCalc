@@ -53,7 +53,7 @@ Display.changePokemon = function ($side) {
 	if (!($side instanceof jQuery)) return null;
 	if (!$side.val()) return Display.clearAllFields($side.parent());
 	var side = $side.parent().attr('id').substr(0,2);
-	Display.active[side] = new Pokemon($side.val(), (Data.Sets[$side.val()] ? Data.Sets[$side.val()].sets[0] : null));
+	Display.active[side] = new Pokemon($side.val());
 	Display.active[side].side = side;
 	Display.showPokemon(side, Display.active[side]);
 	Display.loadSets(side);
@@ -112,7 +112,7 @@ Display.showPokemon = function ($side, pokemon) {
 		var $row = $side.find('#move-'+i);
 		if (!$row.length) continue;
 		var move = Data.Movedex[pokemon.moveset[i]];
-		if (!move) continue;
+		if (!move) move = {id:''};
 		Display.showMove($row, move.id);
 	}
 	if (pokemon.side) this.active[pokemon.side] = pokemon;
@@ -122,7 +122,7 @@ Display.showMove = function ($moveRow, move) {
 	if (!($moveRow instanceof jQuery)) return null;
 	var move = move.id || move;
 	var move = Data.Movedex[move];
-	if (!move) return false;
+	if (!move) return Display.clearMoveField($moveRow);
 	$moveRow.find(".move-select").val(move.id);
 	$moveRow.find(".type-select").val(move.type);
 	$moveRow.find(".bp-input").val(move.basePower);
@@ -386,7 +386,6 @@ Display.loadSets = function ($side) {
 	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	var pkm = Display.active[$side.attr('id').substr(0,2)];
-	console.log($side.attr('id'));
 	$side.children('.set-select').html(Display.makeSetDropdown(pkm.id));
 }
 Display.addHandlers = function () {};

@@ -45,7 +45,7 @@
 			margin: auto;
 		}
 		.set-select {
-			display: none;
+			/* display: none; */
 		}
 		</style>
 	</head>
@@ -111,9 +111,9 @@
 			</div>
 			<div id="p1-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
 				<h3>P1</h3>
-				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
-				<select id="type1" class="type-select" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">--</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">--</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select"></select><br />
-				<select id="ability" class="ability-select" data-default=""><option value="">--</option></select><select id="item" class="item-select" data-default=""><option value="">--</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
+				<select id="species" class="pkm-select" data-default=""><option value="">(No Pokemon)</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
+				<select id="type1" class="type-select" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">???</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">???</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select" data-default=""><option value="">Blank Set</option></select><br />
+				<select id="ability" class="ability-select" data-default=""><option value="">(No Ability)</option></select><select id="item" class="item-select" data-default=""><option value="">(No Item)</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
 				<table class="stats-table">
 					<thead>
 						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td></tr>
@@ -178,7 +178,7 @@
 						<tr id="move-0">
 							<th>Move 1</th>
 							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
 							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
 							<td><select class="cat-select" disabled data-default="Physical"></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
@@ -187,7 +187,7 @@
 						<tr id="move-1">
 							<th>Move 2</th>
 							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
 							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
 							<td><select class="cat-select" data-default="Physical" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
@@ -196,7 +196,7 @@
 						<tr id="move-2">
 							<th>Move 3</th>
 							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
 							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
 							<td><select class="cat-select" data-default="Physical" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
@@ -205,7 +205,7 @@
 						<tr id="move-3">
 							<th>Move 4</th>
 							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
 							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
 							<td><select class="cat-select" data-default="Physical" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
@@ -216,9 +216,9 @@
 			</div>
 			<div id="p2-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
 				<h3>P2</h3>
-				<select id="species" class="pkm-select" data-default=""><option value="">--</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
-				<select id="type1" class="type-select" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">--</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">--</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select"></select><br />
-				<select id="ability" class="ability-select" data-default=""><option value="">--</option></select><select id="item" class="item-select" data-default=""><option value="">--</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
+				<select id="species" class="pkm-select" data-default=""><option value="">(No Pokemon)</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
+				<select id="type1" class="type-select" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">???</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">???</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select" data-default=""><option value="">Blank Set</option></select><br />
+				<select id="ability" class="ability-select" data-default=""><option value="">(No Ability)</option></select><select id="item" class="item-select" data-default=""><option value="">(No Item)</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
 				<table class="stats-table">
 					<thead>
 						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td></tr>
@@ -283,16 +283,16 @@
 						<tr id="move-0">
 							<th>Move 1</th>
 							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
 							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><select class="cat-select" disabled data-default="Physical"></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
 							<td><input type="checkbox" class="crit-checkbox"></td>
 						</tr>
 						<tr id="move-1">
 							<th>Move 2</th>
 							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
 							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
 							<td><select class="cat-select" data-default="Physical" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
@@ -301,7 +301,7 @@
 						<tr id="move-2">
 							<th>Move 3</th>
 							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
 							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
 							<td><select class="cat-select" data-default="Physical" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>
@@ -310,7 +310,7 @@
 						<tr id="move-3">
 							<th>Move 4</th>
 							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
 							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
 							<td><select class="cat-select" data-default="Physical" disabled></select></td>
 							<td><input type="number" min=1 max=64 class="pp-input"></td>

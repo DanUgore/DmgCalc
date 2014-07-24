@@ -54,7 +54,7 @@ Data.Natures = {
 };
 
 // Data Functions
-Data.getLearnset = function(pokemon) {
+Data.getLearnset = function (pokemon) {
 	if (!Data.Learnsets) return null;
 	if (!Data.Pokedex[pokemon]) return false;
 	if (!Data.Learnsets[pokemon]) {
@@ -63,3 +63,7 @@ Data.getLearnset = function(pokemon) {
 	if (!Data.Learnsets[pokemon].learnset) return false;
 	return Data.Learnsets[pokemon].learnset;
 };
+Data.getSets = function (pokemon) {
+	if (!Data.Sets[pokemon] || !Data.Sets[pokemon]) return false;
+	return Data.Sets[pokemon].sets.length ? Data.Sets[pokemon].sets : [];
+}

@@ -31,8 +31,8 @@ function Pokemon(name, set) {
 	this.hpType = hpTypes[hpTypeIndex];
 	this.hpPower = 60; //Math.floor(parseInt(function() { var buf = ""; for (var stat in statTable) { buf += ''+((this.ivs[stat] & 2) / 2) }; return buf; }, 2) * 40 / 63 + 30)
 	this.status = this.set.status || "";
-	this.currentHP = parseInt(this.set.currentHP || this.stats['hp']);
-	this.happiness = parseInt(this.set.happiness || 255);
+	this.currentHP = parseInt(this.set.currentHP) || this.stats['hp'];
+	this.happiness = parseInt(this.set.happiness) || 255;
 	for (var prop in this.set) if (typeof this[prop] === 'undefined') this[prop] = this.set[prop];
 };
 
@@ -43,13 +43,11 @@ Pokemon.prototype.changeSet = function(set) {
 	this.item = toID(this.set.item || (this.set.items && this.set.items[0]) || "");
 	this.ability = toID(this.set.ability || (this.set.abilities && this.set.abilities[0]) || this.abilities[0]);
 	this.nature = this.set.nature || "Docile";
-	this.level = this.set.level || 100;
+	this.level = parseInt(this.set.level) || 100;
 	var statTable = Data.StatTable;
 	this.ivs = {}; this.evs = {};
-	this.baseStats = this.baseStats || {};
 	this.boosts = this.set.boosts || {};
 	for (var stat in statTable) {
-		this.baseStats[stat] = parseInt(this.baseStats[stat]) || 10;
 		this.ivs[stat] = isNaN(parseInt(this.set.ivs[stat])) ? 31 : parseInt(this.set.ivs[stat]);
 		this.evs[stat] = isNaN(parseInt(this.set.evs[stat])) ? 0 : parseInt(this.set.evs[stat]);
 		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
@@ -61,6 +59,15 @@ Pokemon.prototype.changeSet = function(set) {
 Pokemon.prototype.updateDetails = function(update) {
 	if (!update) return null;
 	$.extend(true, this, update);
+	// Ensure IVs and EVs are numbers.
+	for (var stat in Data.StatTable) {
+		this.ivs[stat] = isNaN(parseInt(this.ivs[stat])) ? 31 : parseInt(this.ivs[stat]);
+		this.evs[stat] = isNaN(parseInt(this.evs[stat])) ? 0 : parseInt(this.evs[stat]);
+		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
+	}
+	this.level = parseInt(this.level) || 100;
+	this.happiness = parseInt(this.happiness) || 255;
+	this.currentHP = parseInt(this.happiness) || this.stats['hp'];
 	this.update();
 	return this;
 };

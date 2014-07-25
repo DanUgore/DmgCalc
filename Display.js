@@ -68,7 +68,8 @@ Display.updatePokemon = function ($side) {
 	if (pkm.id !== $side.find(".pkm-select").val()) pkm = Display.getPokemon($side, true); // Species changed. Make a new Pokemon
 	else pkm = pkm.updateDetails(Display.getSet($side));
 	if (!pkm) return Display.clearAllFields();
-	return Display.showPokemon($side, pkm);
+	Display.showPokemon($side, pkm);
+	Display.updateCalcs();
 }
 Display.changeSet = function ($side, set) {
 	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
@@ -223,6 +224,14 @@ Display.showResult = function ($atkSide, $defSide, moveIndex, damageNumbers) {
 	var $resultBox = $("#"+atkMon.side+"-results > .result-move-"+moveIndex+" > .inner-results-container");
 	$resultBox.children('.results-move-name').text(moveName);
 	$resultBox.children('.results-move-damage').text(range+" "+percentage);
+	return true;
+}
+Display.clearResult = function (side, index) {
+	if (!(side in Display.active)) return null;
+	$resultBox = $('#'+side+'-results > .result-move-'+index+' > .inner-results-container');
+	$resultBox.children('.results-move-name').text('---');
+	$resultBox.children('.results-move-damage').text('0-0 (0-0%)');
+	return true;
 }
 Display.updateCalcs = function () {
 	if (!$p1 && !$p2) return null;
@@ -237,23 +246,27 @@ Display.updateCalcs = function () {
 	for (var i = 0; i < p1active.moveset.length; i++) {
 		if (!p1active.moveset[i]) {
 			p1results.push(false);
+			Display.clearResult('p1', i);
 			continue;
 		}
 		p1results.push(
 			Calc.calcDamageNumbers(p1active, p2active, p1active.moveset[i])/*,  field {} */
 		);
 		if (p1results[i]) Display.showResult(p1active, p2active, i, p1results[i]);
+		else Display.clearResult('p1', i);
 	}
 	// P2
 	for (var i = 0; i < p2active.moveset.length; i++) {
 		if (!p2active.moveset[i]) {
 			p2results.push(false);
+			Display.clearResult('p2', i);
 			continue;
 		}
 		p2results.push(
 			Calc.calcDamageNumbers(p2active, p1active, p2active.moveset[i])/*,  field {} */
 		);
 		if (p2results[i]) Display.showResult(p2active, p1active, i, p2results[i]);
+		else Display.clearResult('p2', i);
 	}
 }
 Display.makeSetDropdown = function (pokemon) {

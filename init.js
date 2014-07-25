@@ -22,21 +22,13 @@ Display.loadDropdowns();
 		".nature-select",
 		".status-select",
 		".ev-input",
-		".iv-input"
+		".iv-input",
+		".move-select"
 	]
 	$(elements.join(', ')).change(
 		function () {
 			// $this = $(this);
 			Display.updatePokemon($(this).parents('.pokemon-pane'));
-		}
-	);
-
-	// Move Handlers
-	$('.move-select').change(
-		function () {
-			$this = $(this);
-			if (!$this.val()) return Display.clearMoveFields($this.parents("tr"));
-			Display.showMove($this.parents("tr"), $this.val());
 		}
 	);
 

@@ -47,10 +47,13 @@ Display.loadDropdowns();
 			var val = $this.val();
 			var $side = $this.parent();
 			pkm = Display.getPokemon($side);
-			if (val === "") return Display.showPokemon($side, pkm.resetDetails());
-			if (val === "R") return Display.showPokemon($side, pkm.randomMoveset()); // Do stuff here later
-			set = Data.getSets(pkm.id)[val];
-			Display.showPokemon($side, pkm.changeSet(set));
+			if (val === "") Display.showPokemon($side, pkm.resetDetails());
+			else if (val === "R") Display.showPokemon($side, pkm.randomMoveset()); // Do stuff here later
+			else {
+				set = Data.getSets(pkm.id)[val];
+				Display.showPokemon($side, pkm.changeSet(set));
+			}
+			Display.updateCalcs();
 		}
 	);
 })()

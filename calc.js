@@ -221,7 +221,6 @@ Calc.getTypeEff = function (oType, dTypes) {
 		damageTaken = this.getFrom('typeEff'+dTypes[j], 'move') || Data.TypeChart[dTypes[j]].damageTaken[oType];
 		eff *= (damageTaken !== 0 ? damageTaken : (ignoreImmunities ? 1 : 0));
 	}
-	console.log('eff: ',eff);
 	return eff;
 }
 

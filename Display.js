@@ -1,7 +1,7 @@
 ﻿// Display Definitions
 Display = {};
 
-Display.genderSymbols = {m:'\u2642',f:'\u2640',n:'\u2205'};
+Display.genderSymbols = {M:'\u2642',F:'\u2640',N:'\u2205'};
 Display.active = { // Caching Pokemon so we don't have to rebuild every time
 	p1: null,
 	p2: null
@@ -38,6 +38,7 @@ Display.clearAllFields = function ($side) {
 	];
 	var $elements = $side.find(classes.join(','));
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
+	Display.loadGenders($side);
 	Display.showPokemon(Display.getPokemon($side, true));
 	return true;
 }
@@ -117,6 +118,7 @@ Display.showPokemon = function ($side, pokemon) {
 		Display.showMove($row, move.id);
 	}
 	if (pokemon.side) this.active[pokemon.side] = pokemon;
+	Display.reloadGenders($side);
 	return true;
 }
 Display.showMove = function ($moveRow, move) {
@@ -361,9 +363,9 @@ Display.loadDropdowns = function () {
 		}
 		if ($dropdown.hasClass("gender-select")) {
 			options = [
-				'<option value="M">'+Display.genderSymbols['m']+'</option>',
-				'<option value="F">'+Display.genderSymbols['f']+'</option>',
-				'<option value="N">'+Display.genderSymbols['n']+'</option>'
+				'<option value="M">'+Display.genderSymbols['M']+'</option>',
+				'<option value="F">'+Display.genderSymbols['F']+'</option>',
+				'<option value="N">'+Display.genderSymbols['N']+'</option>'
 			];
 			$dropdown.append(options.join(''));
 			continue;
@@ -400,6 +402,31 @@ Display.loadSets = function ($side) {
 	if (!($side instanceof jQuery)) return null;
 	var pkm = Display.active[$side.attr('id').substr(0,2)];
 	$side.children('.set-select').html(Display.makeSetDropdown(pkm.id));
+}
+Display.reloadGenders = function ($side) {
+	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
+	var pkm = Display.active[$side.attr('id').substr(0,2)];
+	var options;
+	if (pkm.genderRatio) {
+			options = [
+				'<option value="M">'+Display.genderSymbols['M']+'</option>',
+				'<option value="F">'+Display.genderSymbols['F']+'</option>',
+			];
+	}
+	else if (pkm.gender) {
+			options = [
+				'<option value="'+pkm.gender+'">'+Display.genderSymbols[pkm.gender]+'</option>'
+			];
+	}
+	else {
+		options = [
+			'<option value="M">'+Display.genderSymbols['M']+'</option>',
+			'<option value="F">'+Display.genderSymbols['F']+'</option>',
+			'<option value="N">'+Display.genderSymbols['N']+'</option>'
+		];
+	}
+	$side.children('.gender-select').html(options.join(''));
 }
 Display.addHandlers = function () {
 	$('.pkm-select').change(

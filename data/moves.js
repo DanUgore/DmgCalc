@@ -5194,6 +5194,16 @@ exports.BattleMovedex = {
 		pp: 20,
 		priority: 0,
 		isContact: true,
+		handles: {
+			basePower: function (pokemon, target) {
+				if (this.defender.weightkg.weightkg >= 200) return 120;
+				if (this.defender.weightkg.weightkg >= 100) return 100;
+				if (this.defender.weightkg.weightkg >= 50) return 80;
+				if (this.defender.weightkg.weightkg >= 25) return 60;
+				if (this.defender.weightkg.weightkg >= 10) return 40;
+				return 20;
+			}
+		},
 		secondary: false,
 		target: "normal",
 		type: "Grass"
@@ -7595,6 +7605,16 @@ exports.BattleMovedex = {
 		pp: 20,
 		priority: 0,
 		isContact: true,
+		handles: {
+			basePower: function (pokemon, target) {
+				if (this.defender.weightkg.weightkg >= 200) return 120;
+				if (this.defender.weightkg.weightkg >= 100) return 100;
+				if (this.defender.weightkg.weightkg >= 50) return 80;
+				if (this.defender.weightkg.weightkg >= 25) return 60;
+				if (this.defender.weightkg.weightkg >= 10) return 40;
+				return 20;
+			}
+		},
 		secondary: false,
 		target: "normal",
 		type: "Fighting"

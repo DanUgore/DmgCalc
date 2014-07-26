@@ -170,7 +170,7 @@ Calc.get = function (handle, returnArray) {
 		}
 	}
 	returnValues.sort(function(a,b){
-		return a.priority - b.priority;
+		return b.priority - a.priority;
 	});
 	if (returnArray) return returnValues.map(function(o){return o.value;});
 	if (!returnValues.length) return false;

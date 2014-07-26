@@ -54,7 +54,8 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	// defendStat
 	var damage = 0;
 	
-	this.move.basePower = this.get('basePower') || move.basePower;
+	this.move.basePower = this.getFrom('basePower', 'move');
+	if (!this.move.basePower) return;
 	var bpMod = this.getMod('bpMod') || 0x1000;
 	this.move.basePower = this.modify(this.move.basePower, bpMod);
 	

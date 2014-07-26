@@ -591,7 +591,7 @@ exports.BattleAbilities = {
 					if (this.move.type === 'Fire') return 0x1400;
 				}
 			}
-		}
+		},
 		id: "dryskin",
 		name: "Dry Skin",
 		rating: 3.5,
@@ -684,7 +684,7 @@ exports.BattleAbilities = {
 					if (this.attacker.status === 'brn' && this.move.category === 'Special') return 0x1800;
 				}
 			}
-		}
+		},
 		id: "flareboost",
 		name: "Flare Boost",
 		rating: 3,
@@ -1012,7 +1012,7 @@ exports.BattleAbilities = {
 					if (this.move.type === 'Fire') return 0x800;
 				}
 			}
-		}
+		},
 		id: "heatproof",
 		name: "Heatproof",
 		rating: 2.5,
@@ -1259,7 +1259,8 @@ exports.BattleAbilities = {
 				value: function () {
 					if (this.move.isPunchAttack) return 0x1333;
 				}
-		}
+			}
+		},
 		id: "ironfist",
 		name: "Iron Fist",
 		rating: 3,
@@ -1531,6 +1532,14 @@ exports.BattleAbilities = {
 		onBasePower: function (basePower, attacker, defender, move) {
 			if (move.isPulseMove) {
 				return this.chainModify(1.5);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.move.isPulseMove) return 0x1800;
+				}
 			}
 		},
 		id: "megalauncher",
@@ -1894,6 +1903,17 @@ exports.BattleAbilities = {
 				return this.chainModify([0x14CD, 0x1000]);
 			}
 		},
+		handles: {
+			moveType: function () {
+				if (this.move.type === "Normal") {
+					this.args[this.self.id] = true;
+					return "Fairy";
+				}
+			},
+			bpModAttack: function () {
+				if (this.args[this.self.id]) return 0x14CD;
+			}
+		},
 		id: "pixilate",
 		name: "Pixilate",
 		rating: 3,
@@ -2100,6 +2120,17 @@ exports.BattleAbilities = {
 				return this.chainModify([0x14CD, 0x1000]);
 			}
 		},
+		handles: {
+			moveType: function () {
+				if (this.move.type === "Normal") {
+					this.args[this.self.id] = true;
+					return "Ice";
+				}
+			},
+			bpModAttack: function () {
+				if (this.args[this.self.id]) return 0x14CD;
+			}
+		},
 		id: "refrigerate",
 		name: "Refrigerate",
 		rating: 3,
@@ -2141,7 +2172,7 @@ exports.BattleAbilities = {
 					return 0xC00;
 				}
 			}
-		}
+		},
 		id: "rivalry",
 		name: "Rivalry",
 		rating: 0.5,
@@ -2202,7 +2233,7 @@ exports.BattleAbilities = {
 					if (this.move.type in {Rock:1,Ground:2,Steel:3}) return 0x14CD;
 				}
 			}
-		}
+		},
 		id: "sandforce",
 		name: "Sand Force",
 		rating: 2,
@@ -2357,7 +2388,7 @@ exports.BattleAbilities = {
 					if (this.move.secondary || this.move.secondaries) return 0x14CD;
 				}
 			}
-		}
+		},
 		id: "sheerforce",
 		name: "Sheer Force",
 		rating: 4,
@@ -2669,6 +2700,11 @@ exports.BattleAbilities = {
 				return this.chainModify(1.5);
 			}
 		},
+		handles: {
+			bpModAttack: function () {
+				if (this.move.isBiteAttack) return 0x1800;
+			}
+		},
 		id: "strongjaw",
 		name: "Strong Jaw",
 		rating: 3,
@@ -2827,7 +2863,7 @@ exports.BattleAbilities = {
 					if (this.move.basePower <= 60) return 0x1800;
 				}
 			}
-		}
+		},
 		id: "technician",
 		name: "Technician",
 		rating: 4,
@@ -2942,7 +2978,7 @@ exports.BattleAbilities = {
 					if (this.attacker.status in {psn:1,tox:1} && this.move.category === 'Physical') return 0x1800;
 				}
 			}
-		}
+		},
 		id: "toxicboost",
 		name: "Toxic Boost",
 		rating: 3,
@@ -2955,6 +2991,14 @@ exports.BattleAbilities = {
 		onBasePower: function (basePower, attacker, defender, move) {
 			if (move.isContact) {
 				return this.chainModify(1.33);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.move.isContact) return 0x1547;
+				}
 			}
 		},
 		id: "toughclaws",

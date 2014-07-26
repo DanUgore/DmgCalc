@@ -56,6 +56,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.attacker.species === 'Dialga' && this.move.type in {Dragon:1,Steel:2}) return 0x1333;
+				}
+			}
+		},
 		num: 135,
 		gen: 4,
 		desc: "If holder is a Dialga, its Steel- and Dragon-type attacks have 1.2x power."
@@ -359,6 +367,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Fighting') return 0x1333;
+				}
+			}
+		},
 		num: 241,
 		gen: 2,
 		desc: "Holder's Fighting-type attacks have 1.2x power."
@@ -394,6 +410,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move && move.type === 'Dark') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Dark') return 0x1333;
+				}
 			}
 		},
 		num: 240,
@@ -472,6 +496,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Bug') return 0x1800;
+				}
+			}
+		},
 		num: 558,
 		gen: 5,
 		desc: "Holder's first successful Bug-type attack will have 1.3x power. Single use."
@@ -521,6 +553,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move && move.type === 'Fire') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Fire') return 0x1333;
+				}
 			}
 		},
 		num: 249,
@@ -895,6 +935,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Dark') return 0x1800;
+				}
+			}
+		},
 		num: 562,
 		gen: 5,
 		desc: "Holder's first successful Dark-type attack will have 1.3x power. Single use."
@@ -1001,6 +1049,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Dragon') return 0x1333;
+				}
+			}
+		},
 		num: 311,
 		gen: 4,
 		desc: "Holder's Dragon-type attacks have 1.2x power. Judgment is Dragon-type."
@@ -1016,6 +1072,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move && move.type === 'Dragon') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Dragon') return 0x1333;
+				}
 			}
 		},
 		num: 250,
@@ -1037,6 +1101,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Dragon') return 0x1800;
+				}
+			}
+		},
 		num: 561,
 		gen: 5,
 		desc: "Holder's first successful Dragon-type attack will have 1.3x power. Single use."
@@ -1053,6 +1125,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move && move.type === 'Dark') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Dark') return 0x1333;
+				}
 			}
 		},
 		num: 312,
@@ -1100,6 +1180,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move && move.type === 'Ground') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ground') return 0x1333;
+				}
 			}
 		},
 		num: 305,
@@ -1152,6 +1240,14 @@ exports.BattleItems = {
 				if (source.useItem()) {
 					this.add('-enditem', source, 'Electric Gem', '[from] gem', '[move] ' + move.name);
 					source.addVolatile('gem');
+				}
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Electric') return 0x1800;
 				}
 			}
 		},
@@ -1253,6 +1349,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Fairy') return 0x1800;
+				}
+			}
+		},
 		num: -6,
 		gen: 6,
 		desc: "Holder's first successful Fairy-type attack will have 1.3x power. Single use."
@@ -1323,6 +1427,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Fire') return 0x1800;
+				}
+			}
+		},
 		num: 548,
 		gen: 5,
 		desc: "Holder's first successful Fire-type attack will have 1.3x power. Single use."
@@ -1339,6 +1451,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move && move.type === 'Fighting') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Fighting') return 0x1333;
+				}
 			}
 		},
 		num: 303,
@@ -1376,6 +1496,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Fire') return 0x1333;
+				}
+			}
+		},
 		num: 298,
 		gen: 4,
 		desc: "Holder's Fire-type attacks have 1.2x power. Judgment is Fire-type."
@@ -1406,6 +1534,14 @@ exports.BattleItems = {
 				if (source.useItem()) {
 					this.add('-enditem', source, 'Flying Gem', '[from] gem', '[move] ' + move.name);
 					source.addVolatile('gem');
+				}
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Flying') return 0x1800;
 				}
 			}
 		},
@@ -1550,6 +1686,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ghost') return 0x1800;
+				}
+			}
+		},
 		num: 560,
 		gen: 5,
 		desc: "Holder's first successful Ghost-type attack will have 1.3x power. Single use."
@@ -1566,6 +1710,14 @@ exports.BattleItems = {
 				if (source.useItem()) {
 					this.add('-enditem', source, 'Grass Gem', '[from] gem', '[move] ' + move.name);
 					source.addVolatile('gem');
+				}
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Grass') return 0x1800;
 				}
 			}
 		},
@@ -1625,6 +1777,14 @@ exports.BattleItems = {
 			}
 			return true;
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () { // 487 - Giratina
+					if (this.attacker.num === 487 && this.move.type in {Dragon:1,Ghost:2}) return 0x1333;
+				}
+			}
+		},
 		num: 112,
 		gen: 4,
 		desc: "If holder is a Giratina, its Ghost- and Dragon-type attacks have 1.2x power."
@@ -1641,6 +1801,14 @@ exports.BattleItems = {
 				if (source.useItem()) {
 					this.add('-enditem', source, 'Ground Gem', '[from] gem', '[move] ' + move.name);
 					source.addVolatile('gem');
+				}
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ground') return 0x1800;
 				}
 			}
 		},
@@ -1695,6 +1863,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move && move.type === 'Rock') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Rock') return 0x1333;
+				}
 			}
 		},
 		num: 238,
@@ -1819,6 +1995,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ice') return 0x1800;
+				}
+			}
+		},
 		num: 552,
 		gen: 5,
 		desc: "Holder's first successful Ice-type attack will have 1.3x power. Single use."
@@ -1835,6 +2019,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Ice') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ice') return 0x1333;
+				}
 			}
 		},
 		num: 302,
@@ -1864,6 +2056,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Bug') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Bug') return 0x1333;
+				}
 			}
 		},
 		num: 308,
@@ -1900,6 +2100,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Steel') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Steel') return 0x1333;
+				}
 			}
 		},
 		num: 313,
@@ -2369,6 +2577,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.attacker.species === 'Palkia' && this.move.type in {Dragon:1,Water:2}) return 0x1333;
+				}
+			}
+		},
 		num: 136,
 		gen: 4,
 		desc: "If holder is a Palkia, its Water- and Dragon-type attacks have 1.2x power."
@@ -2406,6 +2622,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Electric') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Electric') return 0x1333;
+				}
 			}
 		},
 		num: 242,
@@ -2529,6 +2753,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Grass') return 0x1333;
+				}
+			}
+		},
 		num: 301,
 		gen: 4,
 		desc: "Holder's Grass-type attacks have 1.2x power. Judgment is Grass-type."
@@ -2592,6 +2824,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Steel') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Steek') return 0x1333;
+				}
 			}
 		},
 		num: 233,
@@ -2722,6 +2962,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Psychic') return 0x1333;
+				}
+			}
+		},
 		num: 307,
 		gen: 4,
 		desc: "Holder's Psychic-type attacks have 1.2x power. Judgment is Psychic-type."
@@ -2737,6 +2985,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Grass') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Grass') return 0x1333;
+				}
 			}
 		},
 		num: 239,
@@ -2764,6 +3020,14 @@ exports.BattleItems = {
 				return this.chainModify(1.1);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.category === 'Physical') return 0x1199;
+				}
+			}
+		},
 		num: 266,
 		gen: 4,
 		desc: "Holder's physical attacks have 1.1x power."
@@ -2779,6 +3043,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Water') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Water') return 0x1333;
+				}
 			}
 		},
 		num: 243,
@@ -2827,6 +3099,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ice') return 0x1333;
+				}
+			}
+		},
 		num: 246,
 		gen: 2,
 		desc: "Holder's Ice-type attacks have 1.2x power."
@@ -2855,6 +3135,14 @@ exports.BattleItems = {
 				if (source.useItem()) {
 					this.add('-enditem', source, 'Normal Gem', '[from] gem', '[move] ' + move.name);
 					source.addVolatile('gem');
+				}
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Normal') return 0x1800;
 				}
 			}
 		},
@@ -2895,6 +3183,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Psychic') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Psychic') return 0x1333;
+				}
 			}
 		},
 		num: 314,
@@ -3104,6 +3400,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Fairy') return 0x1333;
+				}
+			}
+		},
 		num: -6,
 		gen: 6,
 		desc: "Holder's Fairy-type attacks have 1.2x power. Judgment is Fairy-type."
@@ -3133,6 +3437,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Poison') return 0x1333;
+				}
+			}
+		},
 		num: 245,
 		gen: 2,
 		desc: "Holder's Poison-type attacks have 1.2x power."
@@ -3149,6 +3461,14 @@ exports.BattleItems = {
 				if (source.useItem()) {
 					this.add('-enditem', source, 'Poison Gem', '[from] gem', '[move] ' + move.name);
 					source.addVolatile('gem');
+				}
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Poison') return 0x1800;
 				}
 			}
 		},
@@ -3214,6 +3534,14 @@ exports.BattleItems = {
 				if (source.useItem()) {
 					this.add('-enditem', source, 'Psychic Gem', '[from] gem', '[move] ' + move.name);
 					source.addVolatile('gem');
+				}
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Psychic') return 0x1800;
 				}
 			}
 		},
@@ -3453,6 +3781,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Rock') return 0x1800;
+				}
+			}
+		},
 		num: 559,
 		gen: 5,
 		desc: "Holder's first successful Rock-type attack will have 1.3x power. Single use."
@@ -3468,6 +3804,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Rock') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Rock') return 0x1333;
+				}
 			}
 		},
 		num: 315,
@@ -3513,6 +3857,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Grass') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Grass') return 0x1333;
+				}
 			}
 		},
 		num: 318,
@@ -3643,6 +3995,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Water') return 0x1333;
+				}
+			}
+		},
 		num: 254,
 		gen: 3,
 		desc: "Holder's Water-type attacks have 1.2x power."
@@ -3658,6 +4018,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move && move.type === 'Flying') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Flying') return 0x1333;
+				}
 			}
 		},
 		num: 244,
@@ -3748,6 +4116,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Normal') return 0x1333;
+				}
+			}
+		},
 		num: 251,
 		gen: 3,
 		desc: "Holder's Normal-type attacks have 1.2x power."
@@ -3763,6 +4139,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Bug') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Bug') return 0x1333;
+				}
 			}
 		},
 		num: 222,
@@ -3815,6 +4199,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Flying') return 0x1333;
+				}
+			}
+		},
 		num: 306,
 		gen: 4,
 		desc: "Holder's Flying-type attacks have 1.2x power. Judgment is Flying-type."
@@ -3859,6 +4251,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ground') return 0x1333;
+				}
+			}
+		},
 		num: 237,
 		gen: 2,
 		desc: "Holder's Ground-type attacks have 1.2x power."
@@ -3900,6 +4300,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ghost') return 0x1333;
+				}
+			}
+		},
 		num: 247,
 		gen: 2,
 		desc: "Holder's Ghost-type attacks have 1.2x power."
@@ -3931,6 +4339,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Water') return 0x1333;
+				}
+			}
+		},
 		num: 299,
 		gen: 4,
 		desc: "Holder's Water-type attacks have 1.2x power. Judgment is Water-type."
@@ -3947,6 +4363,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Ghost') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Ghost') return 0x1333;
+				}
 			}
 		},
 		num: 310,
@@ -4008,6 +4432,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Steel') return 0x1800;
+				}
+			}
+		},
 		num: 563,
 		gen: 5,
 		desc: "Holder's first successful Steel-type attack will have 1.3x power. Single use."
@@ -4063,6 +4495,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Rock') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Rock') return 0x1333;
+				}
 			}
 		},
 		num: 309,
@@ -4160,6 +4600,14 @@ exports.BattleItems = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Poison') return 0x1333;
+				}
+			}
+		},
 		num: 304,
 		gen: 4,
 		desc: "Holder's Poison-type attacks have 1.2x power. Judgment is Poison-type."
@@ -4175,6 +4623,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Psychic') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Psychic') return 0x1333;
+				}
 			}
 		},
 		num: 248,
@@ -4254,6 +4710,14 @@ exports.BattleItems = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Water') return 0x1800;
+				}
+			}
+		},
 		num: 549,
 		gen: 5,
 		desc: "Holder's first successful Water-type attack will have 1.3x power. Single use."
@@ -4282,6 +4746,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Water') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Water') return 0x1333;
+				}
 			}
 		},
 		num: 317,
@@ -4408,6 +4880,14 @@ exports.BattleItems = {
 				return this.chainModify(1.1);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.category === 'Special') return 0x1199;
+				}
+			}
+		},
 		num: 267,
 		gen: 4,
 		desc: "Holder's special attacks have 1.1x power."
@@ -4446,6 +4926,14 @@ exports.BattleItems = {
 		onBasePower: function (basePower, user, target, move) {
 			if (move.type === 'Electric') {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.type === 'Electric') return 0x1333;
+				}
 			}
 		},
 		num: 300,

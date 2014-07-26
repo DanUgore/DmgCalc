@@ -584,6 +584,14 @@ exports.BattleAbilities = {
 				this.damage(target.maxhp / 8);
 			}
 		},
+		handles: {
+			bpModDefend: {
+				priority: 7,
+				value: function () {
+					if (this.move.type === 'Fire') return 0x1400;
+				}
+			}
+		}
 		id: "dryskin",
 		name: "Dry Skin",
 		rating: 3.5,
@@ -669,6 +677,14 @@ exports.BattleAbilities = {
 				return this.chainModify(1.5);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.attacker.status === 'brn' && this.move.category === 'Special') return 0x1800;
+				}
+			}
+		}
 		id: "flareboost",
 		name: "Flare Boost",
 		rating: 3,
@@ -989,6 +1005,14 @@ exports.BattleAbilities = {
 				return damage / 2;
 			}
 		},
+		handles: {
+			bpModDefend: {
+				priority: 7,
+				value: function () {
+					if (this.move.type === 'Fire') return 0x800;
+				}
+			}
+		}
 		id: "heatproof",
 		name: "Heatproof",
 		rating: 2.5,
@@ -1229,6 +1253,13 @@ exports.BattleAbilities = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.move.isPunchAttack) return 0x1333;
+				}
+		}
 		id: "ironfist",
 		name: "Iron Fist",
 		rating: 3,
@@ -2040,6 +2071,14 @@ exports.BattleAbilities = {
 				return this.chainModify(1.2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.move.recoil || this.move.hasCustomRecoil) return 0x1333;
+				}
+			}
+		},
 		id: "reckless",
 		name: "Reckless",
 		rating: 3,
@@ -2092,6 +2131,17 @@ exports.BattleAbilities = {
 				}
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (!this.attacker.gender || this.attacker.gender === 'N') return;
+					if (!this.defender.gender || this.defender.gender === 'N') return;
+					if (this.attacker.gender === this.defender.gender) return 0x1400;
+					return 0xC00;
+				}
+			}
+		}
 		id: "rivalry",
 		name: "Rivalry",
 		rating: 0.5,
@@ -2145,6 +2195,14 @@ exports.BattleAbilities = {
 		onImmunity: function (type, pokemon) {
 			if (type === 'sandstorm') return false;
 		},
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.move.type in {Rock:1,Ground:2,Steel:3}) return 0x14CD;
+				}
+			}
+		}
 		id: "sandforce",
 		name: "Sand Force",
 		rating: 2,
@@ -2292,6 +2350,14 @@ exports.BattleAbilities = {
 				return this.chainModify([0x14CD, 0x1000]); // The Sheer Force modifier is slightly higher than the normal 1.3 (0x14CC)
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 6,
+				value: function () {
+					if (this.move.secondary || this.move.secondaries) return 0x14CD;
+				}
+			}
+		}
 		id: "sheerforce",
 		name: "Sheer Force",
 		rating: 4,
@@ -2754,13 +2820,14 @@ exports.BattleAbilities = {
 	"technician": {
 		desc: "When this Pokemon uses an attack that has 60 Base Power or less (including Struggle), the move's Base Power receives a 50% boost. For example, a move with 60 Base Power effectively becomes a move with 90 Base Power.",
 		shortDesc: "This Pokemon's attacks of 60 Base Power or less do 1.5x damage. Includes Struggle.",
-		onBasePowerPriority: 8,
-		onBasePower: function (basePower, attacker, defender, move) {
-			if (basePower <= 60) {
-				this.debug('Technician boost');
-				return this.chainModify(1.5);
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.move.basePower <= 60) return 0x1800;
+				}
 			}
-		},
+		}
 		id: "technician",
 		name: "Technician",
 		rating: 4,
@@ -2868,6 +2935,14 @@ exports.BattleAbilities = {
 				return this.chainModify(1.5);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.attacker.status in {psn:1,tox:1} && this.move.category === 'Physical') return 0x1800;
+				}
+			}
+		}
 		id: "toxicboost",
 		name: "Toxic Boost",
 		rating: 3,

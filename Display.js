@@ -278,7 +278,8 @@ Display.makeSetDropdown = function (pokemon) {
 	var options = ['<option value="">Blank Set</option>'];
 	for (var i = 0, set, tier; i < sets.length; i++) {
 		set = sets[i];
-		tier = set.tier ? (Data.Tiers[set.tier].shortName || set.tier) : '';
+		tier = set.tier || '';
+		if (Data.Tiers[set.tier]) tier = Data.Tiers[set.tier].shortName || tier;
 		options.push('<option value='+i+'>'+tier+': '+(set.name || 'Set '+i)+'</option>');
 	}
 	options.push('<option value="R">Random Moves</option>');
@@ -438,6 +439,8 @@ Display.addHandlers = function () {
 		".level-input",
 		".happiness-input",
 		".gender-select",
+		".ability-select",
+		".item-select",
 		".nature-select",
 		".status-select",
 		".ev-input",

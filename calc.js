@@ -52,8 +52,12 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	// defendStat
 	var damage = 0;
 	
+	var basePower = this.get('basePower') || move.basePower;
+	var bpMod = this.getMod('bpMod') || 0x1000;
+	basePower = this.modify(basePower, bpMod);
+	
 	// Base Damage
-	baseDamage = (Math.floor(Math.floor(Math.floor(2 * attacker.level / 5 + 2) * move.basePower * attackStat / defendStat) / 50) + 2);
+	baseDamage = (Math.floor(Math.floor(Math.floor(2 * attacker.level / 5 + 2) * basePower * attackStat / defendStat) / 50) + 2);
 	damage = baseDamage;
 	
 	// Spread?
@@ -63,7 +67,9 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	// TODO
 	
 	// Crit?
-	damage = (move.crit ? this.modify(damage, 0x1800) : damage);
+	var critMod = this.get('critMod') || 0x1800;
+	var crit = crit || false;
+	if (crit) this.modify(damage, critMod);
 	
 	// Random Factor Begins To Apply Here
 	// Store other variables for calculations in loop
@@ -73,7 +79,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	for (var i = 0; i < attacker.types.length && !hasSTAB; i++) {
 		if (this.move.type === attacker.types[i]) hasSTAB = true;
 	}
-	var stabMod = 0x1800;
+	var stabMod = this.get('stabMod') || 0x1800;
 	
 	// Type Effectiveness
 	// var typeEff = 1;
@@ -85,6 +91,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	
 	// Final Mods
 	// TODO
+	var finalMod = this.getMod('finalMod') || 0x1000; console.log()
 	
 	// Loop through damage rolls
 	var damageNumbers = [];
@@ -94,6 +101,8 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 		rolledDamage = Math.floor(rolledDamage * typeEff);
 		if (burnEffect) rolledDamage = Math.floor(rolledDamage/2);
 		// Final Modifier
+		rolledDamage = this.modify(rolledDamage, finalMod);
+		if (rolledDamage < 1) rolledDamage = 1;
 		damageNumbers.push(rolledDamage);
 	}
 	// done calcing
@@ -137,50 +146,38 @@ Calc.compareTypes = function (oType, dType, ignoreImmunities) {
 	}
 }
 
-/* Calc.get() - returns 
+/* Calc.get() - returns the highest priority value or an array of values.
  * Calc.get() is a function that checks the relevant variables in a battle
  * that could affect the part of damage calculation passed to the function.
- * For Example: Calc.get('finalMod') returns the chained final modifier.
+ * Uses Calc.getFrom().
 */
 
 Calc.get = function (handle, returnArray) {
 	if (!this.calcing) return null;
 	handle = handle || '';
-	if (!handle) return null;
-	var returnValues = [];
-	for (var obj in this.relevantObjs) {
-		if (!this[obj]) {
-			console.log('Could not find this.'+obj);
-			continue;
-		}
-		if (!this[obj]['handles'] || !this[obj]['handles'][handle]) continue;
-		var returnValue = {};
-		this.self = this[obj];
-		switch (typeof this[obj]['handles'][handle]) {
-			case 'function':
-				returnValue.value = this[obj]['handles'][handle].call(this);
-				if (typeof returnValue.value === 'object') returnValue = $.extend({}, returnValue, returnValue.value);
-				break;
-			case 'object':
-				returnValue = $.extend(returnValue, this[obj]['handles'][handle]); break;
-			default: returnValue.value = this[obj]['handles'][handle];
-		}
-		if (typeof returnValue.value === 'undefined') continue;
-		returnValue.priority = returnValue.priority || 0;
-		returnValue.source = this[obj];
-		returnValues.push(returnValue);
+	if (!handle) return console.log('Blank Handle') || null;
+	returnValues = [];
+	var sides = {
+		attack: "Attack",
+		defend: "Defend"
 	}
-	if (this.self) delete this.self;
-	//console.log(returnValues);
+	for (obj in this.relevantObjs) {
+		var value = this.getFrom(handle,obj,true);
+		if (value !== undefined) returnValues.push(value);
+		if (obj.substr(0,6) in sides) {
+			value = this.getFrom(handle+sides[obj.substr(0,6)], obj, true);
+			if (value !== undefined) returnValues.push(value);
+		}
+	}
 	returnValues.sort(function(a,b){
 		return a.priority - b.priority;
 	});
-	if (returnArray) return returnValues;
+	if (returnArray) return returnValues.map(function(o){return o.value;});
 	if (!returnValues.length) return false;
 	return returnValues[0].value;
 };
 
-Calc.getFrom = function (handle, fromObj) {
+Calc.getFrom = function (handle, fromObj, returnObj) {
 	if (!this.calcing) return null;
 	handle = handle || '';
 	fromObj = fromObj || '';
@@ -190,21 +187,25 @@ Calc.getFrom = function (handle, fromObj) {
 		console.log('Could not find this.'+fromObj);
 		return false;
 	}
+	// console.log('Running',handle,'on',fromObj);
 	if (!this[fromObj]['handles'] || !this[fromObj]['handles'][handle]) return false;
 	var returnValue = {};
 	this.self = this[fromObj];
 	switch (typeof this[fromObj]['handles'][handle]) {
 		case 'function':
 			returnValue.value = this[fromObj]['handles'][handle].call(this);
-			if (typeof returnValue.value === 'object') returnValue = $.extend({}, returnValue, returnValue.value);
+			if (typeof returnValue.value === 'object') returnValue = $.extend(returnValue, returnValue.value);
 			break;
 		case 'object':
-			returnValue = $.extend(returnValue, this[fromObj]['handles'][handle]); break;
+			returnValue = $.extend(returnValue, this[fromObj]['handles'][handle]);
+			if (typeof returnValue.value === 'function') returnValue.value = returnValue.value.call(this);
+			break;
 		default: returnValue.value = this[fromObj]['handles'][handle];
 	}
 	if (this.self) delete this.self;
 	if (typeof returnValue.value === 'undefined') return false;
 	returnValue.source = this[fromObj];
+	if (returnObj) return returnValue;
 	return returnValue.value;
 };
 
@@ -222,7 +223,17 @@ Calc.getTypeEff = function (oType, dTypes) {
 		eff *= (damageTaken !== 0 ? damageTaken : (ignoreImmunities ? 1 : 0));
 	}
 	return eff;
-}
+};
+
+Calc.getMod = function (modName) { // Responsible for chaining modifiers as well
+	modName = modName || '';
+	modifiers = this.get(modName, true); // Get an array of modifiers
+	var totalMod = 0x1000;
+	for (var i = 0; i < modifiers.length; i++) {
+		totalMod = this.chainModifiers(totalMod, modifiers[i]);
+	}
+	return totalMod;
+};
 
 Calc.moveClone = function (move) {
 	if (!move) return {};
@@ -247,3 +258,46 @@ Calc.abilityClone = function (ability) {
 	// Return Simple clone for now
 	return $.extend(true, {}, ability);
 };
+
+/*
+Calc.get = function (handle, returnArray) { // bool returnArray - if true, return array of values
+	if (!this.calcing) return null;
+	handle = handle || '';
+	if (!handle) return null;
+	var returnValues = [];
+	for (var obj in this.relevantObjs) {
+		if (!this[obj]) {
+			console.log('Could not find this.'+obj);
+			continue;
+		}
+		if (!this[obj]['handles'] || !this[obj]['handles'][handle]) continue;
+		var returnValue = {};
+		this.self = this[obj];
+		switch (typeof this[obj]['handles'][handle]) {
+			case 'function':
+				returnValue.value = this[obj]['handles'][handle].call(this);
+				if (typeof returnValue.value === 'object') returnValue = $.extend({}, returnValue, returnValue.value);
+				break;
+			case 'object':
+				returnValue = $.extend(returnValue, this[obj]['handles'][handle]);
+				if (typeof returnValue.value === 'function') returnValue.value = returnValue.value.call(this);
+				break;
+			default: returnValue.value = this[obj]['handles'][handle];
+		}
+		if (typeof returnValue.value === 'undefined') continue;
+		returnValue.priority = returnValue.priority || 0;
+		returnValue.source = this[obj];
+		returnValues.push(returnValue);
+		if () {
+		
+		}
+	}
+	if (this.self) delete this.self;
+	//console.log(returnValues);
+	returnValues.sort(function(a,b){
+		return a.priority - b.priority;
+	});
+	if (returnArray) return returnValues.map(function(o){return o.value;});
+	if (!returnValues.length) return false;
+	return returnValues[0].value;
+};*/

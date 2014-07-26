@@ -59,7 +59,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	this.move.basePower = this.modify(this.move.basePower, bpMod);
 	
 	// Base Damage
-	baseDamage = (Math.floor(Math.floor(Math.floor(2 * attacker.level / 5 + 2) * basePower * attackStat / defendStat) / 50) + 2);
+	baseDamage = (Math.floor(Math.floor(Math.floor(2 * attacker.level / 5 + 2) * this.move.basePower * attackStat / defendStat) / 50) + 2);
 	damage = baseDamage;
 	
 	// Spread?

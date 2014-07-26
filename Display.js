@@ -216,11 +216,11 @@ Display.showResult = function ($atkSide, $defSide, moveIndex, damageNumbers) {
 		else return null;
 	}
 	atkMon = atkMon || Display.getPokemon($atkSide);
-	defMon = atkMon || Display.getPokemon($defSide);
+	defMon = defMon || Display.getPokemon($defSide);
 	moveIndex = parseInt(moveIndex);
 	if (isNaN(moveIndex)) return false;
 	var moveName = ( atkMon === $atkSide ? ( Data.Movedex[atkMon.moveset[moveIndex]] ? Data.Movedex[atkMon.moveset[moveIndex]].name : atkMon.moveset[moveIndex] ) : ( Display.getMove($atkSide.find('#move-'+moveIndex)) ? Display.getMove($atkSide.find('#move-'+moveIndex)).name : "Unnamed Move" ) );
-	var percentage = "(" + (Math.floor(damageNumbers[0]*1000/defMon.stats['hp'])/10) + "-" + (Math.floor(damageNumbers[15]*1000/defMon.stats['hp'])/10) + "%)";
+	var percentage = "(" + (Math.round(damageNumbers[0]*1000/defMon.stats['hp'])/10) + "-" + (Math.round(damageNumbers[15]*1000/defMon.stats['hp'])/10) + "%)";
 	var range = ""+damageNumbers[0]+"-"+damageNumbers[15];
 	var $resultBox = $("#"+atkMon.side+"-results > .result-move-"+moveIndex+" > .inner-results-container");
 	$resultBox.children('.results-move-name').text(moveName);

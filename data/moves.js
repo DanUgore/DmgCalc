@@ -1316,6 +1316,14 @@ exports.BattleMovedex = {
 				return this.chainModify(2);
 			}
 		},
+		handles: {
+			bpModAttack: {
+				priority: 4,
+				value: function () {
+					if (this.defender.currentHP * 2 < this.defender.stats['hp']) return 0x2000;
+				}
+			}
+		},
 		secondary: false,
 		target: "normal",
 		type: "Water"
@@ -3683,6 +3691,14 @@ exports.BattleMovedex = {
 		onBasePower: function (basePower, pokemon) {
 			if (pokemon.status && pokemon.status !== 'slp') {
 				return this.chainModify(2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 4,
+				value: function () {
+					if (this.attacker.status in {par:1,brn:2,psn:3,tox:4}) return 0x2000;
+				}
 			}
 		},
 		secondary: false,
@@ -14422,6 +14438,14 @@ exports.BattleMovedex = {
 		onBasePower: function (basePower, pokemon, target) {
 			if (target.status === 'psn' || target.status === 'tox') {
 				return this.chainModify(2);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 4,
+				value: function () {
+					if (this.defender.status in {psn:3,tox:4}) return 0x2000;
+				}
 			}
 		},
 		secondary: false,

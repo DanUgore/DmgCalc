@@ -58,7 +58,6 @@ Display.changePokemon = function ($side) {
 	Display.active[side].side = side;
 	Display.showPokemon(side, Display.active[side]);
 	Display.loadSets(side);
-	
 	Display.updateCalcs();
 }
 Display.updatePokemon = function ($side) {

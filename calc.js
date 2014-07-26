@@ -20,8 +20,10 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	//this.attacker = attacker;
 	//this.defender = defender;
 	this.move = Calc.moveClone(move);
+	this.attacker = attacker;
 	this.attackerAbility = Calc.abilityClone(attacker.ability);
 	this.attackerItem = Calc.itemClone(attacker.item);
+	this.defender = defender;
 	this.defenderAbility = Calc.abilityClone(defender.ability);
 	this.defenderItem = Calc.itemClone(defender.item);
 	this.args = {}; // Keep variables from Calc.get() here
@@ -52,9 +54,9 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	// defendStat
 	var damage = 0;
 	
-	var basePower = this.get('basePower') || move.basePower;
+	this.move.basePower = this.get('basePower') || move.basePower;
 	var bpMod = this.getMod('bpMod') || 0x1000;
-	basePower = this.modify(basePower, bpMod);
+	this.move.basePower = this.modify(this.move.basePower, bpMod);
 	
 	// Base Damage
 	baseDamage = (Math.floor(Math.floor(Math.floor(2 * attacker.level / 5 + 2) * basePower * attackStat / defendStat) / 50) + 2);
@@ -109,6 +111,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	this.calcing = false;
 	// Clear relevantObjs
 	for (var obj in this.relevantObjs) delete this[obj];
+	for (var side in {attacker:1,defender:2}) delete this[side];
 	delete this.args;
 	return damageNumbers;
 };

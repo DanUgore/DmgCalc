@@ -163,10 +163,10 @@ Calc.get = function (handle, returnArray) {
 	}
 	for (obj in this.relevantObjs) {
 		var value = this.getFrom(handle,obj,true);
-		if (value !== undefined) returnValues.push(value);
+		if (typeof value !== 'undefined') returnValues.push(value);
 		if (obj.substr(0,6) in sides) {
 			value = this.getFrom(handle+sides[obj.substr(0,6)], obj, true);
-			if (value !== undefined) returnValues.push(value);
+			if (typeof value !== 'undefined') returnValues.push(value);
 		}
 	}
 	returnValues.sort(function(a,b){
@@ -185,10 +185,10 @@ Calc.getFrom = function (handle, fromObj, returnObj) {
 	var returnValues = [];
 	if (!this[fromObj]) {
 		console.log('Could not find this.'+fromObj);
-		return false;
+		return;
 	}
 	// console.log('Running',handle,'on',fromObj);
-	if (!this[fromObj]['handles'] || !this[fromObj]['handles'][handle]) return false;
+	if (!this[fromObj]['handles'] || !this[fromObj]['handles'][handle]) return;
 	var returnValue = {};
 	this.self = this[fromObj];
 	switch (typeof this[fromObj]['handles'][handle]) {
@@ -203,7 +203,7 @@ Calc.getFrom = function (handle, fromObj, returnObj) {
 		default: returnValue.value = this[fromObj]['handles'][handle];
 	}
 	if (this.self) delete this.self;
-	if (typeof returnValue.value === 'undefined') return false;
+	if (typeof returnValue.value === 'undefined') return;
 	returnValue.source = this[fromObj];
 	if (returnObj) return returnValue;
 	return returnValue.value;
@@ -228,6 +228,7 @@ Calc.getTypeEff = function (oType, dTypes) {
 Calc.getMod = function (modName) { // Responsible for chaining modifiers as well
 	modName = modName || '';
 	modifiers = this.get(modName, true); // Get an array of modifiers
+	console.log(modifiers);
 	var totalMod = 0x1000;
 	for (var i = 0; i < modifiers.length; i++) {
 		totalMod = this.chainModifiers(totalMod, modifiers[i]);

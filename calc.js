@@ -137,17 +137,11 @@ Calc.chainModifiers = function (mod1, mod2) {
 	return ((mod1 * mod2 + 0x800) >>> 12); // M'' = ((M * M') + 0x800) >> 12
 }
 
-Calc.compareTypes = function (oType, dType, ignoreImmunities) {
-	if (typeof oType === 'string') oType = [oType];
-	if (typeof dType === 'string') dType = [dType];
+Calc.compareTypes = function (oType, dType) {
 	var eff = 1;
-	for (var i = 0; i < oType.length; i++) {
-		if (!Data.TypeChart[oType[i]]) return false;
-		for (var j = 0; j < dType.length; j++) {
-			if (!Data.TypeChart[dType[j]]) return false;
-			eff *= (Data.TypeChart[dType[j]].damageTaken[oType[i]] !== 0 ? Data.TypeChart[dType[j]].damageTaken[oType[i]] : (ignoreImmunities ? 1 : 0));
-		}
-	}
+	if (!Data.TypeChart[oType]) return false;
+	if (!Data.TypeChart[dType]) return false;
+	eff *= Data.TypeChart[dType].damageTaken[oType];
 }
 
 /* Calc.get() - returns the highest priority value or an array of values.

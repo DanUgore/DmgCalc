@@ -70,12 +70,13 @@ exports.BattleAbilities = {
 		shortDesc: "This Pokemon's Normal moves become Flying-type and do 1.3x damage.",
 		handles: {
 			moveType: function () {
-				if (this.move.type === "Normal") return "Flying";
-				this.args[this.self.id] = true;
+				if (this.move.type === "Normal") {
+					this.args[this.self.id] = true;
+					return "Flying";
+				}
 			},
-			bpMod: function () {
+			bpModAttack: function () {
 				if (this.args[this.self.id]) return 0x14CD;
-				return undefined;
 			}
 		},
 		id: "aerilate",

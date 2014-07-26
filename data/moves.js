@@ -91,6 +91,14 @@ exports.BattleMovedex = {
 		category: "Physical",
 		desc: "Deals damage to one adjacent or non-adjacent target. Power doubles if the user has no held item. Makes contact.",
 		shortDesc: "Power doubles if the user has no held item.",
+		handles: {
+			basePower: function () {
+				if (this.attacker.item && !this.attackerItem.isGem) {
+					if (this.attackerItem.name.indexOf(this.move.type) < -1) return 110;
+				}
+				return 55;
+			}
+		},
 		id: "acrobatics",
 		isViable: true,
 		name: "Acrobatics",
@@ -2262,6 +2270,11 @@ exports.BattleMovedex = {
 		category: "Physical",
 		desc: "Deals damage to one adjacent target. Power is equal to 120 * (target's current HP / target's maximum HP), rounded half down, but not less than 1. Makes contact.",
 		shortDesc: "More power the more HP the target has left.",
+		handles: {
+			basePower: function () {
+				return Math.floor(Math.floor((120 * (100 * Math.floor(target.hp * 0x1000 / target.maxhp)) + 0x800 - 1) / 0x1000) / 100) || 1;
+			}
+		},
 		id: "crushgrip",
 		name: "Crush Grip",
 		pp: 5,
@@ -4329,6 +4342,13 @@ exports.BattleMovedex = {
 			var item = this.getItem(source.volatiles['fling'].item);
 			this.add("-enditem", source, item.name, '[from] move: Fling');
 		},
+		handles: {
+			basePower: function () {
+				if (this.attacker.item && this.attackerItem.fling) {
+					return this.attackerItem.fling.basePower;
+				}
+			}
+		},
 		effect: {
 			duration: 1,
 			onStart: function (pokemon) {
@@ -4449,6 +4469,59 @@ exports.BattleMovedex = {
 		getEffectiveness: function (source, target, pokemon) {
 			var type = source.type || source;
 			return this.getEffectiveness(type, target) + this.getEffectiveness('Flying', target);
+		},
+		handles: {
+			typeEffBug: function () {
+				return Calc.compareTypes(this.move.type, 'Bug') * Calc.compareTypes('Flying', 'Bug');
+			},
+			typeEffDark: function () {
+				return Calc.compareTypes(this.move.type, 'Dark') * Calc.compareTypes('Flying', 'Dark');
+			},
+			typeEffDragon: function () {
+				return Calc.compareTypes(this.move.type, 'Dragon') * Calc.compareTypes('Flying', 'Dragon');
+			},
+			typeEffElectric: function () {
+				return Calc.compareTypes(this.move.type, 'Electric') * Calc.compareTypes('Flying', 'Electric');
+			},
+			typeEffFairy: function () {
+				return Calc.compareTypes(this.move.type, 'Fairy') * Calc.compareTypes('Flying', 'Fairy');
+			},
+			typeEffFighting: function () {
+				return Calc.compareTypes(this.move.type, 'Fighting') * Calc.compareTypes('Flying', 'Fighting');
+			},
+			typeEffFire: function () {
+				return Calc.compareTypes(this.move.type, 'Fire') * Calc.compareTypes('Flying', 'Fire');
+			},
+			typeEffFlying: function () {
+				return Calc.compareTypes(this.move.type, 'Flying') * Calc.compareTypes('Flying', 'Flying');
+			},
+			typeEffGhost: function () {
+				return Calc.compareTypes(this.move.type, 'Ghost') * Calc.compareTypes('Flying', 'Ghost');
+			},
+			typeEffGrass: function () {
+				return Calc.compareTypes(this.move.type, 'Grass') * Calc.compareTypes('Flying', 'Grass');
+			},
+			typeEffGround: function () {
+				return Calc.compareTypes(this.move.type, 'Ground') * Calc.compareTypes('Flying', 'Ground');
+			},
+			typeEffIce: function () {
+				return Calc.compareTypes(this.move.type, 'Ice') * Calc.compareTypes('Flying', 'Ice');
+			},
+			typeEffNormal: function () {
+				return Calc.compareTypes(this.move.type, 'Normal') * Calc.compareTypes('Flying', 'Normal');
+			},
+			typeEffPoison: function () {
+				return Calc.compareTypes(this.move.type, 'Poison') * Calc.compareTypes('Flying', 'Poison');
+			},
+			typeEffPsychic: function () {
+				return Calc.compareTypes(this.move.type, 'Psychic') * Calc.compareTypes('Flying', 'Psychic');
+			},
+			typeEffRock: function () {
+				return Calc.compareTypes(this.move.type, 'Rock') * Calc.compareTypes('Flying', 'Rock');
+			},
+			typeEffSteel: function () {
+				return Calc.compareTypes(this.move.type, 'Steel') * Calc.compareTypes('Flying', 'Steel');
+			}
 		},
 		priority: 0,
 		isContact: true,
@@ -4756,6 +4829,11 @@ exports.BattleMovedex = {
 		pp: 20,
 		priority: 0,
 		isContact: true,
+		handles: {
+			basePower: function () {
+				return Math.floor((255 - this.attacker.happiness) * 10 / 25) || 1;
+			}
+		},
 		secondary: false,
 		target: "normal",
 		type: "Normal"
@@ -6032,6 +6110,11 @@ exports.BattleMovedex = {
 		priority: 0,
 		onModifyMove: function (move, pokemon) {
 			move.type = pokemon.hpType || 'Dark';
+		},
+		handles: {
+			moveType: function () {
+				return this.attacker.hpType || 'Dark';
+			}
 		},
 		secondary: false,
 		target: "normal",
@@ -10652,6 +10735,11 @@ exports.BattleMovedex = {
 		category: "Physical",
 		desc: "Deals damage to one adjacent target. Power is equal to the greater of (user's Happiness * 2/5), rounded down, or 1. Makes contact.",
 		shortDesc: "Max 102 power at maximum Happiness.",
+		handles: {
+			basePower: function () {
+				return Math.floor((this.attacker.happiness * 10) / 25) || 1;
+			}
+		},
 		id: "return",
 		isViable: true,
 		name: "Return",
@@ -12224,6 +12312,12 @@ exports.BattleMovedex = {
 		category: "Physical",
 		desc: "Deals damage to one adjacent target. Power doubles if the target is paralyzed, and the target is cured of paralysis. Makes contact.",
 		shortDesc: "Power doubles if target is paralyzed, and cures it.",
+		handles: {
+			basePower: function () {
+				if (this.attacker.status === 'par') return 140;
+				return 70;
+			}
+		},
 		id: "smellingsalts",
 		name: "Smelling Salts",
 		pp: 10,
@@ -12871,6 +12965,15 @@ exports.BattleMovedex = {
 		category: "Special",
 		desc: "Deals damage to one adjacent target. Power is equal to 20 + (X * 20), where X is the user's total stat stage changes that are greater than 0.",
 		shortDesc: " + 20 power for each of the user's stat boosts.",
+		handles: {
+			basePower: function () {
+				var positiveBoosts = 0;
+				for (var stat in this.attacker.boosts) {
+					if (this.attacker.boosts[stat] > 0) positiveBoosts += this.attacker.boosts[stat];
+				}
+				return 20 + 20 * positiveBoosts;
+			}
+		},
 		id: "storedpower",
 		isViable: true,
 		name: "Stored Power",
@@ -14557,6 +14660,12 @@ exports.BattleMovedex = {
 		onHit: function (target) {
 			if (target.status === 'slp') target.cureStatus();
 		},
+		handles: {
+			basePower: function () {
+				if (this.attacker.status === 'slp') return 140;
+				return 70;
+			}
+		},
 		secondary: false,
 		target: "normal",
 		type: "Fighting"
@@ -14712,6 +14821,11 @@ exports.BattleMovedex = {
 		category: "Special",
 		desc: "Deals damage to all adjacent foes. Power is equal to (user's current HP * 150 / user's maximum HP), rounded down, but not less than 1.",
 		shortDesc: "Less power as user's HP decreases. Hits foe(s).",
+		handles: {
+			basePower: function () {
+				return Math.floor(150 * this.attacker.currentHP / this.attacker.stats['hp']);
+			}
+		},
 		id: "waterspout",
 		isViable: true,
 		name: "Water Spout",
@@ -15111,6 +15225,11 @@ exports.BattleMovedex = {
 		category: "Special",
 		desc: "Deals damage to one adjacent target. Power is equal to 120 * (target's current HP / target's maximum HP), rounded half down, but not less than 1. Makes contact.",
 		shortDesc: "More power the more HP the target has left.",
+		handles: {
+			basePower: function () {
+				return Math.floor(Math.floor((120 * (100 * Math.floor(this.defender.currentHP * 0x1000 / this.defender.stats['hp'])) + 0x800 - 1) / 0x1000) / 100) || 1;
+			}
+		},
 		id: "wringout",
 		name: "Wring Out",
 		pp: 5,

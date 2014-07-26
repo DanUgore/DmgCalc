@@ -5,7 +5,8 @@ Data.Tiers = {
 	"rarelyused": {shortName:"RU",level:100,id:"rarelyused",name:"RarelyUsed"},
 	"neverused": {shortName:"NU",level:100,id:"neverused",name:"NeverUsed"},
 	"littlecup": {shortName:"LC",level:100,id:"littlecup",name:"Little Cup"},
-	"vgc12": {shortName:"VGC",level:50,id:"vgc12",name:"VGC '12"},
+	"vgc12": {shortName:"VGC12",level:50,id:"vgc12",name:"VGC '12"},
+	"vgc11": {shortName:"VGC11",level:50,id:"vgc11",name:"VGC '11"},
 	"xybattlespot": {shortName:"BS",level:50,id:"xybattlespot",name:"Battle Spot"},
 	"doubles": {name:"Doubles",level:100,id:"doubles",shortName:"Dubs",name:"Smogon Doubles"}
 }

@@ -17,8 +17,6 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	if (typeof move === 'string') move = Data.Movedex[move]; // Calc.getMove(move)
 	if (!move || move.category === 'Status') return;
 	// Clone attacker, defender, and move.
-	//this.attacker = attacker;
-	//this.defender = defender;
 	this.move = Calc.moveClone(move);
 	this.attacker = attacker;
 	this.attackerAbility = Calc.abilityClone(attacker.ability);
@@ -26,6 +24,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	this.defender = defender;
 	this.defenderAbility = Calc.abilityClone(defender.ability);
 	this.defenderItem = Calc.itemClone(defender.item);
+	// this.field = Calc.getField(field);
 	this.args = {}; // Keep variables from Calc.get() here
 
 	/* listed move type -> moves that call other moves use the new move instead ->
@@ -34,14 +33,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
      * -> if the move is still Normal, Ion Deluge changes to Electric -> Electrify changes the move to Electric -> 
 	 * Protean activates -> Gems activate if the Gem matches the move type
 	*/
-	// console.log(this.get('moveType'));
 	this.move.type = this.get('moveType') || move.type;
-	// Abilities
-	//attacker.ability = Calc.getAbility();
-	//defender.ability = Calc.getAbility();	
-	// Items
-	//attacker.item = Calc.getItem();
-	//defender.item = Calc.getItem();
 	
 	attackStatName = (move.category === 'Physical' ? 'atk' : 'spa');
 	defendStatName = (move.category === 'Physical' ? 'def' : 'spd');
@@ -49,14 +41,11 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	attackStat = this.getStat(attackStatName, attacker.stats[attackStatName], attacker.boosts[attackStatName], true);
 	defendStat = this.getStat(defendStatName, defender.stats[defendStatName], defender.boosts[defendStatName], true);
 	
-	
-	// attackStat = Calc.getEffectiveStat(attackStatName, attackStat, attackBoosts, attacker);
-	// defendStat
 	var damage = 0;
 	
-	this.move.basePower = this.getFrom('basePower', 'move') || this.move.basePower;
+	this.move.basePower = this.getFrom('basePower', 'move') || this.move.basePower; // Only thing that should change base power directly is the move.
 	if (!this.move.basePower) return;
-	var bpMod = this.getMod('bpMod') || 0x1000;
+	var bpMod = this.getMod('bpMod') || 0x1000; // Abilities, Items, etc do it through modifiers.
 	this.move.basePower = this.modify(this.move.basePower, bpMod);
 	
 	// Base Damage

@@ -46,8 +46,8 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	attackStatName = (move.category === 'Physical' ? 'atk' : 'spa');
 	defendStatName = (move.category === 'Physical' ? 'def' : 'spd');
 
-	attackStat = attacker.stats[attackStatName]; console.log(this.getStat(attacker, attackStatName, true, true));
-	defendStat = defender.stats[defendStatName]; console.log(this.getStat2(attackStatName, attacker.stats[attackStatName], attacker.boosts[attackStatName], true));
+	attackStat = this.getStat(attackStatName, attacker.stats[attackStatName], attacker.boosts[attackStatName], true);
+	defendStat = this.getStat(defendStatName, defender.stats[defendStatName], defender.boosts[defendStatName], true);
 	
 	
 	// attackStat = Calc.getEffectiveStat(attackStatName, attackStat, attackBoosts, attacker);
@@ -94,7 +94,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	
 	// Final Mods
 	// TODO
-	var finalMod = this.getMod('finalMod') || 0x1000; console.log()
+	var finalMod = this.getMod('finalMod') || 0x1000;
 	
 	// Loop through damage rolls
 	var damageNumbers = [];

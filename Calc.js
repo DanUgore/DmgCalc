@@ -46,8 +46,8 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	attackStatName = (move.category === 'Physical' ? 'atk' : 'spa');
 	defendStatName = (move.category === 'Physical' ? 'def' : 'spd');
 
-	attackStat = attacker.stats[attackStatName];
-	defendStat = defender.stats[defendStatName];
+	attackStat = attacker.stats[attackStatName]; console.log(this.getStat(attacker, attackStatName, true, true));
+	defendStat = defender.stats[defendStatName]; console.log(this.getStat2(attackStatName, attacker.stats[attackStatName], attacker.boosts[attackStatName], true));
 	
 	
 	// attackStat = Calc.getEffectiveStat(attackStatName, attackStat, attackBoosts, attacker);
@@ -232,6 +232,19 @@ Calc.getMod = function (modName) { // Responsible for chaining modifiers as well
 		totalMod = this.chainModifiers(totalMod, modifiers[i]);
 	}
 	return totalMod;
+};
+
+Calc.getStat = function (statName, stat, boost, modify) {
+	if (boost) {
+		if (boost > 0) stat *= ( 2 + boost ) / 2;
+		if (boost < 0) stat *= 2 / (2 - boost);
+		stat = Math.floor(stat);
+	}
+	if (modify) {
+		var mod = this.getMod(statName+'Mod') || 0x1000;
+		stat = this.modify(stat, mod);
+	}
+	return stat;
 };
 
 Calc.moveClone = function (move) {

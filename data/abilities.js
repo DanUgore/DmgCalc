@@ -1044,6 +1044,9 @@ exports.BattleAbilities = {
 		onModifyAtk: function (atk) {
 			return this.chainModify(2);
 		},
+		handles: {
+			atkModAttack: 0x2000
+		},
 		id: "hugepower",
 		name: "Huge Power",
 		rating: 5,

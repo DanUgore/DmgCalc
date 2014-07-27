@@ -8,6 +8,7 @@ Calc.relevantObjs = {
 	defenderItem:1,
 	move:1
 };
+Calc.noDamage = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 
 Calc.calcDamageNumbers = function (attacker, defender, move, field) {
@@ -15,7 +16,8 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	this.calcing = true;
 	// Move
 	if (typeof move === 'string') move = Data.Movedex[move]; // Calc.getMove(move)
-	if (!move || move.category === 'Status') return;
+	if (!move) return;
+	if (move.category === 'Status') return this.noDamage;
 	// Clone attacker, defender, and move.
 	this.move = Calc.moveClone(move);
 	this.attacker = attacker;

@@ -435,15 +435,12 @@ Display.addHandlers = function () {
 		}
 	);
 	var elements = [
-		".level-input",
-		".happiness-input",
+		"input",
 		".gender-select",
 		".ability-select",
 		".item-select",
 		".nature-select",
 		".status-select",
-		".ev-input",
-		".iv-input",
 		".move-select"
 	]
 	$(elements.join(', ')).change(

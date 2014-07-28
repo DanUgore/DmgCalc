@@ -3383,7 +3383,7 @@ exports.BattleMovedex = {
 				if (ratio >= 1) return 60;
 				return 40;
 			}
-		}
+		},
 		secondary: false,
 		target: "normal",
 		type: "Electric"

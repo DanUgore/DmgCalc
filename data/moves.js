@@ -3372,6 +3372,18 @@ exports.BattleMovedex = {
 		pp: 10,
 		priority: 0,
 		isBullet: true,
+		handles: {
+			basePower: function () {
+				var targetSpe = this.getStat('spe', this.defender.stats['spe'], this.defender.boosts['spe'], true);
+				var userSpe = this.getStat('spe', this.attacker.stats['spe'], this.attacker.boosts['spe'], true);
+				var ratio = userSpe / targetSpe;
+				if (ratio >= 4) return 150;
+				if (ratio >= 3) return 120;
+				if (ratio >= 2) return 80;
+				if (ratio >= 1) return 60;
+				return 40;
+			}
+		}
 		secondary: false,
 		target: "normal",
 		type: "Electric"
@@ -5195,12 +5207,12 @@ exports.BattleMovedex = {
 		priority: 0,
 		isContact: true,
 		handles: {
-			basePower: function (pokemon, target) {
-				if (this.defender.weightkg.weightkg >= 200) return 120;
-				if (this.defender.weightkg.weightkg >= 100) return 100;
-				if (this.defender.weightkg.weightkg >= 50) return 80;
-				if (this.defender.weightkg.weightkg >= 25) return 60;
-				if (this.defender.weightkg.weightkg >= 10) return 40;
+			basePower: function () {
+				if (this.defender.weightkg >= 200) return 120;
+				if (this.defender.weightkg >= 100) return 100;
+				if (this.defender.weightkg >= 50) return 80;
+				if (this.defender.weightkg >= 25) return 60;
+				if (this.defender.weightkg >= 10) return 40;
 				return 20;
 			}
 		},
@@ -5603,6 +5615,15 @@ exports.BattleMovedex = {
 		priority: 0,
 		isContact: true,
 		isBullet: true,
+		handles: {
+			basePower: function () {
+				var targetSpe = this.getStat('spe', this.defender.stats['spe'], this.defender.boosts['spe'], true);
+				var userSpe = this.getStat('spe', this.attacker.stats['spe'], this.attacker.boosts['spe'], true);
+				var power = (Math.floor(25 * targetSpe / userSpe) || 1);
+				if (power > 150) power = 150;
+				return power;
+			}
+		},
 		secondary: false,
 		target: "normal",
 		type: "Steel"
@@ -7606,12 +7627,12 @@ exports.BattleMovedex = {
 		priority: 0,
 		isContact: true,
 		handles: {
-			basePower: function (pokemon, target) {
-				if (this.defender.weightkg.weightkg >= 200) return 120;
-				if (this.defender.weightkg.weightkg >= 100) return 100;
-				if (this.defender.weightkg.weightkg >= 50) return 80;
-				if (this.defender.weightkg.weightkg >= 25) return 60;
-				if (this.defender.weightkg.weightkg >= 10) return 40;
+			basePower: function () {
+				if (this.defender.weightkg >= 200) return 120;
+				if (this.defender.weightkg >= 100) return 100;
+				if (this.defender.weightkg >= 50) return 80;
+				if (this.defender.weightkg >= 25) return 60;
+				if (this.defender.weightkg >= 10) return 40;
 				return 20;
 			}
 		},

@@ -3,6 +3,12 @@
 	width: 48%;
 	margin: auto;
 }
+.results-pane {
+	height: 15%;
+}
+#results > h3 {
+	margin: 0px;
+}
 .results-list {
 	display: inline-block;
 	width: 48%;

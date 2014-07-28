@@ -82,6 +82,9 @@
 				</div>
 				<div id="results-details" style="display: none"></div>
 			</div>
+			<div id="field-details" class="field-pane">
+				<select class="weather-select" data-default=""></select>
+			</div>
 			<div id="p1-pokemon" class="pokemon-pane" style="display: inline-block; width: 48%;">
 				<h3>P1</h3>
 				<select id="species" class="pkm-select" data-default=""><option value="">(No Pokemon)</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
@@ -294,72 +297,8 @@
 			</div>
 		</div>
 	</body>
-	<!-- Post-body code here, done after page loads -->
 	<script src="init.js"></script>
 	<script>
 	
 	</script>
-	<!--<script>
-		// Initial Gender
-		$(".genderIcon").text(Display.genderSymbols['m']);
-		
-		// Initialize Dropdowns
-		(function loadDropdowns() {
-			$dropdowns = $( "select" );
-			// console.log($dropdowns);
-			for (var index = 0; index < $dropdowns.length; index++) {
-				$dropdown = $dropdowns.eq(index);
-				// if ($dropdown.children().length) continue;
-				var options = []; // Option Elements to be Appended
-				if ($dropdown.hasClass("type-select")) {
-					for (var type in Data.BattleTypeChart) options.push('<option value="'+type+'">'+type+'</option>');
-					$dropdown.append(options.join(''));
-					// continue;
-				}
-				if ($dropdown.hasClass("move-select")) {
-					for (var id in Data.BattleMovedex) {
-						var move = Data.BattleMovedex[id];
-						if (id !== move.id) continue;
-						options.push('<option value="'+move.id+'">'+(move.isNonstandard?'Custom: ':'')+move.name+'</option>');
-					}
-					$dropdown.append(options.join(''));
-					// continue;
-				}
-				if ($dropdown.hasClass("cat-select")) {
-					options = [
-						'<option value="Physical">Physical</option>',
-						'<option value="Special">Special</option>',
-						'<option value="Status">Status</option>'
-					];
-					$dropdown.append(options.join(''));
-					// continue;
-				}
-				if ($dropdown.hasClass("pkm-select")) {
-					// Pokemon are placed in alphabetical order for ease of location.
-					var Pokedex = Data.BattlePokedex;
-					var ids = Object.keys(Pokedex).sort();
-					var customPkms = [];
-					for (var i = 0; i < ids.length; i++) {
-						var id = ids[i];
-						var pkm = Data.BattlePokedex[id];
-						if (!pkm.num || pkm.num < 1) {
-							customPkms.push(id);
-							continue;
-						}
-						options.push('<option value="'+id+'">'+pkm.species+'</option>');
-					}
-					for (var i = 0; i < customPkms.length; i++) {
-						var id = customPkms[i];
-						var pkm = Data.BattlePokedex[id];
-						options.push('<option value="'+id+'">Custom: '+pkm.species+'</option>');
-					}
-					$dropdown.append(options.join(''));
-					// $dropdown.get(0).innerHTML = options.join('');
-					// continue;
-					// break;
-				}
-				// if (index > 2) break;
-			}
-		})()
-	</script>-->
 </html>

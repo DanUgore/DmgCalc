@@ -31,3 +31,6 @@ li {
 #p2-pokemon > #type3 {
 	visibility: hidden;
 }
+thead tr {
+	text-align: center;
+}

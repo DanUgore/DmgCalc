@@ -13,7 +13,7 @@ Calc.noDamage = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	// We are in the middle of calcing
-	this.calcing = true;
+	this.calcing = true; 
 	// Move
 	if (typeof move === 'string') move = Data.Movedex[move]; // Calc.getMove(move)
 	if (!move) return;
@@ -150,12 +150,20 @@ Calc.get = function (handle, returnArray) {
 		attack: "Attack",
 		defend: "Defend"
 	}
-	for (obj in this.relevantObjs) {
+	for (var obj in this.relevantObjs) {
 		var value = this.getFrom(handle,obj,true);
 		if (typeof value !== 'undefined') returnValues.push(value);
 		if (obj.substr(0,6) in sides) {
 			value = this.getFrom(handle+sides[obj.substr(0,6)], obj, true);
 			if (typeof value !== 'undefined') returnValues.push(value);
+		}
+	}
+	for (var side in this.field) {
+		for (var effect in this.field[side]) {
+			if (typeof this.field[side][effect] === 'object') {
+				var value = this.getFrom(handle,this.field[side][effect],true);
+				if (typeof value !== 'undefined') returnValues.push(value);
+			}
 		}
 	}
 	returnValues.sort(function(a,b){
@@ -169,31 +177,27 @@ Calc.get = function (handle, returnArray) {
 Calc.getFrom = function (handle, fromObj, returnObj) {
 	if (!this.calcing) return null;
 	handle = handle || '';
-	fromObj = fromObj || '';
-	if (!handle || !fromObj) return null;
+	if (typeof fromObj === 'string') fromObj = this[fromObj];
+	if (!handle || typeof fromObj !== 'object') return null;
 	var returnValues = [];
-	if (!this[fromObj]) {
-		console.log('Could not find this.'+fromObj);
-		return;
-	}
 	// console.log('Running',handle,'on',fromObj);
-	if (!this[fromObj]['handles'] || !this[fromObj]['handles'][handle]) return;
+	if (!fromObj['handles'] || !fromObj['handles'][handle]) return;
 	var returnValue = {};
-	this.self = this[fromObj];
-	switch (typeof this[fromObj]['handles'][handle]) {
+	this.self = fromObj;
+	switch (typeof fromObj['handles'][handle]) {
 		case 'function':
-			returnValue.value = this[fromObj]['handles'][handle].call(this);
+			returnValue.value = fromObj['handles'][handle].call(this);
 			if (typeof returnValue.value === 'object') returnValue = $.extend(returnValue, returnValue.value);
 			break;
 		case 'object':
-			returnValue = $.extend(returnValue, this[fromObj]['handles'][handle]);
+			returnValue = $.extend(returnValue, fromObj['handles'][handle]);
 			if (typeof returnValue.value === 'function') returnValue.value = returnValue.value.call(this);
 			break;
-		default: returnValue.value = this[fromObj]['handles'][handle];
+		default: returnValue.value = fromObj['handles'][handle];
 	}
 	if (this.self) delete this.self;
 	if (typeof returnValue.value === 'undefined') return;
-	returnValue.source = this[fromObj];
+	returnValue.source = fromObj;
 	if (returnObj) return returnValue;
 	return returnValue.value;
 };
@@ -217,7 +221,7 @@ Calc.getTypeEff = function (oType, dTypes) {
 Calc.getMod = function (modName) { // Responsible for chaining modifiers as well
 	modName = modName || '';
 	modifiers = this.get(modName, true); // Get an array of modifiers
-	if (modifiers.length) console.log(modifiers.map(function(m){return "0x"+("0000"+m.toString(16)).slice(-4);}));
+	if (modifiers.length) console.log(modifiers.map(function(m){return "0x"+("0000"+m.toString(16)).slice(-4).toUpperCase();}));
 	var totalMod = 0x1000;
 	for (var i = 0; i < modifiers.length; i++) {
 		totalMod = this.chainModifiers(totalMod, modifiers[i]);

@@ -52,6 +52,18 @@ Data.Natures = {
 	Serious: {name:"Serious"},
 	Timid: {name:"Timid", plus:'spe', minus:'atk'}
 };
+Data.FieldEffects = {
+	sun:{id:'sun',name:'Sun'},
+	sand:{id:'sand',name:'Sand'},
+	hail:{id:'hail',name:'Hail'},
+	rain:{id:'rain',name:'Rain'}
+};
+Data.Weather = {
+	sun: Data.FieldEffects['sun'],
+	sand: Data.FieldEffects['sand'],
+	hail: Data.FieldEffects['hail'],
+	rain: Data.FieldEffects['rain']
+}
 
 // Data Functions
 Data.getLearnset = function (pokemon) {

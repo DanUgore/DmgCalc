@@ -200,7 +200,37 @@ Display.getMove = function ($moveRow) {
 	move.basePower = $moveRow.find(".bp-input").val();
 	move.category = $moveRow.find(".cat-select").val();
 	move.pp = $moveRow.find(".pp-input").val();
+	move.crit = $moveRow.find(".crit-checkbox").prop('checked');
 	return move;
+}
+Display.getFieldData = function () {
+	var $field = $('#field-details');
+	if (!$field.length) return null;
+	var field = {
+		p1: {},
+		p2: {},
+		field: {}
+	};
+	var $inputs = $field.find('input, select');
+	for (var i = 0, $input, side, id; i < $inputs.length; i++) {
+		$input = $inputs.eq(i);
+		id = $input.attr('id') || 'input-'+i;
+		side = 'field';
+		if (id.substr(0,2) in Display.active) { // #p1-X
+			side = id.substr(0,2);
+			id = id.substr(3);
+		}
+		if ($input.is('select')) {
+			field[side][id] = $input.val() || false;
+		}
+		if ($input.is('input[type="checkbox"]')) {
+			field[side][id] = $input.prop('checked');
+		}
+		if ($input.is('input[type="number"]')) {
+			field[side][id] = parseInt($input.val());
+		}
+	}
+	return field;
 }
 Display.showResult = function ($atkSide, $defSide, moveIndex, damageNumbers) {
 	var atkMon;
@@ -244,14 +274,16 @@ Display.updateCalcs = function () {
 	var p1results = [];
 	var p2results = [];
 	// P1
+	var field = Display.getFieldData();
 	for (var i = 0; i < p1active.moveset.length; i++) {
 		if (!p1active.moveset[i]) {
 			p1results.push(false);
 			Display.clearResult('p1', i);
 			continue;
 		}
+		var critHit = $('#p1-pokemon #move-'+i+' .crit-checkbox').prop('checked');
 		p1results.push(
-			Calc.calcDamageNumbers(p1active, p2active, p1active.moveset[i])/*,  field {} */
+			Calc.calcDamageNumbers(p1active, p2active, p1active.moveset[i], field, critHit)
 		);
 		if (p1results[i]) Display.showResult(p1active, p2active, i, p1results[i]);
 		else Display.clearResult('p1', i);
@@ -263,8 +295,9 @@ Display.updateCalcs = function () {
 			Display.clearResult('p2', i);
 			continue;
 		}
+		var critHit = $('#p2-pokemon #move-'+i+' .crit-checkbox').prop('checked');
 		p2results.push(
-			Calc.calcDamageNumbers(p2active, p1active, p2active.moveset[i])/*,  field {} */
+			Calc.calcDamageNumbers(p2active, p1active, p2active.moveset[i], field, critHit)
 		);
 		if (p2results[i]) Display.showResult(p2active, p1active, i, p2results[i]);
 		else Display.clearResult('p2', i);
@@ -394,6 +427,13 @@ Display.loadDropdowns = function () {
 			options.push('</optgroup>');
 			$dropdown.append(options.join(''));
 			continue;
+		}
+		if ($dropdown.hasClass("weather-select")) {
+			options.push('<option value="">Clear Skies</option>');
+			for (var weather in Data.Weather) {
+				options.push('<option value="'+Data.Weather[weather].id+'">'+Data.Weather[weather].name+'</option>')
+			}
+			$dropdown.append(options.join(''));
 		}
 	}
 }

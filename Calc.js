@@ -11,7 +11,7 @@ Calc.relevantObjs = {
 Calc.noDamage = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
 
-Calc.calcDamageNumbers = function (attacker, defender, move, field) {
+Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	// We are in the middle of calcing
 	this.calcing = true;
 	// Move
@@ -26,7 +26,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	this.defender = defender;
 	this.defenderAbility = Calc.abilityClone(defender.ability);
 	this.defenderItem = Calc.itemClone(defender.item);
-	// this.field = Calc.getField(field);
+	this.field = Calc.fieldEffects(field);
 	this.args = {}; // Keep variables from Calc.get() here
 
 	/* listed move type -> moves that call other moves use the new move instead ->
@@ -62,7 +62,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field) {
 	
 	// Crit?
 	var critMod = this.get('critMod') || 0x1800;
-	var crit = crit || false;
+	isCrit = isCrit || false;
 	if (crit) this.modify(damage, critMod);
 	
 	// Random Factor Begins To Apply Here
@@ -260,6 +260,24 @@ Calc.abilityClone = function (ability) {
 	if (typeof ability !== 'object') return false;
 	// Return Simple clone for now
 	return $.extend(true, {}, ability);
+};
+
+Calc.fieldEffects = function (field) {
+	var effects = {};
+	if (!field) return effects;
+	for (var side in field) {
+		effects[side] = {};
+		for (var arg in field[side]) {
+			effects[side][arg] = (field[side][arg] === true ? arg : field[side][arg]);
+			effects[side][arg] = Calc.getEffect(effects[side][arg]);
+		}
+	}
+	return effects;
+};
+
+Calc.getEffect = function (effect) {
+	if (typeof effect !== 'string') return effect;
+	return Data.FieldEffects[effect];
 };
 
 /*

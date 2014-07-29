@@ -15,12 +15,12 @@ Validator.addValidator = function (index, el) { // This function is called in $(
 }
 Validator.validateNumber = function () {
 	var $this = $(this);
-	var val = parseInt($this.val(),10) || 0;
+	var val = parseInt($this.val(),10);
+	if (isNaN(val)) val = $this.data('default');
 	var min = parseInt($this.attr('min')) || 0;
 	var max = parseInt($this.attr('max')) || 0;
 	if (val < min) val = min;
 	else if (val > max) val = max;
-	else return true;
 	$this.val(val);
 }
 Validator.validateSelection = function () {

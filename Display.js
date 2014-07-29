@@ -485,11 +485,10 @@ Display.addHandlers = function () {
 	]
 	$(elements.join(', ')).change(
 		function () {
-			// $this = $(this);
 			Display.updatePokemon($(this).parents('.pokemon-pane'));
 		}
-	);
-
+	)
+	
 	$('.set-select').change(
 		function () {
 			$this = $(this);

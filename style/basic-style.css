@@ -28,9 +28,6 @@ li {
 	display: inline-block;
 	margin: auto;
 }
-.crit-checkbox {
-	display: none;
-}
 #p1-pokemon > #type3 {
 	visibility: hidden;
 }

@@ -63,7 +63,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	// Crit?
 	var critMod = this.get('critMod') || 0x1800;
 	isCrit = isCrit || false;
-	if (crit) this.modify(damage, critMod);
+	if (isCrit) damage = this.modify(damage, critMod);
 	
 	// Random Factor Begins To Apply Here
 	// Store other variables for calculations in loop
@@ -217,7 +217,7 @@ Calc.getTypeEff = function (oType, dTypes) {
 Calc.getMod = function (modName) { // Responsible for chaining modifiers as well
 	modName = modName || '';
 	modifiers = this.get(modName, true); // Get an array of modifiers
-	console.log(modifiers);
+	if (modifiers.length) console.log(modifiers.map(function(m){return "0x"+("0000"+m.toString(16)).slice(-4);}));
 	var totalMod = 0x1000;
 	for (var i = 0; i < modifiers.length; i++) {
 		totalMod = this.chainModifiers(totalMod, modifiers[i]);

@@ -203,21 +203,27 @@ Display.getMove = function ($moveRow) {
 	move.crit = $moveRow.find(".crit-checkbox").prop('checked');
 	return move;
 }
-Display.getFieldData = function () {
-	var $field = $('#field-details');
+Display.getFieldData = function (attackSide) {
+	var $field = $('.field-pane');
 	if (!$field.length) return null;
+	var sides = {p1:'p1',p2:'p2'};
+	if (attackSide in sides) {
+		var defendSide = (attackSide === 'p1' ? 'p2' : 'p1')
+		sides[attackSide] = 'attack';
+		sides[defendSide] = 'defend';
+	}
 	var field = {
-		p1: {},
-		p2: {},
-		field: {}
+		global: {}
 	};
+	field[sides['p1']] = {};
+	field[sides['p2']] = {};
 	var $inputs = $field.find('input, select');
 	for (var i = 0, $input, side, id; i < $inputs.length; i++) {
 		$input = $inputs.eq(i);
 		id = $input.attr('id') || 'input-'+i;
-		side = 'field';
-		if (id.substr(0,2) in Display.active) { // #p1-X
-			side = id.substr(0,2);
+		side = 'global';
+		if (id.substr(0,2) in sides) { // #p1-X
+			side = sides[id.substr(0,2)];
 			id = id.substr(3);
 		}
 		if ($input.is('select')) {
@@ -273,8 +279,9 @@ Display.updateCalcs = function () {
 	if (!p2active) return false;
 	var p1results = [];
 	var p2results = [];
+	var field;
 	// P1
-	var field = Display.getFieldData();
+	field = Display.getFieldData('p1');
 	for (var i = 0; i < p1active.moveset.length; i++) {
 		if (!p1active.moveset[i]) {
 			p1results.push(false);
@@ -289,6 +296,7 @@ Display.updateCalcs = function () {
 		else Display.clearResult('p1', i);
 	}
 	// P2
+	field = Display.getFieldData('p2');
 	for (var i = 0; i < p2active.moveset.length; i++) {
 		if (!p2active.moveset[i]) {
 			p2results.push(false);
@@ -483,7 +491,7 @@ Display.addHandlers = function () {
 		".status-select",
 		".move-select"
 	]
-	$(elements.join(', ')).change(
+	$('.pokemon-pane').find(elements.join(', ')).change(
 		function () {
 			Display.updatePokemon($(this).parents('.pokemon-pane'));
 		}
@@ -501,6 +509,12 @@ Display.addHandlers = function () {
 				set = Data.getSets(pkm.id)[val];
 				Display.showPokemon($side, pkm.changeSet(set));
 			}
+			Display.updateCalcs();
+		}
+	);
+	
+	$('.field-pane').find('input, select').change(
+		function() {
 			Display.updateCalcs();
 		}
 	);

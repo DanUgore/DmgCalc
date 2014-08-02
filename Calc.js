@@ -8,7 +8,9 @@ Calc.relevantObjs = {
 	defenderItem:1,
 	move:1
 };
-Calc.noDamage = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+Calc.noDamage = function () {
+	return [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+};
 
 
 Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
@@ -55,10 +57,13 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	damage = baseDamage;
 	
 	// Spread?
-	// TODO
+	var spreadMod = 0x1000;
+	if (this.field['attack'].spread && this.move.target !== 'any' || this.move.target !== 'normal') spreadMod = 0xC00;
+	damage = this.modify(damage, weatherMod);
 	
 	// Weather?
-	// TODO
+	var weatherMod = this.getFrom('weatherMod', this.field['global']['weather']) || 0x1000;
+	damage = this.modify(damage, weatherMod);
 	
 	// Crit?
 	var critMod = this.get('critMod') || 0x1800;
@@ -78,13 +83,15 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	// Type Effectiveness
 	// var typeEff = 1;
 	var typeEff = this.getTypeEff(this.move.type, defender.types);
+	if (!typeEff) return this.noDamage();
+	if (typeEff > 1) this.args['superEffective'] = true;
+	else if (typeEff < 1) this.args['notVeryEffective'] = true;
 	
 	// Burn
 	var burnEffect = false;
-	if (attacker.status === 'brn') burnEffect = true;
+	if (attacker.status === 'brn') burnEffect = this.get('immuneToBurnDrop') || true;
 	
 	// Final Mods
-	// TODO
 	var finalMod = this.getMod('finalMod') || 0x1000;
 	
 	// Loop through damage rolls
@@ -159,9 +166,10 @@ Calc.get = function (handle, returnArray) {
 		}
 	}
 	for (var side in this.field) {
+		var handleName = handle + (sides[side] || '');
 		for (var effect in this.field[side]) {
 			if (typeof this.field[side][effect] === 'object') {
-				var value = this.getFrom(handle,this.field[side][effect],true);
+				var value = this.getFrom(handleName,this.field[side][effect],true);
 				if (typeof value !== 'undefined') returnValues.push(value);
 			}
 		}
@@ -280,7 +288,7 @@ Calc.fieldEffects = function (field) {
 };
 
 Calc.getEffect = function (effect) {
-	if (typeof effect !== 'string') return effect;
+	if (!effect || typeof effect !== 'string') return effect;
 	return Data.FieldEffects[effect];
 };
 

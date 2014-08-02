@@ -17,6 +17,25 @@ Data.StatTable = {
 	spd:"SpD",
 	spe:"Spe"
 };
+Data.StatIDs = {
+	HP: 'hp',
+	hp: 'hp',
+	Atk: 'atk',
+	atk: 'atk',
+	Def: 'def',
+	def: 'def',
+	SpA: 'spa',
+	SAtk: 'spa',
+	SpAtk: 'spa',
+	spa: 'spa',
+	SpD: 'spd',
+	SDef: 'spd',
+	SpDef: 'spd',
+	spd: 'spd',
+	Spe: 'spe',
+	Spd: 'spe',
+	spe: 'spe'
+}
 Data.Statuses = { // Unfortunately we cant just nab this one from Pokemon Showdown :P
 	brn:{name:'Burn'},
 	par:{name:'Paralyze'},
@@ -53,10 +72,44 @@ Data.Natures = {
 	Timid: {name:"Timid", plus:'spe', minus:'atk'}
 };
 Data.FieldEffects = {
-	sun:{id:'sun',name:'Sun'},
-	sand:{id:'sand',name:'Sand'},
-	hail:{id:'hail',name:'Hail'},
-	rain:{id:'rain',name:'Rain'}
+	sun: {
+		id:'sun',
+		name:'Sun',
+		handles: {
+			weatherMod: function () {
+				if (this.move.type === 'Fire') return 0x1800;
+				if (this.move.type === 'Water') return 0x800;
+			}
+		}
+	},
+	sand: {
+		id:'sand',
+		name:'Sand',
+		handles: {
+		}
+	},
+	hail: {
+		id:'hail',
+		name:'Hail'
+	},
+	rain: {
+		id:'rain',
+		name:'Rain',
+		handles: {
+			weatherMod: function () {
+				if (this.move.type === 'Water') return 0x1800;
+				if (this.move.type === 'Fire') return 0x800;
+			}
+		}
+	},
+	helpinghand: {
+		handles: {
+			finalModAttack: {
+				priority: 3,
+				value: 0x1800
+			}
+		}
+	}
 };
 Data.Weather = {
 	sun: Data.FieldEffects['sun'],

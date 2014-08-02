@@ -3,6 +3,20 @@
 	width: 48%;
 	margin: auto;
 }
+.pokemon-pane h3 {
+	margin-top: 4px;
+	margin-bottom: 8px;
+}
+.field-pane {
+	display: inline-block;
+	width: 30%;
+	margin: auto;
+	margin-top: 8px;
+	text-align: center;
+}
+#field-details {
+	width: 20%;
+}
 .results-pane {
 	height: 15%;
 }

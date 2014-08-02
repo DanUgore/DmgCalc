@@ -2,9 +2,13 @@
 Display = {};
 
 Display.genderSymbols = {M:'\u2642',F:'\u2640',N:'\u2205'};
-Display.active = { // Caching Pokemon so we don't have to rebuild every time
-	p1: null,
-	p2: null
+Display.sides = { // Caching Pokemon so we don't have to rebuild every time
+	p1: {
+		active: null
+	},
+	p2: {
+		active: null
+	}
 };
 
 // Display Functions
@@ -15,7 +19,7 @@ Display.resetElement = function ($el) {
 	return $el.val($el.data("default"));
 }
 Display.clearAllFields = function ($side) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	var classes = [
 		".pkm-select", // Species
@@ -50,18 +54,18 @@ Display.clearMoveField = function ($moveRow) {
 	return true;
 }
 Display.changePokemon = function ($side) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	if (!$side.val()) return Display.clearAllFields($side.parent());
 	var side = $side.parent().attr('id').substr(0,2);
-	Display.active[side] = new Pokemon($side.val());
-	Display.active[side].side = side;
-	Display.showPokemon(side, Display.active[side]);
+	Display.sides[side].active = new Pokemon($side.val());
+	Display.sides[side].active.side = side;
+	Display.showPokemon(side, Display.sides[side].active);
 	Display.loadSets(side);
 	Display.updateCalcs();
 }
 Display.updatePokemon = function ($side) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	var pkm = Display.getPokemon($side); // Pulls Pokemon from cache
 	if (!pkm) return Display.showPokemon($side, Display.getPokemon($side, true));
@@ -72,12 +76,12 @@ Display.updatePokemon = function ($side) {
 	Display.updateCalcs();
 }
 Display.changeSet = function ($side, set) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
-	Display.active;
+	Display.sides;
 }
 Display.showPokemon = function ($side, pokemon) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	if (!(pokemon instanceof Pokemon)) return false;
 	// Species
@@ -116,7 +120,7 @@ Display.showPokemon = function ($side, pokemon) {
 		if (!move) move = {id:''};
 		Display.showMove($row, move.id);
 	}
-	if (pokemon.side) this.active[pokemon.side] = pokemon;
+	if (pokemon.side) this.sides[pokemon.side].active = pokemon;
 	Display.reloadGenders($side);
 	return true;
 }
@@ -133,19 +137,19 @@ Display.showMove = function ($moveRow, move) {
 	return true;
 }
 Display.getPokemon = function ($side, makeNew) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	var side = $side.attr('id').substr(0,2);
-	if (!makeNew) return this.active[side];
+	if (!makeNew) return Display.sides[side].active;
 	// Species
 	var species = $side.find(".pkm-select").val();
 	if (!species) return false;
 	var set = Display.getSet($side);
-	Display.active[side] = new Pokemon(species, set);
-	return Display.active[side];
+	Display.sides[side].active = new Pokemon(species, set);
+	return Display.sides[side].active;
 }
 Display.getSet = function ($side) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
 	var set = {};
 	set.name = $side.find(".pkm-select option:selected").text();
@@ -243,12 +247,12 @@ Display.showResult = function ($atkSide, $defSide, moveIndex, damageNumbers) {
 	var defMon;
 	if (!($atkSide instanceof jQuery)) {
 		if ($atkSide instanceof Pokemon) atkMon = $atkSide;
-		else if ($atkSide in Display.active) $atkSide = $("#"+$atkSide+"-pokemon");
+		else if ($atkSide in Display.sides) $atkSide = $("#"+$atkSide+"-pokemon");
 		else return null;
 	}
 	if (!($defSide instanceof jQuery)) {
 		if ($defSide instanceof Pokemon) defMon = $defSide;
-		else if ($defSide in Display.active) $defSide = $("#"+$defSide+"-pokemon");
+		else if ($defSide in Display.sides) $defSide = $("#"+$defSide+"-pokemon");
 		else return null;
 	}
 	atkMon = atkMon || Display.getPokemon($atkSide);
@@ -264,7 +268,7 @@ Display.showResult = function ($atkSide, $defSide, moveIndex, damageNumbers) {
 	return true;
 }
 Display.clearResult = function (side, index) {
-	if (!(side in Display.active)) return null;
+	if (!(side in Display.sides)) return null;
 	$resultBox = $('#'+side+'-results > .result-move-'+index+' > .inner-results-container');
 	$resultBox.children('.results-move-name').text('---');
 	$resultBox.children('.results-move-damage').text('0-0 (0-0%)');
@@ -446,15 +450,15 @@ Display.loadDropdowns = function () {
 	}
 }
 Display.loadSets = function ($side) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
-	var pkm = Display.active[$side.attr('id').substr(0,2)];
+	var pkm = Display.sides[$side.attr('id').substr(0,2)].active;
 	$side.children('.set-select').html(Display.makeSetDropdown(pkm.id));
 }
 Display.reloadGenders = function ($side) {
-	if ($side in Display.active) $side = $("#"+$side+"-pokemon");
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
-	var pkm = Display.active[$side.attr('id').substr(0,2)];
+	var pkm = Display.sides[$side.attr('id').substr(0,2)].active;
 	var options;
 	if (pkm.genderRatio) {
 			options = [

@@ -68,6 +68,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	// Crit?
 	var critMod = this.get('critMod') || 0x1800;
 	isCrit = isCrit || false;
+	this.args['crit'] = isCrit;
 	if (isCrit) damage = this.modify(damage, critMod);
 	
 	// Random Factor Begins To Apply Here

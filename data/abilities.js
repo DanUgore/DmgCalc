@@ -75,8 +75,11 @@ exports.BattleAbilities = {
 					return "Flying";
 				}
 			},
-			bpModAttack: function () {
-				if (this.args[this.self.id]) return 0x14CD;
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.args[this.self.id]) return 0x14CD;
+				}
 			}
 		},
 		id: "aerilate",
@@ -109,6 +112,14 @@ exports.BattleAbilities = {
 				return this.chainModify([0x14CD, 0x1000]); // The Analytic modifier is slightly higher than the normal 1.3 (0x14CC)
 			}
 		},
+		handles: {
+			/* TODO
+			bpModAttack: {
+				priority: 8,
+				value: return 0x14CD;
+			}
+			*/
+		}
 		id: "analytic",
 		name: "Analytic",
 		rating: 1,
@@ -1933,8 +1944,11 @@ exports.BattleAbilities = {
 					return "Fairy";
 				}
 			},
-			bpModAttack: function () {
-				if (this.args[this.self.id]) return 0x14CD;
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.args[this.self.id]) return 0x14CD;
+				}
 			}
 		},
 		id: "pixilate",
@@ -2150,8 +2164,11 @@ exports.BattleAbilities = {
 					return "Ice";
 				}
 			},
-			bpModAttack: function () {
-				if (this.args[this.self.id]) return 0x14CD;
+			bpModAttack: {
+				priority: 8,
+				value: function () {
+					if (this.args[this.self.id]) return 0x14CD;
+				}
 			}
 		},
 		id: "refrigerate",
@@ -2406,7 +2423,7 @@ exports.BattleAbilities = {
 		},
 		handles: {
 			bpModAttack: {
-				priority: 6,
+				priority: 8,
 				value: function () {
 					if (this.move.secondary || this.move.secondaries) return 0x14CD;
 				}

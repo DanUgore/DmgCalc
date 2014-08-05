@@ -112,6 +112,9 @@ Display.showPokemon = function ($side, pokemon) {
 		$row.find(".stat-input").val(pokemon.stats[stat]);
 		$row.find(".boost-input").val(pokemon.boosts[stat]||0);
 	}
+	// Current HP
+	$side.find(".currenthp-input").val(pokemon.currentHP);
+	$side.find(".currenthppercent-input").val(Math.ceil(pokemon.currentHP*100/pokemon.stats['hp']));
 	// Moves
 	for (var i = 0; i < pokemon.moveset.length; i++) {
 		var $row = $side.find('#move-'+i);
@@ -180,8 +183,14 @@ Display.getSet = function ($side) {
 		if (!$row.length) continue;
 		set.ivs[stat] = $row.find(".iv-input").val();
 		set.evs[stat] = $row.find(".ev-input").val();
-		if (stat !== "hp" && $row.find(".boost-input").val()) if (set.boosts || (set.boosts = {})) set.boosts[stat] = $row.find(".boost-input").val();
+		if (stat !== "hp" && $row.find(".boost-input").val()) {
+			if (set.boosts || (set.boosts = {})) set.boosts[stat] = $row.find(".boost-input").val();
+		}
 	}
+	// Current HP
+	set.currentHP = $side.find(".currenthp-input").val();
+	// Current HP %
+	// var currentHPpercent = $side.find(".currenthppercent-input").val();
 	// Moves
 	set.moveset = ['','','',''];
 	for (var i = 0; i < 4; i++) {
@@ -484,6 +493,20 @@ Display.addHandlers = function () {
 	$('.pkm-select').change(
 		function () {
 			Display.changePokemon($(this));
+		}
+	);
+	
+	// This input only changes the current HP input. Not the pokemon. However when current HP changes the display updates
+	$('.currenthppercent-input').change( 
+		function () {
+			var $side = $(this).parents('.pokemon-pane');
+			var pkm = Display.getPokemon($side);
+			if (!pkm) {
+				$(this).val("");
+				return false;
+			}
+			var maxHP = pkm.stats['hp'] || 0;
+			$side.find('.currenthp-input').val(Math.floor($(this).val() * maxHP / 100));
 		}
 	);
 	var elements = [

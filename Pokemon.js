@@ -67,7 +67,7 @@ Pokemon.prototype.updateDetails = function(update) {
 	}
 	this.level = parseInt(this.level) || 100;
 	this.happiness = parseInt(this.happiness) || 255;
-	this.currentHP = parseInt(this.happiness) || this.stats['hp'];
+	this.currentHP = parseInt(this.currentHP) || this.stats['hp'];
 	this.update();
 	return this;
 };

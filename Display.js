@@ -490,25 +490,21 @@ Display.reloadGenders = function ($side) {
 	$side.children('.gender-select').html(options.join(''));
 }
 Display.addHandlers = function () {
-	$('.pkm-select').change(
-		function () {
-			Display.changePokemon($(this));
-		}
-	);
+	$('.pkm-select').change(function () {
+		Display.changePokemon($(this));
+	});
 	
 	// This input only changes the current HP input. Not the pokemon. However when current HP changes the display updates
-	$('.currenthppercent-input').change( 
-		function () {
-			var $side = $(this).parents('.pokemon-pane');
-			var pkm = Display.getPokemon($side);
-			if (!pkm) {
-				$(this).val("");
-				return false;
-			}
-			var maxHP = pkm.stats['hp'] || 0;
-			$side.find('.currenthp-input').val(Math.floor($(this).val() * maxHP / 100));
+	$('.currenthppercent-input').change(function () {
+		var $side = $(this).parents('.pokemon-pane');
+		var pkm = Display.getPokemon($side);
+		if (!pkm) {
+			$(this).val("");
+			return false;
 		}
-	);
+		var maxHP = pkm.stats['hp'] || 0;
+		$side.find('.currenthp-input').val(Math.floor($(this).val() * maxHP / 100));
+	});
 	var elements = [
 		"input",
 		".gender-select",
@@ -518,32 +514,26 @@ Display.addHandlers = function () {
 		".status-select",
 		".move-select"
 	]
-	$('.pokemon-pane').find(elements.join(', ')).change(
-		function () {
-			Display.updatePokemon($(this).parents('.pokemon-pane'));
-		}
-	)
+	$('.pokemon-pane').find(elements.join(', ')).change(function () {
+		Display.updatePokemon($(this).parents('.pokemon-pane'));
+	});
 	
-	$('.set-select').change(
-		function () {
-			$this = $(this);
-			var val = $this.val();
-			var $side = $this.parent();
-			pkm = Display.getPokemon($side);
-			if (val === "") Display.showPokemon($side, pkm.resetDetails());
-			else if (val === "R") Display.showPokemon($side, pkm.randomMoveset()); // Do stuff here later
-			else {
-				set = Data.getSets(pkm.id)[val];
-				Display.showPokemon($side, pkm.changeSet(set));
-			}
-			Display.updateCalcs();
+	$('.set-select').change(function () {
+		$this = $(this);
+		var val = $this.val();
+		var $side = $this.parent();
+		pkm = Display.getPokemon($side);
+		if (val === "") Display.showPokemon($side, pkm.resetDetails());
+		else if (val === "R") Display.showPokemon($side, pkm.randomMoveset()); // Do stuff here later
+		else {
+			set = Data.getSets(pkm.id)[val];
+			Display.showPokemon($side, pkm.changeSet(set));
 		}
-	);
+		Display.updateCalcs();
+	});
 	
-	$('.field-pane').find('input, select').change(
-		function() {
-			Display.updateCalcs();
-		}
-	);
+	$('.field-pane').find('input, select').change(function() {
+		Display.updateCalcs();
+	});
 };
 

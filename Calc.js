@@ -29,7 +29,9 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	this.defenderAbility = Calc.abilityClone(defender.ability);
 	this.defenderItem = Calc.itemClone(defender.item);
 	this.field = Calc.fieldEffects(field);
-	this.args = {}; // Keep variables from Calc.get() here
+	this.args = {}; // Keep various variables and flags here
+	this.args['spread'] = this.field['attack'].spread;
+	this.args['crit'] = !!isCrit || false;
 
 	/* listed move type -> moves that call other moves use the new move instead ->
 	 * Normalize changes the move to Normal -> moves now change type (Hidden Power/Judgment/Natural Gift/Techno Blast/Weather Ball) ->
@@ -67,8 +69,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	
 	// Crit?
 	var critMod = this.get('critMod') || 0x1800;
-	isCrit = isCrit || false;
-	this.args['crit'] = isCrit;
+	isCrit = this.args['crit'];
 	if (isCrit) damage = this.modify(damage, critMod);
 	
 	// Random Factor Begins To Apply Here

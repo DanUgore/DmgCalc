@@ -275,6 +275,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 199,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Steel-type attack. Single use."
@@ -613,6 +621,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 195,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Rock-type attack. Single use."
@@ -689,6 +705,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 200,
 		gen: 4,
 		desc: "Halves damage taken from a Normal-type attack. Single use."
@@ -803,6 +827,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 189,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Fighting-type attack. Single use."
@@ -836,6 +868,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 192,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Flying-type attack. Single use."
@@ -858,6 +898,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 198,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Dark-type attack. Single use."
@@ -1328,6 +1376,16 @@ exports.BattleItems = {
 		onModifyDamage: function (damage, source, target, move) {
 			if (move && this.getEffectiveness(move, target) > 0) {
 				return this.chainModify(1.2);
+			}
+		},
+		handles: {
+			finalModAttack: {
+				priority: 2,
+				value: function () {
+					if (this.args['supereffective']) {
+						return 0x1333;
+					}
+				}
 			}
 		},
 		num: 268,
@@ -1848,6 +1906,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 197,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Dragon-type attack. Single use."
@@ -2153,6 +2219,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 196,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Ghost-type attack. Single use."
@@ -2175,6 +2249,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 190,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Poison-type attack. Single use."
@@ -2438,6 +2520,12 @@ exports.BattleItems = {
 					this.damage(source.maxhp / 10, source, source, this.getItem('lifeorb'));
 					source.removeVolatile('lifeorb');
 				}
+			}
+		},
+		handles: {
+			finalModAttack: {
+				priority: 2,
+				value: 0x14CC
 			}
 		},
 		num: 270,
@@ -3168,6 +3256,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 184,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Fire-type attack. Single use."
@@ -3268,6 +3364,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 185,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Water-type attack. Single use."
@@ -3290,6 +3394,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 193,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Psychic-type attack. Single use."
@@ -3748,6 +3860,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 187,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Grass-type attack. Single use."
@@ -3889,6 +4009,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: -6,
 		gen: 6,
 		desc: "Halves damage taken from a super effective Fairy-type attack. Single use."
@@ -4099,6 +4227,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 191,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Ground-type attack. Single use."
@@ -4540,6 +4676,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 194,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Bug-type attack. Single use."
@@ -4691,6 +4835,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 186,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Electric-type attack. Single use."
@@ -4910,6 +5062,14 @@ exports.BattleItems = {
 			}
 		},
 		onEat: function () { },
+		handles: {
+			finalModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.args['supereffective'] && this.move.type === this.self['naturalGift'].type) return 0x800;
+				}
+			}
+		},
 		num: 188,
 		gen: 4,
 		desc: "Halves damage taken from a super effective Ice-type attack. Single use."

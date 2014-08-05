@@ -648,6 +648,16 @@ exports.BattleAbilities = {
 					return this.chainModify(0.75);
 			}
 		},
+		handles: {
+			finalModDefend: {
+				priority: 5,
+				value: function () {
+					if (this.args['supereffective']) {
+						return 0xC00;
+					}
+				}
+			}
+		},
 		id: "filter",
 		name: "Filter",
 		rating: 3,
@@ -1665,6 +1675,16 @@ exports.BattleAbilities = {
 				return this.chainModify(0.5);
 			}
 		},
+		handles: {
+			finalModDefend: {
+				priority: 5,
+				value: function () {
+					if (this.attacker.currentHP === this.attacker.stats['hp']) {
+						return 0x800;
+					}
+				}
+			}
+		},
 		id: "multiscale",
 		name: "Multiscale",
 		rating: 4,
@@ -2488,6 +2508,16 @@ exports.BattleAbilities = {
 				return this.chainModify(1.5);
 			}
 		},
+		handles: {
+			finalModDefend: {
+				priority: 4,
+				value: function () {
+					if (this.args['crit']) {
+						return 0x1800;
+					}
+				}
+			}
+		},
 		id: "sniper",
 		name: "Sniper",
 		rating: 1,
@@ -2548,6 +2578,16 @@ exports.BattleAbilities = {
 			if (this.getEffectiveness(move, target) > 0) {
 				this.debug('Solid Rock neutralize');
 				return this.chainModify(0.75);
+			}
+		},
+		handles: {
+			finalModDefend: {
+				priority: 5,
+				value: function () {
+					if (this.args['supereffective']) {
+						return 0xC00;
+					}
+				}
 			}
 		},
 		id: "solidrock",
@@ -2936,6 +2976,16 @@ exports.BattleAbilities = {
 			if (this.getEffectiveness(move, target) < 0) {
 				this.debug('Tinted Lens boost');
 				return this.chainModify(2);
+			}
+		},
+		handles: {
+			finalModDefend: {
+				priority: 4,
+				value: function () {
+					if (this.args['notveryeffective']) {
+						return 0x2000;
+					}
+				}
 			}
 		},
 		id: "tintedlens",

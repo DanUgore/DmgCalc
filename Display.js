@@ -524,7 +524,7 @@ Display.addHandlers = function () {
 		var $side = $this.parent();
 		pkm = Display.getPokemon($side);
 		if (val === "") Display.showPokemon($side, pkm.resetDetails());
-		else if (val === "R") Display.showPokemon($side, pkm.randomMoveset()); // Do stuff here later
+		else if (val === "R") Display.showPokemon($side, pkm.randomizeMoveset()); // Do stuff here later
 		else {
 			set = Data.getSets(pkm.id)[val];
 			Display.showPokemon($side, pkm.changeSet(set));

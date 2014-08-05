@@ -21,6 +21,8 @@ function Pokemon(name, set) {
 		this.evs[stat] = isNaN(parseInt(this.set.evs[stat])) ? 0 : parseInt(this.set.evs[stat]);
 		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
 	}
+	this.boosts['acc'] = parseInt(this.boosts['acc']) || 0;
+	this.boosts['eva'] = parseInt(this.boosts['acc']) || 0;
 	this.calcStats();
 	this.moveset = (this.set.moveset || []).slice(0,4).map(toID);
 	while (this.moveset.length < 4) this.moveset.push('');
@@ -52,6 +54,8 @@ Pokemon.prototype.changeSet = function(set) {
 		this.evs[stat] = isNaN(parseInt(this.set.evs[stat])) ? 0 : parseInt(this.set.evs[stat]);
 		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
 	}
+	this.boosts['acc'] = parseInt(this.boosts['acc']) || 0;
+	this.boosts['eva'] = parseInt(this.boosts['acc']) || 0;
 	this.calcStats();
 	this.moveset = (this.set.moveset || ["","","",""]).map(toID);
 	return this;
@@ -65,6 +69,8 @@ Pokemon.prototype.updateDetails = function(update) {
 		this.evs[stat] = isNaN(parseInt(this.evs[stat])) ? 0 : parseInt(this.evs[stat]);
 		if (stat !== 'hp') this.boosts[stat] = parseInt(this.boosts[stat]) || 0;
 	}
+	this.boosts['acc'] = parseInt(this.boosts['acc']) || 0;
+	this.boosts['eva'] = parseInt(this.boosts['acc']) || 0;
 	this.level = parseInt(this.level) || 100;
 	this.happiness = parseInt(this.happiness) || 255;
 	this.currentHP = parseInt(this.currentHP) || this.stats['hp'];
@@ -86,7 +92,7 @@ Pokemon.prototype.randomGender = function () {
 	if (!this.genderRatio) return this.gender || "N";
 	return (Math.floor(Math.random()*0x100)/0x100 < this.genderRatio['M'] ? 'F' : 'M');
 };
-Pokemon.prototype.randomMoveset = function() {
+Pokemon.prototype.randomizeMoveset = function() {
 	if (!Data.getLearnset) return null;
 	var lset = Data.getLearnset(this.id);
 	if (!lset) return false;
@@ -111,7 +117,7 @@ Pokemon.prototype.update = function() { // Recalculate necessary things when int
 	this.hpType = hpTypes[hpTypeIndex];
 	//this.hpPower = 60; Math.floor(parseInt((function(ivs) { var buf = ''; for (var stat in ivs) { buf += ((ivs[stat] & 2) / 2) }; return buf; }(this.ivs), 2) * 40 / 63 + 30)
 };
-Pokemon.makeRandomMoveset = function (pokemon) { // This one is accessible outside the Pokemon object
+Pokemon.randomMoveset = function (pokemon) { // This one is accessible outside the Pokemon object
 	if (!Data.getLearnset) return null;
 	var lset = Data.getLearnset(toID(pokemon));
 	if (!lset) return false;

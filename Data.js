@@ -104,9 +104,53 @@ Data.FieldEffects = {
 	},
 	helpinghand: {
 		handles: {
-			finalModAttack: {
-				priority: 3,
+			bpModAttack: {
+				priority: 2,
 				value: 0x1800
+			}
+		}
+	},
+	friendguard: {
+		handles: {
+			finalModDefend: {
+				priority: 3,
+				value: 0xC00
+			}
+		}
+	},
+	reflect: {
+		handles: {
+			finalModDefend: {
+				priority: 6,
+				value: function () {
+					if (this.move.category === 'Physical') {
+						if (this.args['spread']) return 0xA8F;
+						return 0x800;
+					}
+				}
+			}
+		}
+	},
+	lightscreen: {
+		handles: {
+			finalModDefend: {
+				priority: 6,
+				value: function () {
+					if (this.move.category === 'Special') {
+						if (this.args['spread']) return 0xA8F;
+						return 0x800;
+					}
+				}
+			}
+		}
+	},
+	charge: {
+		handles: {
+			bpModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.move.type === 'Electric') return 0x2000;
+				}
 			}
 		}
 	}

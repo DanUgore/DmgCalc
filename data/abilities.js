@@ -2423,7 +2423,7 @@ exports.BattleAbilities = {
 		},
 		handles: {
 			bpModAttack: {
-				priority: 8,
+				priority: 6,
 				value: function () {
 					if (this.move.secondary || this.move.secondaries) return 0x14CD;
 				}

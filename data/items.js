@@ -756,6 +756,12 @@ exports.BattleItems = {
 			return this.chainModify(1.5);
 		},
 		isChoice: true,
+		handles: {
+			atkModAttack: {
+				priority: 1,
+				value: 0x1800
+			}
+		},
 		num: 220,
 		gen: 3,
 		desc: "Holder's Attack is 1.5x, but it can only use the first move it selects."
@@ -805,6 +811,12 @@ exports.BattleItems = {
 			return this.chainModify(1.5);
 		},
 		isChoice: true,
+		handles: {
+			spaModAttack: {
+				priority: 1,
+				value: 0x1800
+			}
+		},
 		num: 297,
 		gen: 4,
 		desc: "Holder's Sp. Atk is 1.5x, but it can only use the first move it selects."
@@ -1008,6 +1020,14 @@ exports.BattleItems = {
 				return this.chainModify(2);
 			}
 		},
+		handles: {
+			spdModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.attacker.species === 'Clamperl') return 0x2000;
+				}
+			}
+		},
 		num: 227,
 		gen: 3,
 		desc: "If holder is a Clamperl, its Sp. Def is doubled."
@@ -1023,6 +1043,14 @@ exports.BattleItems = {
 		onModifySpA: function (spa, pokemon) {
 			if (pokemon.baseTemplate.species === 'Clamperl') {
 				return this.chainModify(2);
+			}
+		},
+		handles: {
+			spaModAttack: {
+				priority: 1,
+				value: function () {
+					if (this.attacker.species === 'Clamperl') return 0x2000;
+				}
 			}
 		},
 		num: 226,
@@ -1360,6 +1388,14 @@ exports.BattleItems = {
 		onModifySpD: function (spd, pokemon) {
 			if (pokemon.baseTemplate.nfe) {
 				return this.chainModify(1.5);
+			}
+		},
+		handles: {
+			spdModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.defender.evos && this.defender.evos.length) return 0x1800;
+				}
 			}
 		},
 		num: 538,
@@ -2552,6 +2588,20 @@ exports.BattleItems = {
 				return this.chainModify(2);
 			}
 		},
+		handles: {
+			atkModAttack: {
+				priority: 1,
+				value: function () {
+					if (this.attacker.species === 'Pikachu') return 0x2000;
+				}
+			},
+			spaModAttack: {
+				priority: 1,
+				value: function () {
+					if (this.attacker.species === 'Pikachu') return 0x2000;
+				}
+			}
+		},
 		num: 236,
 		gen: 2,
 		desc: "If holder is a Pikachu, its Attack and Sp. Atk are doubled."
@@ -2937,6 +2987,14 @@ exports.BattleItems = {
 		onModifyDef: function (def, pokemon) {
 			if (pokemon.template.species === 'Ditto') {
 				return this.chainModify(2);
+			}
+		},
+		handles: {
+			defModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.attacker.species === 'Ditto') return 0x2000;
+				}
 			}
 		},
 		num: 257,
@@ -4419,6 +4477,20 @@ exports.BattleItems = {
 				return this.chainModify(1.5);
 			}
 		},
+		handles: {
+			spaModAttack: {
+				priority: 1,
+				value: function () {
+					if (this.attacker.species === 'Latios' || this.attacker.species === 'Latias') return 0x1800;
+				}
+			},
+			spdModDefend: {
+				priority: 1,
+				value: function () {
+					if (this.defender.species === 'Latios' || this.defender.species === 'Latias') return 0x1800;
+				}
+			}
+		},
 		num: 225,
 		gen: 3,
 		desc: "If holder is a Latias or a Latios, its Sp. Atk and Sp. Def are 1.5x."
@@ -4699,6 +4771,14 @@ exports.BattleItems = {
 		onModifyAtk: function (atk, pokemon) {
 			if (pokemon.baseTemplate.species === 'Cubone' || pokemon.baseTemplate.species === 'Marowak') {
 				return this.chainModify(2);
+			}
+		},
+		handles: {
+			atkModAttack: {
+				priority: 1,
+				value: function () {
+					if (this.attacker.species === 'Cubone' || this.attacker.species === 'Marowak') return 0x2000;
+				}
 			}
 		},
 		num: 258,

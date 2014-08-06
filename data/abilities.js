@@ -119,7 +119,7 @@ exports.BattleAbilities = {
 				value: return 0x14CD;
 			}
 			*/
-		}
+		},
 		id: "analytic",
 		name: "Analytic",
 		rating: 1,
@@ -268,6 +268,24 @@ exports.BattleAbilities = {
 			if (move.type === 'Fire' && attacker.hp <= attacker.maxhp / 3) {
 				this.debug('Blaze boost');
 				return this.chainModify(1.5);
+			}
+		},
+		handles: {
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 3 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Fire') return 0x1800;
+					}
+				}
+			},
+			spaModDefend: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 3 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Fire') return 0x1800;
+					}
+				}
 			}
 		},
 		id: "blaze",
@@ -497,6 +515,24 @@ exports.BattleAbilities = {
 		},
 		onResidual: function (pokemon) {
 			pokemon.update();
+		},
+		handles: {
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 2 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Grass') return 0x1800;
+					}
+				}
+			},
+			spaModDefend: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 2 <= this.attacker.stats['hp']){
+						return 0x800;
+					}
+				}
+			}
 		},
 		id: "defeatist",
 		name: "Defeatist",
@@ -743,6 +779,21 @@ exports.BattleAbilities = {
 				}
 			}
 		},
+		handles: {
+			/* Figure out a way to do this too...
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.move.type === 'Fire') return 0x1800;
+				}
+			},
+			spaModDefend: {
+				priority: 3,
+				value: function () {
+					if (this.move.type === 'Fire') return 0x1800;
+				}
+			}*/
+		},
 		id: "flashfire",
 		name: "Flash Fire",
 		rating: 3,
@@ -968,6 +1019,15 @@ exports.BattleAbilities = {
 				return this.chainModify(1.5);
 			}
 		},
+		handles: {
+			immuneToBurnDrop: true,
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.status) return 0x1800;
+				}
+			}
+		},
 		id: "guts",
 		name: "Guts",
 		rating: 3,
@@ -1066,6 +1126,7 @@ exports.BattleAbilities = {
 			return this.chainModify(2);
 		},
 		handles: {
+			priority: 3,
 			atkModAttack: 0x2000
 		},
 		id: "hugepower",
@@ -1084,6 +1145,13 @@ exports.BattleAbilities = {
 		onModifyMove: function (move) {
 			if (move.category === 'Physical' && typeof move.accuracy === 'number') {
 				move.accuracy *= 0.8;
+			}
+		},
+		handles: {
+			priority: 3,
+			atkDirectModAttack: {
+				priority: 1,
+				value: 0x1800
 			}
 		},
 		id: "hustle",
@@ -1544,6 +1612,14 @@ exports.BattleAbilities = {
 				return this.chainModify(1.5);
 			}
 		},
+		handles: {
+			defModDefend: {
+				priority: 3,
+				value: function () {
+					if (this.defender.status) return 0x1800;
+				}
+			}
+		},
 		id: "marvelscale",
 		name: "Marvel Scale",
 		rating: 3,
@@ -1585,6 +1661,16 @@ exports.BattleAbilities = {
 					return this.chainModify(1.5);
 				}
 			}
+		},
+		handles: {
+			/* Figure something out
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					return 0x1800;
+				}
+			}
+			*/
 		},
 		id: "minus",
 		name: "Minus",
@@ -1763,6 +1849,12 @@ exports.BattleAbilities = {
 				move.type = 'Normal';
 			}
 		},
+		handles: {
+			moveType: {
+				priority: -1,
+				value: 'Normal'
+			}
+		},
 		id: "normalize",
 		name: "Normalize",
 		rating: -1,
@@ -1825,6 +1917,24 @@ exports.BattleAbilities = {
 			if (move.type === 'Grass' && attacker.hp <= attacker.maxhp / 3) {
 				this.debug('Overgrow boost');
 				return this.chainModify(1.5);
+			}
+		},
+		handles: {
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 3 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Grass') return 0x1800;
+					}
+				}
+			},
+			spaModDefend: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 3 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Grass') return 0x1800;
+					}
+				}
 			}
 		},
 		id: "overgrow",
@@ -1971,6 +2081,16 @@ exports.BattleAbilities = {
 				}
 			}
 		},
+		handles: {
+			/* Figure something out
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					return 0x1800;
+				}
+			}
+			*/
+		},
 		id: "plus",
 		name: "Plus",
 		rating: 0,
@@ -2073,6 +2193,10 @@ exports.BattleAbilities = {
 		onModifyAtkPriority: 5,
 		onModifyAtk: function (atk) {
 			return this.chainModify(2);
+		},
+		handles: {
+			priority: 3,
+			atkModAttack: 0x2000
 		},
 		id: "purepower",
 		name: "Pure Power",
@@ -2583,6 +2707,14 @@ exports.BattleAbilities = {
 				this.damage(target.maxhp / 8);
 			}
 		},
+		handles: {
+			spaModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.args['weather'] === 'sun') return 0x1800;
+				}
+			}
+		},
 		id: "solarpower",
 		name: "Solar Power",
 		rating: 1.5,
@@ -2830,6 +2962,24 @@ exports.BattleAbilities = {
 				return this.chainModify(1.5);
 			}
 		},
+		handles: {
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 3 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Bug') return 0x1800;
+					}
+				}
+			},
+			spaModDefend: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 3 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Bug') return 0x1800;
+					}
+				}
+			}
+		},
 		id: "swarm",
 		name: "Swarm",
 		rating: 2,
@@ -2981,6 +3131,20 @@ exports.BattleAbilities = {
 				return this.chainModify(0.5);
 			}
 		},
+		handles: {
+			atkModDefend: {
+				priority: 4,
+				value: function () {
+					if (this.move.type === 'Fire' || this.move.type === 'Ice') return 0x800;
+				}
+			},
+			spaModDefend: {
+				priority: 4,
+				value: function () {
+					if (this.move.type === 'Fire' || this.move.type === 'Ice') return 0x800;
+				}
+			}
+		},
 		id: "thickfat",
 		name: "Thick Fat",
 		rating: 3,
@@ -3025,6 +3189,24 @@ exports.BattleAbilities = {
 			if (move.type === 'Water' && attacker.hp <= attacker.maxhp / 3) {
 				this.debug('Torrent boost');
 				return this.chainModify(1.5);
+			}
+		},
+		handles: {
+			atkModAttack: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 3 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Water') return 0x1800;
+					}
+				}
+			},
+			spaModDefend: {
+				priority: 3,
+				value: function () {
+					if (this.attacker.currentHP * 3 <= this.attacker.stats['hp']){
+						if (this.move.type === 'Water') return 0x1800;
+					}
+				}
 			}
 		},
 		id: "torrent",

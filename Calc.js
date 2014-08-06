@@ -31,7 +31,8 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	this.field = Calc.fieldEffects(field);
 	this.args = {}; // Keep various variables and flags here
 	this.args['spread'] = this.field['attack'].spread;
-	this.args['crit'] = !!isCrit || false;
+	this.args['crit'] = (this.get('negateCrit') ? false : !!isCrit);
+	this.args['weather'] = this.field['global']['weather'] ? this.field['global']['weather'].id : false;
 
 	/* listed move type -> moves that call other moves use the new move instead ->
 	 * Normalize changes the move to Normal -> moves now change type (Hidden Power/Judgment/Natural Gift/Techno Blast/Weather Ball) ->
@@ -41,11 +42,17 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	*/
 	this.move.type = this.get('moveType') || move.type;
 	
-	attackStatName = (move.category === 'Physical' ? 'atk' : 'spa');
-	defendStatName = (move.category === 'Physical' ? 'def' : 'spd');
+	var attackStatName = (move.category === 'Physical' ? 'atk' : 'spa');
+	var defendStatName = (move.category === 'Physical' ? 'def' : 'spd');
 
-	attackStat = this.getStat(attackStatName, attacker.stats[attackStatName], attacker.boosts[attackStatName], true);
-	defendStat = this.getStat(defendStatName, defender.stats[defendStatName], defender.boosts[defendStatName], true);
+	var attackBoosts = attacker.boosts[attackStatName];
+	var defendBoosts = defender.boosts[defendStatName];
+	if (this.args['crit']) {
+		if (attackBoosts < 0) attackBoosts = 0;
+		if (defendBoosts > 0) defendBoosts = 0;
+	}
+	attackStat = this.getStat(attackStatName, attacker.stats[attackStatName], attackBoosts, true);
+	defendStat = this.getStat(defendStatName, defender.stats[defendStatName], defendBoosts, true);
 	
 	var damage = 0;
 	
@@ -60,7 +67,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	
 	// Spread?
 	var spreadMod = 0x1000;
-	if (this.field['attack'].spread && this.move.target !== 'any' || this.move.target !== 'normal') spreadMod = 0xC00;
+	if (this.args['spread'] && this.move.target !== 'any' || this.move.target !== 'normal') spreadMod = 0xC00;
 	damage = this.modify(damage, weatherMod);
 	
 	// Weather?
@@ -246,6 +253,13 @@ Calc.getStat = function (statName, stat, boost, modify) {
 		stat = Math.floor(stat);
 	}
 	if (modify) {
+		// Direct Modifiers
+		var directMods = this.get(statName+'DirectMod', true) || [];
+		directMods.forEach(function(m){stat = Calc.modify(stat, m)});
+		/*for (var i = 0; i < directMods.length; i++) {
+			
+		}*/
+		// Chained Modifiers
 		var mod = this.getMod(statName+'Mod') || 0x1000;
 		stat = this.modify(stat, mod);
 	}

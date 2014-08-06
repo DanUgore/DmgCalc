@@ -86,6 +86,20 @@ Data.FieldEffects = {
 		id:'sand',
 		name:'Sand',
 		handles: {
+			spdDirectMod: {
+				priority: 2,
+				/* lol this is so wrong... a global handle only checking the defender... <_<
+				 * the stat function doesn't specify who the stat is coming from...
+				 * and this can apply to either attacker or defender...
+				 * We only get a modified defense stat from the defender so its safe to assume for now...
+				 * But I really wanna fix that in the future...
+				*/
+				value: function () {
+					for (var i = 0; i < this.defender.types.length; i++) {
+						if (this.defender.types[i] === 'Rock') return 0x1800;
+					}
+				}
+			}
 		}
 	},
 	hail: {
@@ -123,7 +137,7 @@ Data.FieldEffects = {
 			finalModDefend: {
 				priority: 6,
 				value: function () {
-					if (this.move.category === 'Physical') {
+					if (this.move.category === 'Physical' && !this.args['crit']) {
 						if (this.args['spread']) return 0xA8F;
 						return 0x800;
 					}
@@ -136,7 +150,7 @@ Data.FieldEffects = {
 			finalModDefend: {
 				priority: 6,
 				value: function () {
-					if (this.move.category === 'Special') {
+					if (this.move.category === 'Special' && !this.args['crit']) {
 						if (this.args['spread']) return 0xA8F;
 						return 0x800;
 					}
@@ -150,6 +164,22 @@ Data.FieldEffects = {
 				priority: 3,
 				value: function () {
 					if (this.move.type === 'Electric') return 0x2000;
+				}
+			}
+		}
+	},
+	flowergift: {
+		handles: {
+			atkModAttack: {
+				priority: 2,
+				value: function () {
+					if (this.args['weather'] === 'sun') return 0x1800;
+				}
+			},
+			spdModDefend: {
+				priority: 2,
+				value: function () {
+					if (this.args['weather'] === 'sun') return 0x1800;
 				}
 			}
 		}

@@ -1328,7 +1328,7 @@ exports.BattleMovedex = {
 			bpModAttack: {
 				priority: 4,
 				value: function () {
-					if (this.defender.currentHP * 2 < this.defender.stats['hp']) return 0x2000;
+					if (this.defender.currentHP * 2 <= this.defender.stats['hp']) return 0x2000;
 				}
 			}
 		},
@@ -3719,6 +3719,7 @@ exports.BattleMovedex = {
 			}
 		},
 		handles: {
+			immuneToBurnDrop: true,
 			bpModAttack: {
 				priority: 4,
 				value: function () {
@@ -12593,6 +12594,14 @@ exports.BattleMovedex = {
 			if (this.isWeather(['raindance', 'sandstorm', 'hail'])) {
 				this.debug('weakened by weather');
 				return this.chainModify(0.5);
+			}
+		},
+		handles: {
+			bpModAttack: {
+				priority: 4,
+				value: function () {
+					if (this.args['weather'] && this.args['weather'] !== 'sun') return 0x800;
+				}
 			}
 		},
 		secondary: false,

@@ -29,9 +29,9 @@ function Pokemon(name, set) {
 	if (!this.genderRatio && !this.gender) this.genderRatio = {M:0.5,F:0.5};
 	this.gender = this.gender || this.set.gender || this.randomGender();
 	var hpTypes = ["Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark"];
-	var hpTypeIndex = Math.floor(parseInt((function(ivs) { var buf = ""; for (var stat in ivs) buf += ''+(ivs[stat] % 2) ; return buf; })(this.ivs), 2) * 15 / 63)
+	var hpTypeIndex = Math.floor(parseInt((function(ivs) { var buf = ""; for (var stat in ivs) buf += ''+(ivs[stat]&1) ; return buf; })(this.ivs), 2) * 15 / 63)
 	this.hpType = hpTypes[hpTypeIndex];
-	this.hpPower = 60; //Math.floor(parseInt(function() { var buf = ""; for (var stat in statTable) { buf += ''+((this.ivs[stat] & 2) / 2) }; return buf; }, 2) * 40 / 63 + 30)
+	this.hpPower = 60; //Math.floor(parseInt(function() { var buf = ""; for (var stat in statTable) { buf += ''+((this.ivs[stat]&2)/2) }; return buf; }, 2) * 40 / 63 + 30)
 	this.status = this.set.status || "";
 	this.currentHP = parseInt(this.set.currentHP) || this.stats['hp'];
 	this.happiness = parseInt(this.set.happiness) || 255;
@@ -73,7 +73,7 @@ Pokemon.prototype.updateDetails = function(update) {
 	this.boosts['eva'] = parseInt(this.boosts['acc']) || 0;
 	this.level = parseInt(this.level) || 100;
 	this.happiness = parseInt(this.happiness) || 255;
-	this.currentHP = parseInt(this.currentHP) || this.stats['hp'];
+	this.currentHP = isNaN(parseInt(this.currentHP)) ? this.stats['hp'] : parseInt(this.currentHP);
 	this.update();
 	return this;
 };

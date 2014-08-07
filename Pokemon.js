@@ -33,7 +33,8 @@ function Pokemon(name, set) {
 	this.hpType = hpTypes[hpTypeIndex];
 	this.hpPower = 60; //Math.floor(parseInt(function() { var buf = ""; for (var stat in statTable) { buf += ''+((this.ivs[stat]&2)/2) }; return buf; }, 2) * 40 / 63 + 30)
 	this.status = this.set.status || "";
-	this.currentHP = parseInt(this.set.currentHP) || this.stats['hp'];
+	this.currentHP = parseInt(this.set.currentHP);
+	this.currentHP = ( isNaN(this.currentHP) ? this.stats['hp'] : ( this.currentHP > this.stats['hp'] ? this.stats['hp'] : this.currentHP ) );
 	this.happiness = parseInt(this.set.happiness) || 255;
 	for (var prop in this.set) if (typeof this[prop] === 'undefined') this[prop] = this.set[prop];
 };

@@ -13123,6 +13123,9 @@ exports.BattleMovedex = {
 		onModifyMove: function (move) {
 			move.type = '???';
 		},
+		handles: {
+			moveType: '???';
+		}
 		self: {
 			onHit: function (source) {
 				this.directDamage(source.maxhp / 4, source, source, 'strugglerecoil');

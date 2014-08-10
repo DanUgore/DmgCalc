@@ -90,11 +90,11 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	var stabMod = this.get('stabMod') || 0x1800;
 	
 	// Type Effectiveness
-	// var typeEff = 1;
-	var typeEff = this.getTypeEff(this.move.type, defender.types);
+	var typeEff = 1;
+	if (this.move.type !== '???') typeEff = this.getTypeEff(this.move.type, defender.types);
 	if (!typeEff) return this.noDamage();
-	if (typeEff > 1) this.args['superEffective'] = true;
-	else if (typeEff < 1) this.args['notVeryEffective'] = true;
+	this.args['superEffective'] = typeEff > 1;
+	this.args['notVeryEffective'] = typeEff < 1;
 	
 	// Burn
 	var burnEffect = false;
@@ -221,7 +221,8 @@ Calc.getFrom = function (handle, fromObj, returnObj) {
 
 Calc.getTypeEff = function (oType, dTypes) {
 	if (!oType) return false;
-	var ignoreImmunities = false;
+	var ignoreImmunities = false; // Attackers, Scrappy, Mold Breaker?
+	var negateImmunities = false; // Defenders, Ring Target
 	var immune = this.getFrom('immuneTo'+oType, 'defenderAbility');
 	if (immune) return 0;
 	var eff = 1;

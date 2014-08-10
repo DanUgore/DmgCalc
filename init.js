@@ -10,7 +10,7 @@ Display.loadDropdowns();
 // Add Handlers
 // Validate Input
 // Validator
-$('select, input').each(Validator.addValidator);
+Validator.addValidators();
 // Update Display
 Display.addHandlers();
 

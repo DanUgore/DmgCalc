@@ -1,5 +1,8 @@
 Validator = {};
 
+Validator.addValidators = function () {
+	$('select, input').each(Validator.addValidator);
+}
 Validator.addValidator = function (index, el) { // This function is called in $().each(). The first arg will be an index. Though we dont need it
 	$el = $(el);
 	// Add function by tag name.

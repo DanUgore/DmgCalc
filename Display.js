@@ -42,7 +42,35 @@ Display.clearAllFields = function ($side) {
 	];
 	var $elements = $side.find(classes.join(','));
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
-	Display.loadGenders($side);
+	Display.reloadGenders($side);
+	Display.showPokemon(Display.getPokemon($side, true));
+	return true;
+}
+Display.clearPokemon = function ($side) {
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
+	var classes = [
+		".pkm-select", // Species
+		".level-input", // Level
+		".happiness-input", // Happiness
+		".gender-select", // Gender
+		".type-select", // Types & Move Types
+		".ability-select", // Ability
+		".item-select", // Item
+		".nature-select", // Nature
+		".baseStat-input", // Stats
+		".iv-input", 
+		".ev-input", 
+		".stat-input", 
+		".boost-input", 
+		".move-select", // Moves
+		".bp-input", 
+		".cat-select", 
+		".pp-input"
+	];
+	var $elements = $side.find(classes.join(','));
+	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
+	Display.reloadGenders($side);
 	Display.showPokemon(Display.getPokemon($side, true));
 	return true;
 }
@@ -53,16 +81,21 @@ Display.clearMoveField = function ($moveRow) {
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
 	return true;
 }
-Display.changePokemon = function ($side) {
+Display.changePokemon = function ($side, pokemon) {
 	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 	if (!($side instanceof jQuery)) return null;
-	if (!$side.val()) return Display.clearAllFields($side.parent());
-	var side = $side.parent().attr('id').substr(0,2);
-	Display.sides[side].active = new Pokemon($side.val());
-	Display.sides[side].active.side = side;
-	Display.showPokemon(side, Display.sides[side].active);
-	Display.loadSets(side);
+	if (typeof pokemon === 'string') {
+		if (!pokemon) return Display.clearAllFields($side);
+		pokemon = new Pokemon(pokemon);
+	}
+	if (!(pokemon instanceof Pokemon)) return false;
+	var side = $side.attr('id').substr(0,2);
+	pokemon.side = side;
+	Display.sides[side].active = pokemon;
+	Display.showPokemon($side, Display.sides[side].active);
+	Display.loadSets($side);
 	Display.updateCalcs();
+	return true;
 }
 Display.updatePokemon = function ($side) {
 	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
@@ -491,19 +524,21 @@ Display.reloadGenders = function ($side) {
 }
 Display.addHandlers = function () {
 	$('.pkm-select').change(function () {
-		Display.changePokemon($(this));
+		$this = $(this);
+		Display.changePokemon($this.parents('.pokemon-pane'), $this.val());
 	});
 	
-	// This input only changes the current HP input. Not the pokemon. However when current HP changes the display updates
+	// This input only changes the current HP input. However when current HP changes the pokemon needs to update anyway
 	$('.currenthppercent-input').change(function () {
-		var $side = $(this).parents('.pokemon-pane');
+		$this = $(this);
+		var $side = $this.parents('.pokemon-pane');
 		var pkm = Display.getPokemon($side);
 		if (!pkm) {
-			$(this).val("");
+			$this.val("");
 			return false;
 		}
 		var maxHP = pkm.stats['hp'] || 0;
-		$side.find('.currenthp-input').val(Math.floor($(this).val() * maxHP / 100));
+		$side.find('.currenthp-input').val(Math.floor($this.val() * maxHP / 100));
 	});
 	var elements = [
 		"input",
@@ -523,17 +558,54 @@ Display.addHandlers = function () {
 		var val = $this.val();
 		var $side = $this.parent();
 		pkm = Display.getPokemon($side);
-		if (val === "") Display.showPokemon($side, pkm.resetDetails());
-		else if (val === "R") Display.showPokemon($side, pkm.randomizeMoveset()); // Do stuff here later
+		if (val === "") pkm.resetDetails();
+		else if (val === "R") pkm.randomizeMoveset(); // Do stuff here later
 		else {
 			set = Data.getSets(pkm.id)[val];
-			Display.showPokemon($side, pkm.changeSet(set));
+			pkm.changeSet(set);
 		}
+		Display.updatePokemon($side);
+	});
+	
+	$('.field-pane').find('input, select').change(function () {
 		Display.updateCalcs();
 	});
 	
-	$('.field-pane').find('input, select').change(function() {
-		Display.updateCalcs();
-	});
+	$('.pokemon-pane button').each(Display.addButtonHandler);
 };
-
+Display.addButtonHandler = function (index, el) {
+	$el = $(el);
+	buttonHandlers = {
+		importPokemon: function () {
+			$this = $(this);
+			// Only single-line input for now
+			var data = prompt('Enter Set Data');
+			Display.importPokemon($this.parents('.pokemon-pane'), data, 'custom');
+		},
+		exportPokemon: function () {
+			// alert('export: TODO');
+			Display.exportPokemon(Display.getPokemon($this.parents('.pokemon-pane')));
+		}
+	}
+	if (typeof buttonHandlers[$el.attr('name')] === 'function') return $el.click(buttonHandlers[$el.attr('name')]);
+	return false;
+};
+Display.importPokemon = function ($side, text, dataFormat) {
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
+	if (typeof text !== 'string') return;
+	dataFormat = dataFormat.toLowerCase();
+	var parsedSet;
+	if (dataFormat === 'custom') parsedSet = TextParser.parseCustomFormat(text);
+	else if (dataFormat === 'json') parsedSet = JSON.parse(text);
+	else parsedSet = TextParser.parseSetText(text);
+	if (!parsedSet.species) return false;
+	var pokemon = new Pokemon(parsedSet.species, parsedSet);
+	pokemon.side = $side.attr('id').substr(0,2);
+	Display.changePokemon($side, pokemon);
+	return true;
+};
+Display.exportPokemon = function (pokemon) {
+	if (!(pokemon instanceof Pokemon)) return null;
+	prompt('Copy with Ctrl+C', TextParser.objectToText(pokemon));
+}

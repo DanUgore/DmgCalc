@@ -7,6 +7,12 @@
 	margin-top: 4px;
 	margin-bottom: 8px;
 }
+.pokemon-header > h3 {
+	margin-top: 4px;
+	margin-bottom: 8px;
+	display: inline;
+	width: 10%;
+}
 .field-pane {
 	display: inline-block;
 	width: 30%;

@@ -3,7 +3,7 @@
 function Pokemon(name, set) {
 	this.id = toID(name);
 	if (!this.id) return false;
-	var set = set || {item:"",ability:"",ivs:{},evs:{}};
+	var set = (typeof set === 'object' ? set : {item:"",ability:"",ivs:{},evs:{}});
 	for (var prop in Data.Pokedex[this.id]) this[prop] = Data.Pokedex[this.id][prop];
 	this.set = {ivs:{},evs:{}};
 	for (var prop in set) this.set[prop] = set[prop];

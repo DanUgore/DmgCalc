@@ -639,7 +639,16 @@ Display.changeActive = function ($side, newPos, saveOld) {
 		oldActive = team[oldPos] = Display.getPokemon($side, true);
 	}
 	var newActive = team[newPos];
-	Display.sides[side].currentIndex = newPos;
+	Display.updateIndex($side, newPos);
 	if (!newActive) return Display.clearAllFields($side);
 	return Display.changePokemon($side, newActive);
+};
+Display.updateIndex = function ($side, pos) {
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
+	pos = parseInt(pos);
+	if (isNaN(pos)) return console.log('pos not a number');
+	if (pos < 0 || pos > 5) return console.log('pos out of bounds');
+	Display.sides[$side.attr('id').substr(0,2)].currentIndex = pos;
+	$side.find('.currentIndex-span').text(pos);
 };

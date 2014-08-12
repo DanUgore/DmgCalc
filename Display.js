@@ -4,9 +4,13 @@ Display = {};
 Display.genderSymbols = {M:'\u2642',F:'\u2640',N:'\u2205'};
 Display.sides = { // Caching Pokemon so we don't have to rebuild every time
 	p1: {
+		team: [null, null, null, null, null, null],
+		currentIndex: 0,
 		active: null
 	},
 	p2: {
+		team: [null, null, null, null, null, null],
+		currentIndex: 0,
 		active: null
 	}
 };
@@ -71,7 +75,7 @@ Display.clearPokemon = function ($side) {
 	var $elements = $side.find(classes.join(','));
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
 	Display.reloadGenders($side);
-	Display.showPokemon(Display.getPokemon($side, true));
+	Display.sides[$side.attr('id').substr(0,2)].active = null;
 	return true;
 }
 Display.clearMoveField = function ($moveRow) {
@@ -435,7 +439,7 @@ Display.loadDropdowns = function () {
 		if ($dropdown.hasClass("nature-select")) {
 			for (var id in Data.Natures) {
 				var nature = Data.Natures[id];
-				options.push('<option value="'+id+'">'+nature.name+'</option>');
+				options.push('<option value="'+id+'"'+(id==='Docile'?' selected':'')+'>'+nature.name+'</option>');
 			}
 			$dropdown.append(options.join(''));
 			continue;
@@ -502,7 +506,14 @@ Display.reloadGenders = function ($side) {
 	if (!($side instanceof jQuery)) return null;
 	var pkm = Display.sides[$side.attr('id').substr(0,2)].active;
 	var options;
-	if (pkm.genderRatio) {
+	if (!pkm) {
+		options = [
+			'<option value="M">'+Display.genderSymbols['M']+'</option>',
+			'<option value="F">'+Display.genderSymbols['F']+'</option>',
+			'<option value="N">'+Display.genderSymbols['N']+'</option>'
+		];
+	}
+	else if (pkm.genderRatio) {
 			options = [
 				'<option value="M">'+Display.genderSymbols['M']+'</option>',
 				'<option value="F">'+Display.genderSymbols['F']+'</option>',
@@ -585,6 +596,10 @@ Display.addButtonHandler = function (index, el) {
 		exportPokemon: function () {
 			// alert('export: TODO');
 			Display.exportPokemon(Display.getPokemon($this.parents('.pokemon-pane')));
+		},
+		changePokemon: function () {
+			var $this = $(this);
+			Display.changeActive($this.parents('.pokemon-pane'), $this.val(), true);
 		}
 	}
 	if (typeof buttonHandlers[$el.attr('name')] === 'function') return $el.click(buttonHandlers[$el.attr('name')]);
@@ -608,4 +623,23 @@ Display.importPokemon = function ($side, text, dataFormat) {
 Display.exportPokemon = function (pokemon) {
 	if (!(pokemon instanceof Pokemon)) return null;
 	prompt('Copy with Ctrl+C', TextParser.objectToText(pokemon));
-}
+};
+Display.changeActive = function ($side, newPos, saveOld) {
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) return null;
+	newPos = parseInt(newPos);
+	if (isNaN(newPos)) return console.log('newPos not a number');
+	if (newPos < 0 || newPos > 5) return console.log('newPos out of bounds');
+	saveOld = !!saveOld;
+	var side = $side.attr('id').substr(0,2);
+	var team = Display.sides[side].team;
+	var oldPos = Display.sides[side].currentIndex;
+	var oldActive = team[oldPos];
+	if (saveOld) {
+		oldActive = team[oldPos] = Display.getPokemon($side, true);
+	}
+	var newActive = team[newPos];
+	Display.sides[side].currentIndex = newPos;
+	if (!newActive) return Display.clearAllFields($side);
+	return Display.changePokemon($side, newActive);
+};

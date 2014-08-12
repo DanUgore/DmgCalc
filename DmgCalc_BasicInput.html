@@ -104,6 +104,15 @@
 			</div>
 			<div id="p1-pokemon" class="pokemon-pane">
 				<div id="p1-header" class="pokemon-header"><h3>P1</h3><button type=button name="importPokemon">Import</button><button type=button name="exportPokemon">Export</button></div>
+				<div id="p1-teamselect" class="teamselect">
+					<button type=button name="changePokemon" value=0>0</button>
+					<button type=button name="changePokemon" value=1>1</button>
+					<button type=button name="changePokemon" value=2>2</button>
+					<button type=button name="changePokemon" value=3>3</button>
+					<button type=button name="changePokemon" value=4>4</button>
+					<button type=button name="changePokemon" value=5>5</button>
+					<!--<button type=button name="importTeam">Import Team</button>-->
+				</div>
 				<select id="species" class="pkm-select" data-default=""><option value="">(No Pokemon)</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
 				<select id="type1" class="type-select" data-default="Bug" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">???</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">???</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select" data-default=""><option value="">Blank Set</option></select><br />
 				<select id="ability" class="ability-select" data-default=""><option value="">(No Ability)</option></select><select id="item" class="item-select" data-default=""><option value="">(No Item)</option></select><select id="nature" class="nature-select" data-default="Docile"></select>

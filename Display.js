@@ -48,6 +48,7 @@ Display.clearAllFields = function ($side) {
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));
 	Display.reloadGenders($side);
 	Display.showPokemon(Display.getPokemon($side, true));
+	Display.clearResults();
 	return true;
 }
 Display.clearPokemon = function ($side) {
@@ -319,6 +320,12 @@ Display.clearResult = function (side, index) {
 	$resultBox.children('.results-move-name').text('---');
 	$resultBox.children('.results-move-damage').text('0-0 (0-0%)');
 	return true;
+};
+Display.clearResults = function () {
+	for (var i = 0; i < 4; i++) {
+		Display.clearResult('p1',i);
+		Display.clearResult('p2',i);
+	}
 }
 Display.updateCalcs = function () {
 	if (!$p1 && !$p2) return null;
@@ -567,19 +574,23 @@ Display.addHandlers = function () {
 	$('.set-select').change(function () {
 		$this = $(this);
 		var val = $this.val();
-		var $side = $this.parent();
+		var $side = $this.parents('.pokemon-pane');
 		pkm = Display.getPokemon($side);
 		if (val === "") pkm.resetDetails();
-		else if (val === "R") pkm.randomizeMoveset(); // Do stuff here later
+		else if (val === "R") Display.showPokemon($side, pkm.randomizeMoveset()); // Do stuff here later
 		else {
 			set = Data.getSets(pkm.id)[val];
-			pkm.changeSet(set);
+			Display.showPokemon($side, pkm.changeSet(set));
 		}
-		Display.updatePokemon($side);
+		Display.updateCalcs();
 	});
 	
 	$('.field-pane').find('input, select').change(function () {
 		Display.updateCalcs();
+	});
+	
+	$('#defaultLevel').change(function () {
+		$('.level-input').data('default',parseInt($(this).val()));
 	});
 	
 	$('.pokemon-pane button').each(Display.addButtonHandler);
@@ -651,4 +662,4 @@ Display.updateIndex = function ($side, pos) {
 	if (pos < 0 || pos > 5) return console.log('pos out of bounds');
 	Display.sides[$side.attr('id').substr(0,2)].currentIndex = pos;
 	$side.find('.currentIndex-span').text(pos);
-};
+}

@@ -1,5 +1,5 @@
 TextParser = {
-	parseSetText: function (text) { // Simulator Import
+	parseSetText: function (text) { // Simulator Import - requires data
 		var text = text.split("\n");
 		var curSet = {name: '', species: '', gender: ''};
 		for (var i=0; i<text.length; i++) {
@@ -25,7 +25,8 @@ TextParser = {
 					line = line.substr(0, parenIndex);
 					curSet.name = line;
 				} else {
-					curSet.species = Data.Pokedex[toID(line)].species; console.log(line)
+					curSet.species = toID(line);
+					if (Data.Pokedex[curSet.species]) curSet.species = Data.Pokedex[curSet.species].species;
 					curSet.name = curSet.species;
 				}
 			} else if (line.substr(0, 7) === 'Trait: ') {
@@ -95,11 +96,13 @@ TextParser = {
 					curSet.happiness = 0;
 				}
 				curSet.moveset.push(toID(line));
+			} else if (!line) {
+				return curSet;
 			}
 		}
 		return curSet;
 	},
-	exportSetToText: function (set) { // Simulator Export
+	exportSetToText: function (set) { // Simulator Export - requires data
 		var text = '';
 		var curSet = set;
 		if (curSet.name && curSet.name !== curSet.species) {
@@ -199,6 +202,19 @@ TextParser = {
 		}
 		text += "\n";
 		return text;
+	},
+	parseTeamText: function (text) {
+		text = text.split('\n\n');
+		if (!text[text.length]) text.length
+		console.log(text);
+		var team = [];
+		for (var i = 0; i < text.length; i++) if (text[i]) team.push(TextParser.parseSetText(text[i]));
+		return team;
+	},
+	exportTeamToText: function (team) {
+		if (!Array.isArray(team)) return;
+		var text = '';
+		return team.map(TextParser.exportSetToText).join('');
 	},
 	parseCustomFormat: function (text) { // Read Custom Data Text
 		var content = text.replace(/\n\s*/g,'').split(':'); // Removes newlines \n and leading spaces \s* after newlines.
@@ -321,8 +337,9 @@ TextParser = {
 			var keys = Object.keys(parent);
 			for (var i = 0, key, val; i < keys.length; i++) {
 				key = keys[i];
-				text += marker + key;
 				val = parent[key];
+				if (typeof val === 'undefined') continue;
+				text += marker + key;
 				if (val === true) continue;
 				if (typeof val !== 'object') {
 					text += objToText(val, depth+1);

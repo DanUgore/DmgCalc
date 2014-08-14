@@ -19,7 +19,7 @@ Calc.calcDamageNumbers = function (attacker, defender, move, field, isCrit) {
 	// Move
 	if (typeof move === 'string') move = Data.Movedex[move]; // Calc.getMove(move)
 	if (!move) return;
-	if (move.category === 'Status') return this.noDamage;
+	if (move.category === 'Status') return this.noDamage();
 	// Clone attacker, defender, and move.
 	this.move = Calc.moveClone(move);
 	this.attacker = attacker;

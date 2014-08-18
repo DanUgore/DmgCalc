@@ -16,11 +16,39 @@ Display.sides = { // Caching Pokemon so we don't have to rebuild every time
 };
 
 // Display Functions
+Display.newPokemon = function (species, $side, set) { // Creates a new Pokemon with default elements pulled from Display.
+	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
+	if (!($side instanceof jQuery)) $side = console.log('$side is not jQuery',$side);
+	set = $.extend(Display.getDefaults(), set || {});
+	if (!species) return console.log('species is false',species);
+	var pokemon = new Pokemon(species, set);
+	if ($side) pokemon.side = $side.attr('id').substr(0,2);
+	return pokemon;
+}
 Display.resetElement = function ($el) {
 	if (!($el instanceof jQuery)) return null;
 	if ($el.length !== 1) return false;
 	if (typeof $el.data("default") === 'undefined') return $el.val("")
 	return $el.val($el.data("default"));
+}
+Display.getDefaults = function () {
+	var defaults = {};
+	// Level
+	defaults.level = $(".level-input").data("default");
+	// Happiness
+	defaults.happiness = $(".happiness-input").data("default");
+	// Gender
+	// defaults.gender = $(".gender-select").data("default");
+	// Status
+	defaults.status = $(".status-select").data("default");
+	// Ability
+	defaults.ability = $(".ability-select").data("default");
+	// Item
+	defaults.item = $(".item-select").data("default");
+	// Nature
+	defaults.nature = $(".nature-select").data("default");
+	
+	return defaults;
 }
 Display.clearAllFields = function ($side) {
 	if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
@@ -91,9 +119,10 @@ Display.changePokemon = function ($side, pokemon) {
 	if (!($side instanceof jQuery)) return null;
 	if (typeof pokemon === 'string') {
 		if (!pokemon) return Display.clearAllFields($side);
-		pokemon = new Pokemon(pokemon);
+		pokemon = Display.newPokemon(pokemon, $side);
 	}
 	if (!(pokemon instanceof Pokemon)) return false;
+	if (Display.getPokemon($side) && pokemon.num === Display.getPokemon($side).num) pokemon.changeSet(Display.getSet($side));
 	var side = $side.attr('id').substr(0,2);
 	pokemon.side = side;
 	Display.sides[side].active = pokemon;
@@ -186,7 +215,7 @@ Display.getPokemon = function ($side, makeNew) {
 	var species = $side.find(".pkm-select").val();
 	if (!species) return false;
 	var set = Display.getSet($side);
-	Display.sides[side].active = new Pokemon(species, set);
+	Display.sides[side].active = Display.newPokemon(species, $side, set);
 	return Display.sides[side].active;
 }
 Display.getSet = function ($side) {
@@ -626,7 +655,7 @@ Display.importPokemon = function ($side, text, dataFormat) {
 	else if (dataFormat === 'json') parsedSet = JSON.parse(text);
 	else parsedSet = TextParser.parseSetText(text);
 	if (!parsedSet.species) return false;
-	var pokemon = new Pokemon(parsedSet.species, parsedSet);
+	var pokemon = Display.newPokemon(parsedSet.species, $side, parsedSet);
 	pokemon.side = $side.attr('id').substr(0,2);
 	Display.changePokemon($side, pokemon);
 	return true;

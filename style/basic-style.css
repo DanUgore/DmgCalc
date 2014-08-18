@@ -2,6 +2,7 @@
 	display: inline-block;
 	width: 48%;
 	margin: auto;
+	position: relative;
 }
 .pokemon-pane h3 {
 	margin-top: 4px;
@@ -57,3 +58,30 @@ li {
 thead tr {
 	text-align: center;
 }
+/* Import Styling */
+.import-div {
+	width: 275px;
+	height: 300px;
+	text-align: center;
+	border: 2px solid;
+	border-radius: 10px;
+	padding: 2px;
+	background-color: white;
+	z-index: 1;
+	position: absolute;
+	top: 0%;
+	left: 25%;
+}
+.import-textarea {
+	width: 265px;
+	height: 220px;
+	resize: none;
+}
+.importdatatype-input {
+	font-size: 75%;
+}
+.importdatatype-input > input {
+	height: 8px;
+	width: 8px;
+}
+

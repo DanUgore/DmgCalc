@@ -630,13 +630,15 @@ Display = {
 		buttonHandlers = {
 			importPokemon: function () {
 				$this = $(this);
-				// Only single-line input for now
-				var data = prompt('Enter Set Data');
-				Display.importPokemon($this.parents('.pokemon-pane'), data, 'custom');
+				Display.showImportScreen($this.parents('.pokemon-pane'));
 			},
 			exportPokemon: function () {
 				// alert('export: TODO');
-				Display.exportPokemon(Display.getPokemon($this.parents('.pokemon-pane')));
+				$this = $(this);
+				var $side = $this.parents('.pokemon-pane');
+				var $import = Display.showImportScreen($side);
+				var setText = TextParser.exportSetToText(Display.getPokemon($side));
+				$import.find('textarea').val(setText).focus().select();
 			},
 			changePokemon: function () {
 				var $this = $(this);
@@ -692,5 +694,57 @@ Display = {
 		if (pos < 0 || pos > 5) return console.log('pos out of bounds');
 		Display.sides[$side.attr('id').substr(0,2)].currentIndex = pos;
 		$side.find('.currentIndex-span').text(pos);
+	},
+	showImportScreen: function ($side) {
+		if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
+		if (!($side instanceof jQuery)) return console.log('$side is not jQuery',$side);
+		var $import = $side.find('.import-div');
+		if (!$import.length) {
+			$import = Display.makeImportScreen();
+			$side.append($import);
+		}
+		if ($import.length > 1) {
+			$import = $import.eq(0);
+		}
+		$import.css('display','inline');
+		return $import;
+	},
+	hideImportScreen: function ($side) {
+		if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
+		if (!($side instanceof jQuery)) return console.log('$side is not jQuery',$side);
+		var $import = $side.find('.import-div');
+		$import.css('display','none');
+		return $import;
+	},
+	makeImportScreen: function (show) {
+		var importTemplate = '' +
+		'<div class="import-div"'+(show ? '>' : ' style="display: none;">') +
+			'<span class="importdatatype-input">Set: <input type=radio name="importType" value="set" checked>Data: <input type=radio name="importType" value="data"></span><br>' +
+			'<span class="import-header">Paste Set Below</span><br>' +
+			'<textarea class="import-textarea"></textarea>' +
+			'<div class="importButtons-div">' +
+				'<button class="import-go">Import</button>' +
+				'<button class="import-leave">Exit</button>' +
+			'</div>' +
+		'</div>';
+		var $import = $(importTemplate);
+		// Handlers
+		$import.find('.import-go').click(function(){
+			var $this = $(this);
+			var $import = $this.parents('.import-div');
+			var importText = $import.children('.import-textarea').val();
+			var type = '';
+			if ($import.children('input:checked').val() === 'data') type = 'custom';
+			Display.importPokemon($this.parents('.pokemon-pane'), importText, type);
+			// Clear and hide
+			$import.children('.import-textarea').val("");
+			Display.hideImportScreen($this.parents('.pokemon-pane'));
+		});
+		$import.find('.import-leave').click(function(){
+			var $this = $(this);
+			$this.parents('.import-div').children('.import-textarea').val("");
+			Display.hideImportScreen($this.parents('.pokemon-pane'));
+		});
+		return $import;
 	}
 };

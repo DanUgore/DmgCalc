@@ -70,7 +70,9 @@ Display.clearAllFields = function ($side) {
 		".move-select", // Moves
 		".bp-input", 
 		".cat-select", 
-		".pp-input"
+		".pp-input",
+		".currenthp-input", // Current HP
+		".currenthppercent-input"
 	];
 	var $elements = $side.find(classes.join(','));
 	for (var i = 0; i < $elements.length; i++) Display.resetElement($elements.eq(i));

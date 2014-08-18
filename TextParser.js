@@ -193,6 +193,7 @@ TextParser = {
 		}
 		if (curSet.moveset) {
 			for (var j=0; j<curSet.moveset.length; j++) {
+				if (!curSet.moveset[j]) continue;
 				var move = Data.Movedex[curSet.moveset[j]] ? Data.Movedex[curSet.moveset[j]].name : curSet.moveset[j];
 				if (move.substr(0,13) === 'Hidden Power ') {
 					move = move.substr(0,13) + '[' + move.substr(13) + ']';

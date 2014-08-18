@@ -29,7 +29,7 @@ function Pokemon(name, set) {
 	if (!this.genderRatio && !this.gender) this.genderRatio = {M:0.5,F:0.5};
 	this.gender = this.gender || this.set.gender || this.randomGender();
 	var hpTypes = ["Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark"];
-	var hpTypeIndex = Math.floor(parseInt((function(ivs) { var buf = ""; for (var stat in ivs) buf += ''+(ivs[stat]&1) ; return buf; })(this.ivs), 2) * 15 / 63)
+	var hpTypeIndex = Math.floor(parseInt([this.ivs['spd'],this.ivs['spa'],this.ivs['spe'],this.ivs['def'],this.ivs['atk'],this.ivs['hp']].map(function(i){return ''+(i&1)}).join(''), 2) * 15 / 63);
 	this.hpType = hpTypes[hpTypeIndex];
 	this.hpPower = 60; //Math.floor(parseInt(function() { var buf = ""; for (var stat in statTable) { buf += ''+((this.ivs[stat]&2)/2) }; return buf; }, 2) * 40 / 63 + 30)
 	this.status = this.set.status || "";
@@ -63,7 +63,7 @@ Pokemon.prototype.changeSet = function(set) {
 };
 Pokemon.prototype.updateDetails = function(update) {
 	if (!update) return null;
-	$.extend(true, this, update);
+	$.extend(true, this, update); // TODO: Do this without jQuery. This file should not require jQuery.
 	// Ensure IVs and EVs are numbers.
 	for (var stat in Data.StatTable) {
 		this.ivs[stat] = isNaN(parseInt(this.ivs[stat])) ? 31 : parseInt(this.ivs[stat]);
@@ -114,7 +114,7 @@ Pokemon.prototype.update = function() { // Recalculate necessary things when int
 	this.calcStats();
 	if (this.currentHP > this.stats['hp']) this.currentHP = this.stats['hp'];
 	var hpTypes = ["Fighting", "Flying", "Poison", "Ground", "Rock", "Bug", "Ghost", "Steel", "Fire", "Water", "Grass", "Electric", "Psychic", "Ice", "Dragon", "Dark"];
-	var hpTypeIndex = Math.floor(parseInt((function(ivs) { var buf = ''; for (var stat in ivs) buf += (ivs[stat] % 2) ; return buf; })(this.ivs), 2) * 15 / 63);
+	var hpTypeIndex = Math.floor(parseInt([this.ivs['spd'],this.ivs['spa'],this.ivs['spe'],this.ivs['def'],this.ivs['atk'],this.ivs['hp']].map(function(i){return ''+(i&1)}).join(''), 2) * 15 / 63);
 	this.hpType = hpTypes[hpTypeIndex];
 	//this.hpPower = 60; Math.floor(parseInt((function(ivs) { var buf = ''; for (var stat in ivs) { buf += ((ivs[stat] & 2) / 2) }; return buf; }(this.ivs), 2) * 40 / 63 + 30)
 };

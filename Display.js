@@ -628,15 +628,31 @@ Display = {
 	addButtonHandler: function (index, el) {
 		$el = $(el);
 		buttonHandlers = {
+			importTeam: function () {
+				var $this = $(this);
+				var $import = Display.showImportScreen($this.parents('.pokemon-pane'));
+				$import.find('.import-header').text("Paste Team Below");
+				$import.find('textarea').val("").focus();
+				$import.find('input[name=importType][value=team]').prop('checked',true);
+			},
+			exportTeam: function () {
+				var $this = $(this);
+				var $side = $this.parents('.pokemon-pane');
+				var $import = Display.showImportScreen($side);
+				var teamText = TextParser.exportTeamToText(Display.sides[$side.attr('id').substr(0,2)].team);
+				$import.find('.import-header').text("Copy with Ctrl+C");
+				$import.find('textarea').val(teamText).focus().select();
+			},
 			importPokemon: function () {
-				$this = $(this);
+				var $this = $(this);
 				var $import = Display.showImportScreen($this.parents('.pokemon-pane'));
 				$import.find('.import-header').text("Paste Set Below");
 				$import.find('textarea').val("").focus();
+				$import.find('input[name=importType][value=set]').prop('checked',true);
 			},
 			exportPokemon: function () {
 				// alert('export: TODO');
-				$this = $(this);
+				var $this = $(this);
 				var $side = $this.parents('.pokemon-pane');
 				var $import = Display.showImportScreen($side);
 				var setText = TextParser.exportSetToText(Display.getPokemon($side));
@@ -655,20 +671,18 @@ Display = {
 		if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 		if (!($side instanceof jQuery)) return null;
 		if (typeof text !== 'string') return;
-		dataFormat = dataFormat.toLowerCase();
+		dataFormat = (dataFormat || '').toLowerCase();
 		var parsedSet;
 		if (dataFormat === 'custom') parsedSet = TextParser.parseCustomFormat(text);
 		else if (dataFormat === 'json') parsedSet = JSON.parse(text);
 		else parsedSet = TextParser.parseSetText(text);
 		if (!parsedSet.species) return false;
-		var pokemon = Display.newPokemon(parsedSet.species, $side, parsedSet);
+		// Don't use Display.newPokemon because it uses Display's defaults
+		// The text generators don't use those defaults
+		var pokemon = new Pokemon(parsedSet.species, parsedSet);
 		pokemon.side = $side.attr('id').substr(0,2);
 		Display.changePokemon($side, pokemon);
 		return true;
-	},
-	exportPokemon: function (pokemon) {
-		if (!(pokemon instanceof Pokemon)) return null;
-		prompt('Copy with Ctrl+C', TextParser.objectToText(pokemon));
 	},
 	changeActive: function ($side, newPos, saveOld) {
 		if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
@@ -698,6 +712,31 @@ Display = {
 		Display.sides[$side.attr('id').substr(0,2)].currentIndex = pos;
 		$side.find('.currentIndex-span').text(pos);
 	},
+	importTeam: function ($side, text, dataFormat) {
+		if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
+		if (!($side instanceof jQuery)) return console.log('$side is not jQuery');
+		if (typeof text !== 'string') return console.log('text is not a string');
+		dataFormat = (dataFormat || '').toLowerCase();
+		var parsedTeam;
+		if (dataFormat === 'custom') parsedTeam = TextParser.parseCustomFormat(text).team; // {team:[]}
+		else if (dataFormat === 'json') parsedTeam = JSON.parse(text); // []
+		else parsedTeam = TextParser.parseTeamText(text);
+		if (!Array.isArray(parsedTeam)) return console.log('text was not parsed as array');
+		var side = $side.attr('id').substr(0,2);
+		var team = Display.sides[side].team;
+		for (var i = 0, set; i < team.length; i++) {
+			set = parsedTeam[i];
+			if (!set.species) {
+				team[i] = null;
+				continue;
+			}
+			team[i] = new Pokemon(set.species, set);
+			team[i].side = side;
+		}
+		Display.changeActive($side, 0);
+		console.log(team);
+		return true;
+	},
 	showImportScreen: function ($side) {
 		if ($side in Display.sides) $side = $("#"+$side+"-pokemon");
 		if (!($side instanceof jQuery)) return console.log('$side is not jQuery',$side);
@@ -722,7 +761,7 @@ Display = {
 	makeImportScreen: function (show) {
 		var importTemplate = '' +
 		'<div class="import-div"'+(show ? '>' : ' style="display: none;">') +
-			'<span class="importdatatype-input">Set: <input type=radio name="importType" value="set" checked>Data: <input type=radio name="importType" value="data"></span><br>' +
+			'<span class="importdatatype-input">Set: <input type=radio name="importType" value="set" checked>Team: <input type=radio name="importType" value="team"></span><br>' +
 			'<span class="import-header">Paste Set Below</span><br>' +
 			'<textarea class="import-textarea"></textarea>' +
 			'<div class="importButtons-div">' +
@@ -735,13 +774,13 @@ Display = {
 		$import.find('.import-go').click(function(){
 			var $this = $(this);
 			var $import = $this.parents('.import-div');
+			var $side = $this.parents('.pokemon-pane');
 			var importText = $import.children('.import-textarea').val();
-			var type = '';
-			if ($import.children('input:checked').val() === 'data') type = 'custom';
-			Display.importPokemon($this.parents('.pokemon-pane'), importText, type);
+			if ($import.find('input[name=importType]:checked').val() === 'team') Display.importTeam($side, importText);
+			else Display.importPokemon($side, importText);
 			// Clear and hide
 			$import.children('.import-textarea').val("");
-			Display.hideImportScreen($this.parents('.pokemon-pane'));
+			Display.hideImportScreen($side);
 		});
 		$import.find('.import-leave').click(function(){
 			var $this = $(this);

@@ -630,7 +630,9 @@ Display = {
 		buttonHandlers = {
 			importPokemon: function () {
 				$this = $(this);
-				Display.showImportScreen($this.parents('.pokemon-pane'));
+				var $import = Display.showImportScreen($this.parents('.pokemon-pane'));
+				$import.find('.import-header').text("Paste Set Below");
+				$import.find('textarea').val("").focus();
 			},
 			exportPokemon: function () {
 				// alert('export: TODO');
@@ -638,6 +640,7 @@ Display = {
 				var $side = $this.parents('.pokemon-pane');
 				var $import = Display.showImportScreen($side);
 				var setText = TextParser.exportSetToText(Display.getPokemon($side));
+				$import.find('.import-header').text("Copy with Ctrl+C");
 				$import.find('textarea').val(setText).focus().select();
 			},
 			changePokemon: function () {

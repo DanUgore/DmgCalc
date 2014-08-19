@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script>
+		doc = document;
+		Data = exports = {};
+		</script>
+		<!-- Add pre-load code and libraries -->
+		<script src="./lib/jquery-1.11.1.min.js"></script>
+		<script src="./data/pokedex.js"></script>
+		<script src="./data/moves.js"></script>
+		<script src="./data/abilities.js"></script>
+		<script src="./data/items.js"></script>
+		<script src="./data/typechart.js"></script>
+		<script src="./data/learnsets.js"></script>
+		<script src="Data.js"></script>
+		<script src="Pokemon.js"></script>
+		<script src="TextParser.js"></script>
+		<script src="Display.js"></script>
+		<script src="Validator.js"></script>
+		<script src="PokemonSets.js"></script>
+		<script src="Calc.js"></script>
+		<!-- Basic Styling -->
+		<link rel="stylesheet" type="text/css" href="./style/basic-style.css">
+	</head>
+	<body>
+		<div id="container">
+			<div id="results" class="results-pane">
+				<h3>Results: </h3>
+				<div id="results-display">
+					<ul id="p1-results" class="results-list">
+						<li class="result-move-0">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>	
+						<li class="result-move-1">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+						<li class="result-move-2">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+						<li class="result-move-3">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+					</ul>
+					<ul id="p2-results" class="results-list">
+						<li class="result-move-0">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>	
+						<li class="result-move-1">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+						<li class="result-move-2">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+						<li class="result-move-3">
+							<div class="inner-results-container">
+								<div class="results-move-name">---</div>
+								<div class="results-move-damage">0-0 (0-0%)</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div id="results-details" style="display: none"></div>
+			</div>
+			<div id="p1-details" class="field-pane">
+				Helping Hand: <input id="p1-helpinghand" type="checkbox">
+				Spread: <input id="p1-spread" type="checkbox">
+				Friend Guard: <input id="p1-friendguard" type="checkbox"><br>
+				Reflect: <input id="p1-reflect" type="checkbox">
+				Light Screen: <input id="p1-lightscreen" type="checkbox">
+				Charge: <input id="p1-charge" type="checkbox">
+			</div>
+			<div id="field-details" class="field-pane">
+				<select id="weather" class="weather-select" data-default=""></select><br>
+				Default Level: <input id="defaultLevel" class="defaultLevel-input" type=number value=100 data-default=100 min=1 max=100 style="width: 40px;">
+			</div>
+			<div id="p2-details" class="field-pane">
+				Helping Hand: <input id="p2-helpinghand" type="checkbox">
+				Spread: <input id="p2-spread" type="checkbox">
+				Friend Guard: <input id="p2-friendguard" type="checkbox"><br>
+				Reflect: <input id="p2-reflect" type="checkbox">
+				Light Screen: <input id="p2-lightscreen" type="checkbox">
+				Charge: <input id="p2-charge" type="checkbox">
+			</div>
+			<div id="p1-pokemon" class="pokemon-pane">
+				<div id="p1-header" class="pokemon-header"><h3>P1</h3><button type=button name="importPokemon">Import</button><button type=button name="exportPokemon">Export</button><button type=button name="importTeam">Import Team</button><button type=button name="exportTeam">Export Team</button></div>
+				<div id="p1-teamselect" class="teamselect">
+					<button type=button name="changePokemon" value=0>0</button>
+					<button type=button name="changePokemon" value=1>1</button>
+					<button type=button name="changePokemon" value=2>2</button>
+					<button type=button name="changePokemon" value=3>3</button>
+					<button type=button name="changePokemon" value=4>4</button>
+					<button type=button name="changePokemon" value=5>5</button>
+					Current: <span class="currentIndex-span" data-default=0>0</span>
+					<!--<button type=button name="importTeam">Import Team</button>-->
+				</div>
+				<select id="species" class="pkm-select" data-default=""><option value="">(No Pokemon)</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
+				<select id="type1" class="type-select" data-default="Bug" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">???</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">???</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select" data-default=""><option value="">Blank Set</option></select><br />
+				<select id="ability" class="ability-select" data-default=""><option value="">(No Ability)</option></select><select id="item" class="item-select" data-default=""><option value="">(No Item)</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
+				<table class="stats-table">
+					<thead>
+						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td></tr>
+					</thead>
+					<!-- Consider `readonly` attribute instead of `disabled` in some places -->
+					<tbody>
+						<tr id="hp">
+							<th><span>HP</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0 disabled></td>
+						</tr>
+						<tr id="atk">
+							<th><span>Atk</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+						<tr id="def">
+							<th><span>Def</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+						<tr id="spa">
+							<th><span>SpA</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+						<tr id="spd">
+							<th><span>SpD</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+						<tr id="spe">
+							<th><span>Spe</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+					</tbody>
+				</table>
+				Current HP:<input type="number" class="currenthp-input" min=0 max=999 data-default=""><input type="number" class="currenthppercent-input" min=0 max=100 data-default=100>%
+				<table class="moves-table">
+					<thead>
+						<tr><th>Moves</th><td>Name</td><td>Type</td><td>BP</td><td>Cat.</td><td>PP</td><td>Crit</td></tr>
+					</thead>
+					<tbody>
+						<tr id="move-0">
+							<th>Move 1</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled data-default="Physical"></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
+						</tr>
+						<tr id="move-1">
+							<th>Move 2</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
+						</tr>
+						<tr id="move-2">
+							<th>Move 3</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
+						</tr>
+						<tr id="move-3">
+							<th>Move 4</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div id="p2-pokemon" class="pokemon-pane">
+				<div id="p2-header" class="pokemon-header"><h3>P2</h3><button type=button name="importPokemon">Import</button><button type=button name="exportPokemon">Export</button></div>
+				<div id="p1-teamselect" class="teamselect">
+					<button type=button name="changePokemon" value=0>0</button>
+					<button type=button name="changePokemon" value=1>1</button>
+					<button type=button name="changePokemon" value=2>2</button>
+					<button type=button name="changePokemon" value=3>3</button>
+					<button type=button name="changePokemon" value=4>4</button>
+					<button type=button name="changePokemon" value=5>5</button>
+					Current: <span class="currentIndex-span" data-default=0>0</span>
+					<!--<button type=button name="importTeam">Import Team</button>-->
+				</div>
+				<select id="species" class="pkm-select" data-default=""><option value="">(No Pokemon)</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
+				<select id="type1" class="type-select" data-default="Bug" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">???</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">???</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select" data-default=""><option value="">Blank Set</option></select><br />
+				<select id="ability" class="ability-select" data-default=""><option value="">(No Ability)</option></select><select id="item" class="item-select" data-default=""><option value="">(No Item)</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
+				<table class="stats-table">
+					<thead>
+						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td></tr>
+					</thead>
+					<!-- Consider `readonly` attribute instead of `disabled` in some places -->
+					<tbody>
+						<tr id="hp">
+							<th><span>HP</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0 disabled></td>
+						</tr>
+						<tr id="atk">
+							<th><span>Atk</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+						<tr id="def">
+							<th><span>Def</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+						<tr id="spa">
+							<th><span>SpA</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+						<tr id="spd">
+							<th><span>SpD</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+						<tr id="spe">
+							<th><span>Spe</span></th>
+							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
+							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
+							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
+							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
+							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
+						</tr>
+					</tbody>
+				</table>
+				Current HP:<input type="number" class="currenthp-input" min=0 max=999 data-default=""><input type="number" class="currenthppercent-input" min=0 max=100 data-default=100>%
+				<table class="moves-table">
+					<thead>
+						<tr><th>Moves</th><td>Name</td><td>Type</td><td>BP</td><td>Cat.</td><td>PP</td><td>Crit</td></tr>
+					</thead>
+					<tbody>
+						<tr id="move-0">
+							<th>Move 1</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" disabled data-default="Physical"></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
+						</tr>
+						<tr id="move-1">
+							<th>Move 2</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
+						</tr>
+						<tr id="move-2">
+							<th>Move 3</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
+						</tr>
+						<tr id="move-3">
+							<th>Move 4</th>
+							<td><select class="move-select"><option value="">--</option></select></td>
+							<td><select class="type-select" disabled><option value="">???</option></select></td>
+							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
+							<td><select class="cat-select" data-default="Physical" disabled></select></td>
+							<td><input type="number" min=1 max=64 class="pp-input"></td>
+							<td><input type="checkbox" class="crit-checkbox"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+	<script src="init.js"></script>
+	<script>
+	
+	</script>
+</html>

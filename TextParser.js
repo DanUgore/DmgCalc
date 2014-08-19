@@ -104,6 +104,7 @@ TextParser = {
 	},
 	exportSetToText: function (set) { // Simulator Export - requires data
 		var text = '';
+		if (!set) return text;
 		var curSet = set;
 		if (curSet.name && curSet.name !== curSet.species) {
 			text += ''+curSet.name+' ('+curSet.species+')';

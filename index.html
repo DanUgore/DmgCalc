@@ -1,344 +1,91 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script>
-		doc = document;
-		Data = exports = {};
-		</script>
-		<!-- Add pre-load code and libraries -->
-		<script src="./lib/jquery-1.11.1.min.js"></script>
-		<script src="./data/pokedex.js"></script>
-		<script src="./data/moves.js"></script>
-		<script src="./data/abilities.js"></script>
-		<script src="./data/items.js"></script>
-		<script src="./data/typechart.js"></script>
-		<script src="./data/learnsets.js"></script>
-		<script src="Data.js"></script>
-		<script src="Pokemon.js"></script>
-		<script src="TextParser.js"></script>
-		<script src="Display.js"></script>
-		<script src="Validator.js"></script>
-		<script src="PokemonSets.js"></script>
-		<script src="Calc.js"></script>
-		<!-- Basic Styling -->
-		<link rel="stylesheet" type="text/css" href="./style/basic-style.css">
+	<!-- 
+	((ATK^2 * (1+Level/100)) / DEF) * Skill * Killers * Element * Variance * RNG
+	Chain Mod applies to hits.
+	-->
+	<script>
+	$ = document.querySelector.bind(document); $$ = document.querySelectorAll.bind(document);
+	function loadCalc(data) {
+		//L100AB133FBWDBFBSIKEVC
+		
+	}
+	function calc() {
+		// Get Input
+		var level = +$("#level").value;
+		var atk = +$("#atk").value, atkflat = +$("#atk-flat").value, atkbuff = +$("#atk-buff").value;
+		var wep1 = +$("#wep1").value;
+		var def = +$("#def").value, defflat = +$("#def-flat").value, defbuff = +$("#def-buff").value;
+		var skill = +$("#skill-mod").value, igndef = +$("#ign-def").value;
+		var slayers = +$("#slayer").value, eleresist = +$("#ele-resist").value, chain = +$("#chain").value;
+		var varmin = +$("#var-min").value, varmax = +$("#var-max").value;
+		if (varmin > varmax) { varmin = $("#var-max").value; varmax = $("#var-min").value; }
+		
+		// Perform Calc
+		var damage = 0, wep = wep1;
+		var effatk = Math.floor(Math.max(1, atk * (1+atkbuff/100) + atkflat + wep));
+		damage += Math.pow(effatk, 2);
+		damage *= (100 + level); damage /= 100;
+		//console.log("ATK: "+Math.max(1, atk * (1+atkbuff/100) + atkflat + wep));
+		damage = Math.floor(damage);
+		var effdef = Math.max(1, Math.floor((def * (1+defbuff/100) + defflat) * (1-igndef/100)))
+		damage /= effdef;
+		//console.log("DEF: "+eff);
+		damage = Math.floor(damage);
+		damage *= skill; damage /= 100;
+		damage = Math.floor(damage);
+		console.log(damage);
+		if (slayers) { damage *= 100+slayers; damage/= 100; }
+		if (eleresist) { damage *= 100-eleresist; damage /= 100; }
+		if (damage < 1 && eleresist !== 100) damage = 1;
+		damage = Math.floor(damage);
+		var dmgrng = [];
+		for (var i = varmin; i <= varmax; i++)
+			dmgrng.push([85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100]
+				.map(r => Math.floor(Math.max(1, Math.floor(r * Math.floor(damage*i/100) / 100)) * 1+chain/100)));
+		var dmgmin = dmgrng[0][0], dmgmax = dmgrng[varmax-varmin][15];
+		
+		// Display Output
+		$("#eff-atk").innerText = effatk;
+		$("#eff-def").innerText = effdef;
+		$("#damage-range").innerText = dmgmin == dmgmax ? dmgmin : dmgmin+" ~ "+dmgmax;
+		//$("")
+	}
+	</script>
 	</head>
+	
 	<body>
 		<div id="container">
-			<div id="results" class="results-pane">
-				<h3>Results: </h3>
-				<div id="results-display">
-					<ul id="p1-results" class="results-list">
-						<li class="result-move-0">
-							<div class="inner-results-container">
-								<div class="results-move-name">---</div>
-								<div class="results-move-damage">0-0 (0-0%)</div>
-							</div>
-						</li>	
-						<li class="result-move-1">
-							<div class="inner-results-container">
-								<div class="results-move-name">---</div>
-								<div class="results-move-damage">0-0 (0-0%)</div>
-							</div>
-						</li>
-						<li class="result-move-2">
-							<div class="inner-results-container">
-								<div class="results-move-name">---</div>
-								<div class="results-move-damage">0-0 (0-0%)</div>
-							</div>
-						</li>
-						<li class="result-move-3">
-							<div class="inner-results-container">
-								<div class="results-move-name">---</div>
-								<div class="results-move-damage">0-0 (0-0%)</div>
-							</div>
-						</li>
-					</ul>
-					<ul id="p2-results" class="results-list">
-						<li class="result-move-0">
-							<div class="inner-results-container">
-								<div class="results-move-name">---</div>
-								<div class="results-move-damage">0-0 (0-0%)</div>
-							</div>
-						</li>	
-						<li class="result-move-1">
-							<div class="inner-results-container">
-								<div class="results-move-name">---</div>
-								<div class="results-move-damage">0-0 (0-0%)</div>
-							</div>
-						</li>
-						<li class="result-move-2">
-							<div class="inner-results-container">
-								<div class="results-move-name">---</div>
-								<div class="results-move-damage">0-0 (0-0%)</div>
-							</div>
-						</li>
-						<li class="result-move-3">
-							<div class="inner-results-container">
-								<div class="results-move-name">---</div>
-								<div class="results-move-damage">0-0 (0-0%)</div>
-							</div>
-						</li>
-					</ul>
-				</div>
-				<div id="results-details" style="display: none"></div>
-			</div>
-			<div id="p1-details" class="field-pane">
-				Helping Hand: <input id="p1-helpinghand" type="checkbox">
-				Spread: <input id="p1-spread" type="checkbox">
-				Friend Guard: <input id="p1-friendguard" type="checkbox"><br>
-				Reflect: <input id="p1-reflect" type="checkbox">
-				Light Screen: <input id="p1-lightscreen" type="checkbox">
-				Charge: <input id="p1-charge" type="checkbox">
-			</div>
-			<div id="field-details" class="field-pane">
-				<select id="weather" class="weather-select" data-default=""></select><br>
-				Default Level: <input id="defaultLevel" class="defaultLevel-input" type=number value=100 data-default=100 min=1 max=100 style="width: 40px;">
-			</div>
-			<div id="p2-details" class="field-pane">
-				Helping Hand: <input id="p2-helpinghand" type="checkbox">
-				Spread: <input id="p2-spread" type="checkbox">
-				Friend Guard: <input id="p2-friendguard" type="checkbox"><br>
-				Reflect: <input id="p2-reflect" type="checkbox">
-				Light Screen: <input id="p2-lightscreen" type="checkbox">
-				Charge: <input id="p2-charge" type="checkbox">
-			</div>
-			<div id="p1-pokemon" class="pokemon-pane">
-				<div id="p1-header" class="pokemon-header"><h3>P1</h3><button type=button name="importPokemon">Import</button><button type=button name="exportPokemon">Export</button><button type=button name="importTeam">Import Team</button><button type=button name="exportTeam">Export Team</button></div>
-				<div id="p1-teamselect" class="teamselect">
-					<button type=button name="changePokemon" value=0>0</button>
-					<button type=button name="changePokemon" value=1>1</button>
-					<button type=button name="changePokemon" value=2>2</button>
-					<button type=button name="changePokemon" value=3>3</button>
-					<button type=button name="changePokemon" value=4>4</button>
-					<button type=button name="changePokemon" value=5>5</button>
-					Current: <span class="currentIndex-span" data-default=0>0</span>
-					<!--<button type=button name="importTeam">Import Team</button>-->
-				</div>
-				<select id="species" class="pkm-select" data-default=""><option value="">(No Pokemon)</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
-				<select id="type1" class="type-select" data-default="Bug" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">???</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">???</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select" data-default=""><option value="">Blank Set</option></select><br />
-				<select id="ability" class="ability-select" data-default=""><option value="">(No Ability)</option></select><select id="item" class="item-select" data-default=""><option value="">(No Item)</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
-				<table class="stats-table">
-					<thead>
-						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td></tr>
-					</thead>
-					<!-- Consider `readonly` attribute instead of `disabled` in some places -->
-					<tbody>
-						<tr id="hp">
-							<th><span>HP</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0 disabled></td>
-						</tr>
-						<tr id="atk">
-							<th><span>Atk</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-						<tr id="def">
-							<th><span>Def</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-						<tr id="spa">
-							<th><span>SpA</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-						<tr id="spd">
-							<th><span>SpD</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-						<tr id="spe">
-							<th><span>Spe</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-					</tbody>
-				</table>
-				Current HP:<input type="number" class="currenthp-input" min=0 max=999 data-default=""><input type="number" class="currenthppercent-input" min=0 max=100 data-default=100>%
-				<table class="moves-table">
-					<thead>
-						<tr><th>Moves</th><td>Name</td><td>Type</td><td>BP</td><td>Cat.</td><td>PP</td><td>Crit</td></tr>
-					</thead>
-					<tbody>
-						<tr id="move-0">
-							<th>Move 1</th>
-							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">???</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" disabled data-default="Physical"></select></td>
-							<td><input type="number" min=1 max=64 class="pp-input"></td>
-							<td><input type="checkbox" class="crit-checkbox"></td>
-						</tr>
-						<tr id="move-1">
-							<th>Move 2</th>
-							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">???</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" data-default="Physical" disabled></select></td>
-							<td><input type="number" min=1 max=64 class="pp-input"></td>
-							<td><input type="checkbox" class="crit-checkbox"></td>
-						</tr>
-						<tr id="move-2">
-							<th>Move 3</th>
-							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">???</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" data-default="Physical" disabled></select></td>
-							<td><input type="number" min=1 max=64 class="pp-input"></td>
-							<td><input type="checkbox" class="crit-checkbox"></td>
-						</tr>
-						<tr id="move-3">
-							<th>Move 4</th>
-							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">???</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" data-default="Physical" disabled></select></td>
-							<td><input type="number" min=1 max=64 class="pp-input"></td>
-							<td><input type="checkbox" class="crit-checkbox"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div id="p2-pokemon" class="pokemon-pane">
-				<div id="p2-header" class="pokemon-header"><h3>P2</h3><button type=button name="importPokemon">Import</button><button type=button name="exportPokemon">Export</button><button type=button name="importTeam">Import Team</button><button type=button name="exportTeam">Export Team</button></div>
-				<div id="p1-teamselect" class="teamselect">
-					<button type=button name="changePokemon" value=0>0</button>
-					<button type=button name="changePokemon" value=1>1</button>
-					<button type=button name="changePokemon" value=2>2</button>
-					<button type=button name="changePokemon" value=3>3</button>
-					<button type=button name="changePokemon" value=4>4</button>
-					<button type=button name="changePokemon" value=5>5</button>
-					Current: <span class="currentIndex-span" data-default=0>0</span>
-					<!--<button type=button name="importTeam">Import Team</button>-->
-				</div>
-				<select id="species" class="pkm-select" data-default=""><option value="">(No Pokemon)</option></select><input class="level-input" value=100 type=number min=1 max=100 data-default=100><input class="happiness-input" type=number min=0 max=255 value=255 data-default=255><select id="gender" class="gender-select" data-default="N"></select><br />
-				<select id="type1" class="type-select" data-default="Bug" disabled></select><select id="type2" class="type-select" data-default="" disabled><option value="">???</option></select><select id="type3" class="type-select" disabled data-default=""><option value="">???</option></select><select id="status" class="status-select" data-default=""><option value="">Healthy</option></select><select class="set-select" data-default=""><option value="">Blank Set</option></select><br />
-				<select id="ability" class="ability-select" data-default=""><option value="">(No Ability)</option></select><select id="item" class="item-select" data-default=""><option value="">(No Item)</option></select><select id="nature" class="nature-select" data-default="Docile"></select>
-				<table class="stats-table">
-					<thead>
-						<tr><th>Stats</th><td>Base</td><td>IVs</td><td>EVs</td><td>Value</td><td>Boosts</td></tr>
-					</thead>
-					<!-- Consider `readonly` attribute instead of `disabled` in some places -->
-					<tbody>
-						<tr id="hp">
-							<th><span>HP</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0 disabled></td>
-						</tr>
-						<tr id="atk">
-							<th><span>Atk</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-						<tr id="def">
-							<th><span>Def</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-						<tr id="spa">
-							<th><span>SpA</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-						<tr id="spd">
-							<th><span>SpD</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-						<tr id="spe">
-							<th><span>Spe</span></th>
-							<td><input type=number class="baseStat-input" min=1 max=255 disabled></td>
-							<td><input type=number class="iv-input" min=0 max=31 value=31 data-default=31></td>
-							<td><input type=number class="ev-input" min=0 max=252 step=4 value=0 data-default=0></td>
-							<td><input type=number class="stat-input" min=0 max=999 disabled></td>
-							<td><input type=number class="boost-input" min=-6 max=6 value=0 data-default=0></td>
-						</tr>
-					</tbody>
-				</table>
-				Current HP:<input type="number" class="currenthp-input" min=0 max=999 data-default=""><input type="number" class="currenthppercent-input" min=0 max=100 data-default=100>%
-				<table class="moves-table">
-					<thead>
-						<tr><th>Moves</th><td>Name</td><td>Type</td><td>BP</td><td>Cat.</td><td>PP</td><td>Crit</td></tr>
-					</thead>
-					<tbody>
-						<tr id="move-0">
-							<th>Move 1</th>
-							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">???</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" disabled data-default="Physical"></select></td>
-							<td><input type="number" min=1 max=64 class="pp-input"></td>
-							<td><input type="checkbox" class="crit-checkbox"></td>
-						</tr>
-						<tr id="move-1">
-							<th>Move 2</th>
-							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">???</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" data-default="Physical" disabled></select></td>
-							<td><input type="number" min=1 max=64 class="pp-input"></td>
-							<td><input type="checkbox" class="crit-checkbox"></td>
-						</tr>
-						<tr id="move-2">
-							<th>Move 3</th>
-							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">???</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" data-default="Physical" disabled></select></td>
-							<td><input type="number" min=1 max=64 class="pp-input"></td>
-							<td><input type="checkbox" class="crit-checkbox"></td>
-						</tr>
-						<tr id="move-3">
-							<th>Move 4</th>
-							<td><select class="move-select"><option value="">--</option></select></td>
-							<td><select class="type-select" disabled><option value="">???</option></select></td>
-							<td><input type="number" class="bp-input" min=0 max=255 readonly></td>
-							<td><select class="cat-select" data-default="Physical" disabled></select></td>
-							<td><input type="number" min=1 max=64 class="pp-input"></td>
-							<td><input type="checkbox" class="crit-checkbox"></td>
-						</tr>
-					</tbody>
-				</table>
+			<div id="input-div"><form id="input">
+				Level <input type="number" id="level" value=100>
+				<!--Damage Type: 
+				Phys. <input type="radio" name="dmg-type" value="Phys" checked>
+				Mag. <input type="radio" name="dmg-type" value="Mag">--><br>
+				Base Atk <input type="number" id="atk" value=1 min=1>
+				Flat Atk <input type="number" id="atk-flat" value=0 min=0>
+				Atk (De)Buff% <input type="number" id="atk-buff" value=0><br>
+				Weapon Atk<input type="number" id="wep1" value=0 min=0>
+				<!--Weapon 2 <input type="number" id="wep2" value=0 min=0>--><br>
+				<!--Element<select id="element" size=1 multiple><option value="">None</option></select><br>-->
+				Target Def <input type="number" id="def" value=1 min=1>
+				Flat Def <input type="number" id="def-flat" value=0 min=0>
+				Def (De)Buff% <input type="number" id="def-buff" value=0><br>
+				Skill Mod% <input type="number" id="skill-mod" value=100 min=1>
+				Ignore Def% <input type="number" id="ign-def" value=0 min=0 max=100 step=5><br>
+				Slayer Mod% <input type="number" id="slayer" value=0 min=0 step=25><br>
+				Element Resist% <input type="number" id="ele-resist" value=0 step=5><br>
+				Variance Min% <input type="number" id="var-min" value=100 min=1 step=5>
+				Max% <input type="number" id="var-max" value=100 min=1 step=5><br>
+				Chain Mod Total% <input type="number" id="chain" value=0 min=0 step=10><br>
+				<button id="calc-button" type="button" onclick=calc()>Calculate!</button><input type="reset"></input>
+			</form></div>
+			<div id="output-div">
+			<!--Calc ID: <span id="calc-id">-</span>-->
+			Final ATK: <span id="eff-atk">--</span> Final DEF: <span id="eff-def">--</span><br>
+			Damage: <span id="damage-range"></span><br>
+			Variance: <span id="damage-values">TODO</span>
 			</div>
 		</div>
 	</body>
-	<script src="init.js"></script>
-	<script>
-	
-	</script>
 </html>
